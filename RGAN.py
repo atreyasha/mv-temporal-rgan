@@ -3,21 +3,23 @@
 
 # get all dependencies
 import numpy as np
+import matplotlib.pyplot as plt
 from keras import backend
 from keras.models import Model
+from keras.constraints import max_norm
 from keras.optimizers import Adam
 from keras.layers import Dense, Activation
 from keras.layers import LSTM, CuDNNLSTM, Input, TimeDistributed
+from keras.layers import Bidirectional
 from keras.backend.tensorflow_backend import clear_session
-from keras.constraints import max_norm
 
 ################################
 # define class and functions
 ################################
 
 class RGAN():
-    def __init__(self, latent_dim = 64, epochs = 50, batch_size = 128, learning_rate = 0.0001,
-                 g_factor = 2.5, im_dim = 64, droprate = 0.2):
+    def __init__(self,latent_dim=64,epochs=100,batch_size=128,learning_rate=0.0001,
+                 g_factor=1.5,im_dim=64,droprate=0.2):
         # define and store local variables
         clear_session()
         self.epochs = epochs
@@ -44,22 +46,22 @@ class RGAN():
         self.combined.compile(loss=['binary_crossentropy'], optimizer=self.optimizer_g,
                               metrics=['accuracy'])
 
-    def getGenerator(self, time_steps=64,latent_dim=100,droprate=0.2):
+    def getGenerator(self,time_steps=64,latent_dim=100,droprate=0.2):
         in_data = Input(shape=(time_steps,latent_dim))
         # possible dense layer to reduce dimensions and noise
         # out = TimeDistributed(Dense(time_steps))(in_data)
         # out = Activation("relu")(out)
         if len(backend.tensorflow_backend._get_available_gpus()) > 0:
-            out = CuDNNLSTM(time_steps,return_sequences=True,recurrent_dropout=droprate,
+            out = Bidirectional(CuDNNLSTM(time_steps,return_sequences=True,recurrent_dropout=droprate,
                     kernel_constraint=max_norm(3), recurrent_constraint=max_norm(3),
-                    bias_constraint=max_norm(3))(in_data)
+                    bias_constraint=max_norm(3)),merge_mode="ave")(in_data)
         else:
-            out = LSTM(time_steps,return_sequences=True,recurrent_dropout=droprate,
+            out = Bidirectional(LSTM(time_steps,return_sequences=True,recurrent_dropout=droprate,
                     kernel_constraint=max_norm(3), recurrent_constraint=max_norm(3),
-                    bias_constraint=max_norm(3))(in_data)
+                    bias_constraint=max_norm(3)),merge_mode="ave")(in_data)
         return Model(inputs=in_data,outputs=out)
 
-    def getDiscriminator(self, im_dim=64,droprate=0.2):
+    def getDiscriminator(self,im_dim=64,droprate=0.2):
         in_data = Input(shape=(im_dim,im_dim))
         if len(backend.tensorflow_backend._get_available_gpus()) > 0:
             out = CuDNNLSTM(28,recurrent_dropout=droprate,kernel_constraint=max_norm(3),recurrent_constraint
@@ -71,10 +73,12 @@ class RGAN():
         out = Activation("sigmoid")(out)
         return Model(inputs=in_data,outputs=out)
 
-    def train(self, data):
+    def train(self,data,direct):
+        np.random.seed(42)
+        constant_noise = np.random.normal(size=(1,self.im_dim,self.latent_dim))
         real_labels = np.ones((self.batch_size,1))
         fake_labels = np.zeros((self.batch_size,1))
-        runs = int(np.ceil(train_images.shape[0]/128))
+        runs = int(np.ceil(data.shape[0]/128))
         for epoch in range(self.epochs):
             for batch in range(runs):
                 # randomize data and generate noise
@@ -93,16 +97,26 @@ class RGAN():
                 g_loss = self.combined.train_on_batch(noise, real_labels)
                 # plot the progress
                 if (batch+1) % 20 == 0:
-                    print ("epoch: %d [batch: %d] [D loss: %f, acc.: %.2f%%] [G loss: %f, acc.: %.2f%%]" % (epoch+1,batch+1,d_loss[0],100*d_loss[1],g_loss[0],100*g_loss[1]))
+                    print("epoch: %d [batch: %d] [D loss: %f, acc.: %.2f%%] [G loss: %f, acc.: %.2f%%]" % (epoch+1,batch+1,d_loss[0],100*d_loss[1],g_loss[0],100*g_loss[1]))
+            # at every epoch, generate an image for reference
+            test_img = self.generator.predict(constant_noise)[0]
+            plt.imsave("./pickles/"+direct+"/img/epoch"+str(epoch+1)+".png",test_img)
 
 ################################
 # comments/to-dos
 ################################
 
+# add function for checking generation process and constraints
+# save models at each epoch and decide quality by factor of gen vs dis
+# add gradient checks to early stopping mechanism
+# add some steps to configure g-factor while training
+
 # make mechanism for early stopping within training
 # try to use early checkpoint method with some modification
+# add sample images to keep track of training progress
+# add sample generation layer and saving model function
 
-# train_images = [mpimg.imread(file) for file in glob.glob("./data/faces/*")]
+# train_images = [mpimg.imread(file) for file in glob.glob("./src/data/faces/*")]
 # train_images = np.asarray(train_images,dtype="float32")
 # train_images /= 255
 
