@@ -18,3 +18,5 @@ test.train(train_images,"test")
 
 # make more complex generator
 # make deeper and more intracacies to layers
+# possibility to add convolutions at early stages and treat meta states as images
+# most important is that final stage converges to actual time series

@@ -19,7 +19,7 @@ from keras.backend.tensorflow_backend import clear_session
 
 class RGAN():
     def __init__(self,latent_dim=12,epochs=100,batch_size=128,learning_rate=0.0001,
-                 g_factor=1.0,im_dim=64,droprate=0.2):
+                 g_factor=2.0,im_dim=64,droprate=0.2):
         # define and store local variables
         clear_session()
         self.epochs = epochs
