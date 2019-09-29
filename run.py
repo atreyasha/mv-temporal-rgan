@@ -9,9 +9,12 @@ from numpy import resize
 from RGAN import RGAN
 
 # compile RGAN and load images
-train_images = [mpimg.imread(file) for file in tqdm(glob.glob("./data/lfwcrop_grey/faces/*")[:2000])]
+train_images = [mpimg.imread(file) for file in tqdm(glob.glob("./data/lfwcrop_grey/faces/*"))]
 train_images = np.asarray(train_images,dtype="float32")
 train_images /= 255
 # run model and check outout
 test = RGAN()
 test.train(train_images,"test")
+
+# make more complex generator
+# make deeper and more intracacies to layers
