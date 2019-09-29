@@ -18,8 +18,8 @@ from keras.backend.tensorflow_backend import clear_session
 ################################
 
 class RGAN():
-    def __init__(self,latent_dim=64,epochs=100,batch_size=128,learning_rate=0.0001,
-                 g_factor=1.5,im_dim=64,droprate=0.2):
+    def __init__(self,latent_dim=100,epochs=100,batch_size=128,learning_rate=0.0001,
+                 g_factor=2,im_dim=64,droprate=0.2):
         # define and store local variables
         clear_session()
         self.epochs = epochs
@@ -49,8 +49,8 @@ class RGAN():
     def getGenerator(self,time_steps=64,latent_dim=100,droprate=0.2):
         in_data = Input(shape=(time_steps,latent_dim))
         # possible dense layer to reduce dimensions and noise
-        # out = TimeDistributed(Dense(time_steps))(in_data)
-        # out = Activation("relu")(out)
+        out = TimeDistributed(Dense(time_steps))(in_data)
+        out = Activation("relu")(out)
         if len(backend.tensorflow_backend._get_available_gpus()) > 0:
             out = Bidirectional(CuDNNLSTM(time_steps,return_sequences=True,
                     kernel_constraint=max_norm(3), recurrent_constraint=max_norm(3),
@@ -115,10 +115,6 @@ class RGAN():
 # try to use early checkpoint method with some modification
 # add sample images to keep track of training progress
 # add sample generation layer and saving model function
-
-# train_images = [mpimg.imread(file) for file in glob.glob("./src/data/faces/*")]
-# train_images = np.asarray(train_images,dtype="float32")
-# train_images /= 255
 
 # TODO:
 # grid-search:
