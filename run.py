@@ -13,5 +13,5 @@ train_images = [resize(mpimg.imread(file),(28,28)) for file in tqdm(glob.glob(".
 train_images = np.asarray(train_images,dtype="float32")
 train_images /= 255
 # run model and check outout
-test = RGAN()
+test = RGAN(im_dim=28)
 test.train(train_images,"test")
