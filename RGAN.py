@@ -52,7 +52,7 @@ class RGAN():
         # out = TimeDistributed(Dense(time_steps))(in_data)
         # out = Activation("relu")(out)
         if len(backend.tensorflow_backend._get_available_gpus()) > 0:
-            out = Bidirectional(CuDNNLSTM(time_steps,return_sequences=True,recurrent_dropout=droprate,
+            out = Bidirectional(CuDNNLSTM(time_steps,return_sequences=True,
                     kernel_constraint=max_norm(3), recurrent_constraint=max_norm(3),
                     bias_constraint=max_norm(3)),merge_mode="ave")(in_data)
         else:
@@ -64,7 +64,7 @@ class RGAN():
     def getDiscriminator(self,im_dim=64,droprate=0.2):
         in_data = Input(shape=(im_dim,im_dim))
         if len(backend.tensorflow_backend._get_available_gpus()) > 0:
-            out = CuDNNLSTM(28,recurrent_dropout=droprate,kernel_constraint=max_norm(3),recurrent_constraint
+            out = CuDNNLSTM(28,kernel_constraint=max_norm(3),recurrent_constraint
                    =max_norm(3),bias_constraint=max_norm(3))(in_data)
         else:
             out = LSTM(28,recurrent_dropout=droprate,kernel_constraint=max_norm(3),recurrent_constraint
