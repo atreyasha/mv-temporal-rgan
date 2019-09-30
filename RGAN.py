@@ -8,9 +8,8 @@ from keras import backend
 from keras.models import Model
 from keras.constraints import max_norm
 from keras.optimizers import Adam
-from keras.layers import Dense, Activation
+from keras.layers import Dense, Activation, Reshape
 from keras.layers import LSTM, CuDNNLSTM, Input, TimeDistributed
-from keras.layers import Bidirectional
 from keras.backend.tensorflow_backend import clear_session
 
 ################################
@@ -18,8 +17,8 @@ from keras.backend.tensorflow_backend import clear_session
 ################################
 
 class RGAN():
-    def __init__(self,latent_dim=12,epochs=100,batch_size=128,learning_rate=0.0001,
-                 g_factor=2.0,im_dim=64,droprate=0.2):
+    def __init__(self,latent_dim=12,im_dim=28,epochs=100,batch_size=64,learning_rate=0.0001,
+                 g_factor=1.5,droprate=0.2):
         # define and store local variables
         clear_session()
         self.epochs = epochs
@@ -39,34 +38,33 @@ class RGAN():
         self.generator = self.getGenerator(self.im_dim,self.latent_dim,self.droprate)
         self.discriminator.trainable = False
         # define combined network with partial gradient application
-        z = Input(shape=(self.im_dim,self.latent_dim))
+        z = Input(shape=(self.im_dim*self.latent_dim,1))
         img = self.generator(z)
         validity = self.discriminator(img)
         self.combined = Model(z, validity)
         self.combined.compile(loss=['binary_crossentropy'], optimizer=self.optimizer_g,
                               metrics=['accuracy'])
 
-    def getGenerator(self,time_steps=64,latent_dim=100,droprate=0.2):
-        in_data = Input(shape=(time_steps,latent_dim))
+    def getGenerator(self,im_dim,latent_dim,droprate):
+        in_data = Input(shape=(im_dim*latent_dim,1))
         # possible dense layer to reduce dimensions and noise
-        out = TimeDistributed(Dense(20))(in_data)
-        out = TimeDistributed(Dense(28))(in_data)
-        out = Activation("relu")(out)
+        # out = TimeDistributed(Dense(20))(in_data)
+        # out = TimeDistributed(Dense(28))(in_data)
+        # out = Activation("relu")(out)
         if len(backend.tensorflow_backend._get_available_gpus()) > 0:
-            out = CuDNNLSTM(time_steps,return_sequences=True,
+            out = CuDNNLSTM(im_dim,
                     kernel_constraint=max_norm(3), recurrent_constraint=max_norm(3),
                     bias_constraint=max_norm(3))(in_data)
         else:
-            out = LSTM(100,return_sequences=True,recurrent_dropout=droprate,
+            out = LSTM(im_dim,recurrent_dropout=droprate,
                     kernel_constraint=max_norm(3), recurrent_constraint=max_norm(3),
                     bias_constraint=max_norm(3))(in_data)
-            out = LSTM(64,return_sequences=True,recurrent_dropout=droprate,
-                    kernel_constraint=max_norm(3), recurrent_constraint=max_norm(3),
-                    bias_constraint=max_norm(3))(out)
+            out = Dense(im_dim**2)(out)
+            out = Reshape((im_dim**2,1))(out)
         return Model(inputs=in_data,outputs=out)
 
-    def getDiscriminator(self,im_dim=64,droprate=0.2):
-        in_data = Input(shape=(im_dim,im_dim))
+    def getDiscriminator(self,im_dim,droprate):
+        in_data = Input(shape=(im_dim**2,1))
         if len(backend.tensorflow_backend._get_available_gpus()) > 0:
             out = CuDNNLSTM(28,kernel_constraint=max_norm(3),recurrent_constraint
                    =max_norm(3),bias_constraint=max_norm(3))(in_data)
@@ -79,7 +77,7 @@ class RGAN():
 
     def train(self,data,direct):
         np.random.seed(42)
-        constant_noise = np.random.normal(size=(1,self.im_dim,self.latent_dim))
+        constant_noise = np.random.normal(size=(1,self.im_dim*self.latent_dim,1))
         real_labels = np.ones((self.batch_size,1))
         fake_labels = np.zeros((self.batch_size,1))
         runs = int(np.ceil(data.shape[0]/128))
@@ -88,7 +86,7 @@ class RGAN():
                 # randomize data and generate noise
                 idx = np.random.randint(0, data.shape[0],self.batch_size)
                 real = data[idx]
-                noise = np.random.normal(size=(self.batch_size,self.im_dim,self.latent_dim))
+                noise = np.random.normal(size=(self.batch_size,self.im_dim*self.latent_dim,1))
                 # generate fake data
                 fake = self.generator.predict(noise)
                 # train the discriminator
@@ -96,14 +94,14 @@ class RGAN():
                 d_loss_fake = self.discriminator.train_on_batch(fake, fake_labels)
                 d_loss = 0.5 * np.add(d_loss_real, d_loss_fake)
                 # generate new set of noise
-                noise = np.random.normal(size=(self.batch_size,self.im_dim,self.latent_dim))
+                noise = np.random.normal(size=(self.batch_size,self.im_dim*self.latent_dim,1))
                 # train generator while freezing discriminator
                 g_loss = self.combined.train_on_batch(noise, real_labels)
                 # plot the progress
                 if (batch+1) % 20 == 0:
                     print("epoch: %d [batch: %d] [D loss: %f, acc.: %.2f%%] [G loss: %f, acc.: %.2f%%]" % (epoch+1,batch+1,d_loss[0],100*d_loss[1],g_loss[0],100*g_loss[1]))
             # at every epoch, generate an image for reference
-            test_img = self.generator.predict(constant_noise)[0]
+            test_img = np.resize(self.generator.predict(constant_noise)[0],(self.im_dim,self.im_dim))
             plt.imsave("./pickles/"+direct+"/img/epoch"+str(epoch+1)+".png",test_img)
 
 ################################
@@ -119,6 +117,16 @@ class RGAN():
 # try to use early checkpoint method with some modification
 # add sample images to keep track of training progress
 # add sample generation layer and saving model function
+
+# clean code, try running on google cpu
+# make network deeper and emulate cross relationships similar to pixelnet
+# use convolutions in hidden layers
+# save images as tif for best preview
+
+# try deforming multivariate time series to single series
+# then model via lstm and possibly cnn
+# see if basic reproduction is possible
+# try to model via MNIST in worst case scenario
 
 # TODO:
 # grid-search:
