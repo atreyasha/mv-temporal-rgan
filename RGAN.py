@@ -108,6 +108,9 @@ class RGAN():
 # comments/to-dos
 ################################
 
+# convert faces to newer and better format hp5
+# reduce cpu variable conversion in colab
+
 # add function for checking generation process and constraints
 # save models at each epoch and decide quality by factor of gen vs dis
 # add gradient checks to early stopping mechanism
