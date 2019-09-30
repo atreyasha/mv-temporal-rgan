@@ -59,8 +59,8 @@ class RGAN():
             out = LSTM(im_dim,recurrent_dropout=droprate,
                     kernel_constraint=max_norm(3), recurrent_constraint=max_norm(3),
                     bias_constraint=max_norm(3))(in_data)
-            out = Dense(im_dim**2)(out)
-            out = Reshape((im_dim**2,1))(out)
+        out = Dense(im_dim**2)(out)
+        out = Reshape((im_dim**2,1))(out)
         return Model(inputs=in_data,outputs=out)
 
     def getDiscriminator(self,im_dim,droprate):
