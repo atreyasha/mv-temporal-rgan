@@ -9,7 +9,7 @@ from numpy import resize
 from RGAN import RGAN
 
 # compile RGAN and load images
-train_images = [resize(mpimg.imread(file),(28,28)) for file in tqdm(glob.glob("./data/lfwcrop_grey/faces/*"))[:100]]
+train_images = [resize(mpimg.imread(file),(28,28)) for file in tqdm(glob.glob("./data/lfwcrop_grey/faces/*")[:100])]
 train_images = np.asarray(train_images,dtype="float32")
 train_images /= 255
 train_images = resize(train_images,(train_images.shape[0],train_images.shape[1]**2,1))
