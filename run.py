@@ -9,7 +9,7 @@ from numpy import resize
 from RGAN import RGAN
 
 # compile RGAN and load images
-train_images = [resize(mpimg.imread(file),(28,28)) for file in tqdm(glob.glob("./data/lfwcrop_grey/faces/*"))]
+train_images = [resize(mpimg.imread(file),(28,28)) for file in tqdm(glob.glob("./data/lfwcrop_grey/faces/*"))[:100]]
 train_images = np.asarray(train_images,dtype="float32")
 train_images /= 255
 train_images = resize(train_images,(train_images.shape[0],train_images.shape[1]**2,1))
@@ -17,6 +17,7 @@ train_images = resize(train_images,(train_images.shape[0],train_images.shape[1]*
 test = RGAN()
 test.train(train_images,"test")
 
+# add hp5y pipeline to speed up data transfer
 # save better quality images, make more random noise to show transitions
 # save proper images in svg and download better image viewer
 # make more complex generator
