@@ -51,15 +51,13 @@ class RGAN():
     def getGenerator(self,im_dim,latent_dim,droprate):
         in_data = Input(shape=(im_dim*latent_dim,1))
         if len(backend.tensorflow_backend._get_available_gpus()) > 0:
-            out = CuDNNLSTM(im_dim*10,
+            out = CuDNNLSTM(im_dim**2,
                     kernel_constraint=max_norm(3), recurrent_constraint=max_norm(3),
                     bias_constraint=max_norm(3))(in_data)
         else:
-            out = LSTM(im_dim*10,recurrent_dropout=droprate,
+            out = LSTM(im_dim**2,recurrent_dropout=droprate,
                     kernel_constraint=max_norm(3), recurrent_constraint=max_norm(3),
                     bias_constraint=max_norm(3))(in_data)
-        out = Dense(im_dim**2)(out)
-        out = Activation("relu")(out)
         out = Reshape((im_dim**2,1))(out)
         return Model(inputs=in_data,outputs=out)
 
