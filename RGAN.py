@@ -109,21 +109,21 @@ class RGAN():
 ################################
 
 # TODO:
-# important:
+# 1. important:
 # run model on mnist, fashion_mnist and then faces with differing epochs
-# add sample generation layer and saving model function
-# save images as figures for best preview
-# find out how to make correlated time series with LSTM
+# add saving model function and save images as figures for best preview
 
+# 2. next steps:
 # add gradient checks to early stopping mechanism
 # add grid-search mechanism for checking more possibilities
 # make mechanism for early stopping within training
 # make mechanism for dynamic g-factor adjustment
-# add script to save models and runs as per standards
 # configure code to use specific gpus on cluster
 # take into account memory of system before running
 # take into account gpu usage before executing
+# find out how to make correlated time series with LSTM
 
+# 3. generic:
 # evaluation pipeline:
 # train mnist, fashion-mnist and lfw-faces for 28 pixels
 # extend to 64 pixels faces to check if abstraction possible
