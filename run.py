@@ -17,11 +17,3 @@ train_images = np.load("./data/lfw.npy")
 # run model and check outout
 test = RGAN()
 test.train(train_images,"test")
-
-# add hp5y pipeline to speed up data transfer
-# save better quality images, make more random noise to show transitions
-# save proper images in svg and download better image viewer
-# make more complex generator
-# make deeper and more intracacies to layers
-# possibility to add convolutions at early stages and treat meta states as images
-# most important is that final stage converges to actual time series

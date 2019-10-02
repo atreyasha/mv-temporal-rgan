@@ -108,43 +108,35 @@ class RGAN():
 # comments/to-dos
 ################################
 
-# convert faces to newer and better format hp5
-# reduce cpu variable conversion in colab
-
-# add function for checking generation process and constraints
-# save models at each epoch and decide quality by factor of gen vs dis
-# add gradient checks to early stopping mechanism
-# add some steps to configure g-factor while training
-
-# make mechanism for early stopping within training
-# try to use early checkpoint method with some modification
-# add sample images to keep track of training progress
-# add sample generation layer and saving model function
-
-# clean code, try running on google cpu
-# make network deeper and emulate cross relationships similar to pixelnet
-# use convolutions in hidden layers
-# save images as tif for best preview
-
-# try deforming multivariate time series to single series
-# then model via lstm and possibly cnn
-# see if basic reproduction is possible
-# try to model via MNIST in worst case scenario
-
 # TODO:
+# important:
+# run model on mnist, fashion_mnist and then faces with differing epochs
+# add sample generation layer and saving model function
+# save images as figures for best preview
+# find out how to make correlated time series with LSTM
+
+# add gradient checks to early stopping mechanism
+# add grid-search mechanism for checking more possibilities
+# make mechanism for early stopping within training
+# make mechanism for dynamic g-factor adjustment
+# add script to save models and runs as per standards
+# configure code to use specific gpus on cluster
+# take into account memory of system before running
+# take into account gpu usage before executing
+
+# evaluation pipeline:
+# train mnist, fashion-mnist and lfw-faces for 28 pixels
+# extend to 64 pixels faces to check if abstraction possible
+
 # grid-search:
-# set up git repository and add GPU support
-# let grid-search run on colab for at least 100 epochs
 # apply some basic filtering such as limits of loss ratios
 # make some early stopping mechanisms and save models to check for convergence
 
 # networks:
 # consider changing LSTM's to bidirectional
-# consider possibly downsampling, but try with high dimensions to check viability
 # consider adding convolutions in both generator and discriminator for locality
+# make model more complex to learn arbitrary sequences more efficiently
 # extend to RCGAN with realistic conditionings such as gender/smile/expression
-# consider adding convolutions where this might be useful
-# implement single run and then grid-search
 
 # masking varied features:
 # come up with mask to create or ignore feature differences
