@@ -2,14 +2,17 @@
 # -*- coding: utf-8 -*-
 
 # get all dependencies
+import pickle
 import numpy as np
+import matplotlib
+matplotlib.use('Agg')
 import matplotlib.pyplot as plt
 from keras import backend
 from keras.models import Model
 from keras.constraints import max_norm
 from keras.optimizers import Adam
 from keras.layers import Dense, Activation, Reshape
-from keras.layers import LSTM, CuDNNLSTM, Input, TimeDistributed
+from keras.layers import LSTM, CuDNNLSTM, Input
 from keras.backend.tensorflow_backend import clear_session
 
 ################################
@@ -17,8 +20,8 @@ from keras.backend.tensorflow_backend import clear_session
 ################################
 
 class RGAN():
-    def __init__(self,latent_dim=12,im_dim=28,epochs=100,batch_size=64,learning_rate=0.0001,
-                 g_factor=1.5,droprate=0.2):
+    def __init__(self,latent_dim=28,im_dim=28,epochs=100,batch_size=128,learning_rate=0.0001,
+                 g_factor=0.7,droprate=0.2):
         # define and store local variables
         clear_session()
         self.epochs = epochs
@@ -47,37 +50,36 @@ class RGAN():
 
     def getGenerator(self,im_dim,latent_dim,droprate):
         in_data = Input(shape=(im_dim*latent_dim,1))
-        # possible dense layer to reduce dimensions and noise
-        # out = TimeDistributed(Dense(20))(in_data)
-        # out = TimeDistributed(Dense(28))(in_data)
-        # out = Activation("relu")(out)
         if len(backend.tensorflow_backend._get_available_gpus()) > 0:
-            out = CuDNNLSTM(im_dim,
+            out = CuDNNLSTM(im_dim**2,
                     kernel_constraint=max_norm(3), recurrent_constraint=max_norm(3),
                     bias_constraint=max_norm(3))(in_data)
         else:
-            out = LSTM(im_dim,recurrent_dropout=droprate,
+            out = LSTM(im_dim**2,recurrent_dropout=droprate,
                     kernel_constraint=max_norm(3), recurrent_constraint=max_norm(3),
                     bias_constraint=max_norm(3))(in_data)
-        out = Dense(im_dim**2)(out)
         out = Reshape((im_dim**2,1))(out)
         return Model(inputs=in_data,outputs=out)
 
     def getDiscriminator(self,im_dim,droprate):
         in_data = Input(shape=(im_dim**2,1))
         if len(backend.tensorflow_backend._get_available_gpus()) > 0:
-            out = CuDNNLSTM(28,kernel_constraint=max_norm(3),recurrent_constraint
+            out = CuDNNLSTM(im_dim*10,kernel_constraint=max_norm(3),recurrent_constraint
                    =max_norm(3),bias_constraint=max_norm(3))(in_data)
         else:
-            out = LSTM(28,recurrent_dropout=droprate,kernel_constraint=max_norm(3),recurrent_constraint
+            out = LSTM(im_dim*10,recurrent_dropout=droprate,kernel_constraint=max_norm(3),recurrent_constraint
                    =max_norm(3),bias_constraint=max_norm(3))(in_data)
+        out = Dense(100)(out)
+        out = Activation("relu")(out)
+        out = Dense(10)(out)
+        out = Activation("relu")(out)
         out = Dense(1)(out)
         out = Activation("sigmoid")(out)
         return Model(inputs=in_data,outputs=out)
 
-    def train(self,data,direct):
+    def train(self,data,direct,plot_samples=10):
         np.random.seed(42)
-        constant_noise = np.random.normal(size=(1,self.im_dim*self.latent_dim,1))
+        constant_noise = np.random.normal(size=(plot_samples,self.im_dim*self.latent_dim,1))
         real_labels = np.ones((self.batch_size,1))
         fake_labels = np.zeros((self.batch_size,1))
         runs = int(np.ceil(data.shape[0]/128))
@@ -101,8 +103,11 @@ class RGAN():
                 if (batch+1) % 20 == 0:
                     print("epoch: %d [batch: %d] [D loss: %f, acc.: %.2f%%] [G loss: %f, acc.: %.2f%%]" % (epoch+1,batch+1,d_loss[0],100*d_loss[1],g_loss[0],100*g_loss[1]))
             # at every epoch, generate an image for reference
-            test_img = np.resize(self.generator.predict(constant_noise)[0],(self.im_dim,self.im_dim))
-            plt.imsave("./pickles/"+direct+"/img/epoch"+str(epoch+1)+".png",test_img)
+            test_img = np.resize(self.generator.predict(constant_noise),(plot_samples,self.im_dim,self.im_dim))
+            test_img = np.hstack(test_img)
+            fig, ax = plt.subplots()
+            plt.imshow(test_img)
+            fig.savefig("./pickles/"+direct+"/img/epoch"+str(epoch+1)+".png", format='png', dpi=500)
 
 ################################
 # comments/to-dos
@@ -111,12 +116,13 @@ class RGAN():
 # TODO:
 # 1. important:
 # run model on mnist, fashion_mnist and then faces with differing epochs
-# add saving model function and save images as figures for best preview
+# pickle log files and dedication; create within main file
 
 # 2. next steps:
-# add gradient checks to early stopping mechanism
+# add saving model function and save images as figures for best preview, need to consider how to save model
+# add gradient checks and heuristics for early stopping mechanism
 # add grid-search mechanism for checking more possibilities
-# make mechanism for early stopping within training
+# add log files to check performance and make future plots
 # make mechanism for dynamic g-factor adjustment
 # configure code to use specific gpus on cluster
 # take into account memory of system before running
