@@ -20,7 +20,7 @@ from keras.backend.tensorflow_backend import clear_session
 ################################
 
 class RGAN():
-    def __init__(self,latent_dim=28,im_dim=28,epochs=100,batch_size=128,learning_rate=0.0001,
+    def __init__(self,latent_dim=28,im_dim=28,epochs=100,batch_size=128,learning_rate=0.01,
                  g_factor=0.7,droprate=0.2):
         # define and store local variables
         clear_session()
@@ -51,13 +51,15 @@ class RGAN():
     def getGenerator(self,im_dim,latent_dim,droprate):
         in_data = Input(shape=(im_dim*latent_dim,1))
         if len(backend.tensorflow_backend._get_available_gpus()) > 0:
-            out = CuDNNLSTM(im_dim**2,
+            out = CuDNNLSTM(im_dim*20,
                     kernel_constraint=max_norm(3), recurrent_constraint=max_norm(3),
                     bias_constraint=max_norm(3))(in_data)
         else:
-            out = LSTM(im_dim**2,recurrent_dropout=droprate,
+            out = LSTM(im_dim*20,recurrent_dropout=droprate,
                     kernel_constraint=max_norm(3), recurrent_constraint=max_norm(3),
                     bias_constraint=max_norm(3))(in_data)
+        out = Dense(im_dim**2)(out)
+        out = Activation("relu")(out)
         out = Reshape((im_dim**2,1))(out)
         return Model(inputs=in_data,outputs=out)
 
