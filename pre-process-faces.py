@@ -27,7 +27,7 @@ def makeBin(kernel,out):
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
-    parser.add_argument("--kernel", type=int, default=28,
+    parser.add_argument("--kernel", type=int, default=2,
                         help="kernel size to downsample lfw-faces <default:2>")
     parser.add_argument("--out", type=str, default="lfw.npy",
                         help="output file name <default:'lfw.npy'>")

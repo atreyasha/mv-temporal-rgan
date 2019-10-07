@@ -8,8 +8,7 @@ from obj.RGAN import RGAN
 # provide details here to train function for logging
 # TODO: add data handling capability here, get data andconvert to string format
 # name model as currentDateTime_modeTyle_dataType
-# TODO: check image conversion back and forth to be the same
-train_images = np.load("./data/lfw_28.npy")
+train_images = np.load("./data/lfw.npy")
 # run model and check outout
 # TODO: require RGAN object to return values for logging
 # TODO: add saving ability by saving models and main hyperparameters
