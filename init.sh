@@ -19,6 +19,6 @@ fi
 # pre-process lfw-faces and save to numpy binary
 read -rep "pre-process lfw-faces into numpy binary? (y/n): " ans
 if [ $ans == "y" ]; then
-    read -rep "specify dimensionality of lfw-faces (28 is recommended): " ans2
-    python3 pre-process-faces.py --dim "$ans2" --out "lfw_$ans2.npy"
+    read -rep "specify kernel size for downsampling lfw-faces (2 is recommended): " ans2
+    python3 pre-process-faces.py --kernel "$ans2"
 fi

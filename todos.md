@@ -2,14 +2,12 @@
 
 ### Important
 * run model on mnist, fashion_mnist and then faces with differing epochs
-* make square shaped plots with boundaries for training samples and try to make more examples
 * pickle detailed log files and models; create within main file such that class reconstruction is possible
 * add data handling and pickling within main run function
 
 ### Conceptual issues
 * think more about lstm returning seq or neurons
 * perhaps keep same timesteps and return sequences and later use cnn to reduce dimensions with global pooling
-* fix np random seed issue which could create identical batches
 * make encoding and decoding lstm with cnn to compact architecture
 
 ### Next steps
@@ -17,9 +15,10 @@
 * add grid-search mechanism for checking more possibilities
 * make mechanism for dynamic g-factor adjustment
 * configure code to use specific gpus on cluster
-* try to share memory and tasks between gpus
+* try to share memory and tasks between gpus (multi\_gpu\_model)
 * take into account memory of system before running
 * take into account gpu usage before executing
+* optionally use tensorboard to analyze learning process
 * find out how to make correlated time series with LSTM
 
 ### Brainstorming points
