@@ -22,7 +22,7 @@ from keras.backend.tensorflow_backend import clear_session
 
 class RGAN():
     def __init__(self,latent_dim=28,im_dim=32,epochs=100,batch_size=128,learning_rate=0.01,
-                 g_factor=0.7,droprate=0.2):
+                 g_factor=1.0,droprate=0.2):
         # define and store local variables
         clear_session()
         self.epochs = epochs
@@ -97,7 +97,7 @@ class RGAN():
 
     def train(self,data,direct,sq_dim=4):
         plot_samples=sq_dim**2
-        data_type = re.sub(r".*\\_","",direct)
+        data_type = re.sub(r".*_","",direct)
         # write init.csv to file for future class reconstruction
         with open("pickles/"+direct+"/init.csv", "w") as csvfile:
             fieldnames = ["data", "im_dim", "latent_dim", "epochs", "batch_size", "learning_rate", "droprate", "g_factor"]
@@ -140,7 +140,7 @@ class RGAN():
                     writer.writerow({"epoch":str(epoch+1), "batch":str(batch+1), "d_loss":str(d_loss[0]),
                              "d_acc":str(d_loss[1]), "g_loss":str(g_loss[0]), "g_acc":str(g_loss[1])})
                     csvfile.flush()
-            # at every epoch, generate 16 images for reference
+            # at every epoch, generate images for reference
             test_img = np.resize(self.generator.predict(constant_noise),(plot_samples,self.im_dim,self.im_dim))
             test_img = {str(i+1):test_img[i] for i in range(test_img.shape[0])}
             self._plot_figures(test_img,direct,epoch,sq_dim)

@@ -3,10 +3,12 @@
 ### Important
 * run model on mnist, fashion_mnist and then faces with differing epochs
 * pickle detailed log files and models; create within main file such that class reconstruction is possible
-* add data handling and pickling within main run function
+* redefine model and integrate dropout into GPU implementation
+* add dropout to gpu model configuration
+* add batch normalization for better stability
 
 ### Conceptual issues
-* think more about lstm returning seq or neurons
+* think more about lstm returning seq or neurons for generation process
 * perhaps keep same timesteps and return sequences and later use cnn to reduce dimensions with global pooling
 * make encoding and decoding lstm with cnn to compact architecture
 
@@ -27,6 +29,7 @@
 * train mnist, fashion-mnist and lfw-faces for 28 pixels
 * extend to 64 pixels faces to check if abstraction possible
 * use TSTR/TRTS methodologies and identification issues to evaluate model
+* use MIMIC data/models for direct TSTR/TRTS validations
 
 #### Grid-search
 * apply some basic filtering such as limits of loss ratios
