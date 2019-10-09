@@ -1,25 +1,22 @@
 ## Workflow to-do's
 
 ### Important
-* run model on mnist, fashion_mnist and then faces with differing epochs
-* pickle detailed log files and models; create within main file such that class reconstruction is possible
-* redefine model and integrate dropout into GPU implementation
-* add dropout to gpu model configuration
-* add batch normalization for better stability
-
-### Conceptual issues
-* think more about lstm returning seq or neurons for generation process
+* redefine model for richer sequential features with CNN and better efficiency; consider return sequences vs. return neurons
 * perhaps keep same timesteps and return sequences and later use cnn to reduce dimensions with global pooling
 * make encoding and decoding lstm with cnn to compact architecture
-
-### Next steps
-* add gradient checks and heuristics for early stopping mechanism
-* add grid-search mechanism for checking more possibilities
-* make mechanism for dynamic g-factor adjustment
+* integrate dropout into GPU implementation
+* add batch normalization for better stability
 * configure code to use specific gpus on cluster
+
+### Following
 * try to share memory and tasks between gpus (multi\_gpu\_model)
 * take into account memory of system before running
 * take into account gpu usage before executing
+
+### Heuristics
+* add gradient checks and heuristics for early stopping mechanism
+* add grid-search mechanism for checking more possibilities
+* make mechanism for dynamic g-factor adjustment
 * optionally use tensorboard to analyze learning process
 * find out how to make correlated time series with LSTM
 

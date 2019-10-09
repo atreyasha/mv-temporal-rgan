@@ -6,7 +6,7 @@ import os
 import argparse
 import datetime
 import numpy as np
-from obj.RGAN import RGAN
+from obj.RGAN_exp import RGAN
 from keras.datasets import mnist, fashion_mnist
 
 ################################
@@ -48,7 +48,7 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument("--subtype", type=str, default="mnist",
                         help="which training data subtype to use; either 'mnist', 'fashion' or 'faces' <default:'mnist'>")
-    parser.add_argument("--latent-dim", type=int, default=28,
+    parser.add_argument("--latent-dim", type=int, default=20,
                         help="latent dimensionality of GAN generator <default:28>")
     parser.add_argument("--epochs", type=int, default=100,
                         help="number of training epochs <default:100>")
