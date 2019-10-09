@@ -20,10 +20,6 @@ from keras.backend.tensorflow_backend import clear_session
 # define class and functions
 ################################
 
-# TODO: work on simplifying generator and discriminator
-# make convolutional lstm's for both processes
-# ponder later on how to reconcile 2d and 1d convolutions for time series
-
 class RGAN():
     def __init__(self,latent_dim=20,im_dim=28,epochs=100,batch_size=128,learning_rate=0.01,
                  g_factor=1.0,droprate=0.2):
@@ -55,6 +51,8 @@ class RGAN():
 
     # experimental generator
     # TODO: incorporate custom conv1D transpose
+    # make convolutional lstm's for both processes
+    # ponder later on how to reconcile 2d and 1d convolutions for time series
     def getGenerator(self,im_dim,latent_dim,droprate):
         in_data = Input(shape=(latent_dim,latent_dim,1))
         out = Conv2DTranspose(filters=12,kernel_size=4,
@@ -73,6 +71,7 @@ class RGAN():
         return Model(inputs=in_data,outputs=out)
 
     # TODO: make similar experimental convolutional recurrent discriminator
+    # optionally consider returning sequences with 1 feature and process later
     def getDiscriminator(self,im_dim,droprate):
         in_data = Input(shape=(im_dim**2,1))
         out = Conv1D(filters=32,kernel_size=4,strides=2)(in_data)
@@ -126,7 +125,7 @@ class RGAN():
         csvfile.flush()
         # generate constant noise vector for model comparisons
         np.random.seed(42)
-        constant_noise = np.random.normal(size=(plot_samples,self.im_dim*self.latent_dim,1))
+        constant_noise = np.random.normal(size=(plot_samples,self.latent_dim,self.latent_dim,1))
         np.random.seed(None)
         real_labels = np.ones((self.batch_size,1))
         fake_labels = np.zeros((self.batch_size,1))
