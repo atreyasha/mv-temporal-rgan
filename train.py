@@ -1,10 +1,6 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 
-# define gpu to use
-import sys
-ID = sys.argv[1]
-print(ID)
 # import dependencies
 import os
 import argparse
