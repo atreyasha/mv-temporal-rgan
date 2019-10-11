@@ -6,7 +6,7 @@ import re
 import csv
 import numpy as np
 import matplotlib
-matplotlib.use('Agg')
+# matplotlib.use('Agg')
 import matplotlib.pyplot as plt
 from keras import backend
 from keras.models import Model
@@ -22,7 +22,7 @@ from keras.backend.tensorflow_backend import clear_session
 ################################
 
 class RGAN():
-    def __init__(self,latent_dim=100,im_dim=28,epochs=100,batch_size=128,learning_rate=0.01,
+    def __init__(self,latent_dim=64,im_dim=28,epochs=100,batch_size=128,learning_rate=0.01,
                  g_factor=1.0,droprate=0.2):
         # define and store local variables
         clear_session()
@@ -51,6 +51,7 @@ class RGAN():
                               metrics=['accuracy'])
 
     # experimental generator
+    # TODO: consider using stacked LSTM at final layer
     # TODO: incorporate custom conv1D transpose
     # parameterize momentum, droprate and alpha
     # make simpler method that will change input dimensions automatically in train
@@ -86,7 +87,15 @@ class RGAN():
         if len(backend.tensorflow_backend._get_available_gpus()) > 0:
             out = Bidirectional(CuDNNLSTM(1,return_sequences=True,kernel_constraint=max_norm(3),
                                           recurrent_constraint=max_norm(3),bias_constraint=max_norm(3)))(out)
+            out = Bidirectional(CuDNNLSTM(1,return_sequences=True,kernel_constraint=max_norm(3),
+                                          recurrent_constraint=max_norm(3),bias_constraint=max_norm(3)))(out)
+            out = Bidirectional(CuDNNLSTM(1,return_sequences=True,kernel_constraint=max_norm(3),
+                                          recurrent_constraint=max_norm(3),bias_constraint=max_norm(3)))(out)
         else:
+            out = Bidirectional(LSTM(1,return_sequences=True,kernel_constraint=max_norm(3),
+                recurrent_constraint=max_norm(3),bias_constraint=max_norm(3)))(out)
+            out = Bidirectional(LSTM(1,return_sequences=True,kernel_constraint=max_norm(3),
+                recurrent_constraint=max_norm(3),bias_constraint=max_norm(3)))(out)
             out = Bidirectional(LSTM(1,return_sequences=True,kernel_constraint=max_norm(3),
                 recurrent_constraint=max_norm(3),bias_constraint=max_norm(3)))(out)
         out = Conv1D(1, kernel_size=3, padding="same")(out)
