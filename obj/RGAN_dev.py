@@ -12,8 +12,9 @@ from keras import backend
 from keras.models import Model
 from keras.constraints import max_norm
 from keras.optimizers import Adam
-from keras.layers import Dense, Activation, Reshape, Conv1D
-from keras.layers import LSTM, CuDNNLSTM, Input, Conv2DTranspose
+from keras.layers import Dense, Activation, Reshape, Conv1D, Conv2D
+from keras.layers import LSTM, CuDNNLSTM, Input, UpSampling1D, Bidirectional
+from keras.layers import BatchNormalization, LeakyReLU, Flatten, Dropout
 from keras.backend.tensorflow_backend import clear_session
 
 ################################
@@ -21,7 +22,7 @@ from keras.backend.tensorflow_backend import clear_session
 ################################
 
 class RGAN():
-    def __init__(self,latent_dim=20,im_dim=28,epochs=100,batch_size=128,learning_rate=0.01,
+    def __init__(self,latent_dim=100,im_dim=28,epochs=100,batch_size=128,learning_rate=0.01,
                  g_factor=1.0,droprate=0.2):
         # define and store local variables
         clear_session()
@@ -39,10 +40,10 @@ class RGAN():
         self.discriminator.compile(loss=['binary_crossentropy'], optimizer=self.optimizer_d,
             metrics=['accuracy'])
         # define generator
-        self.generator = self.getGenerator(self.im_dim,self.latent_dim,self.droprate)
+        self.generator = self.getGenerator(self.latent_dim)
         self.discriminator.trainable = False
         # define combined network with partial gradient application
-        z = Input(shape=(self.latent_dim,self.latent_dim,1))
+        z = Input(shape=(self.latent_dim,))
         img = self.generator(z)
         validity = self.discriminator(img)
         self.combined = Model(z, validity)
@@ -51,41 +52,80 @@ class RGAN():
 
     # experimental generator
     # TODO: incorporate custom conv1D transpose
+    # parameterize momentum, droprate and alpha
+    # make simpler method that will change input dimensions automatically in train
     # make convolutional lstm's for both processes
     # ponder later on how to reconcile 2d and 1d convolutions for time series
-    def getGenerator(self,im_dim,latent_dim,droprate):
-        in_data = Input(shape=(latent_dim,latent_dim,1))
-        out = Conv2DTranspose(filters=12,kernel_size=4,
-                            data_format = "channels_last")(in_data)
-        out = Conv2DTranspose(filters=20,kernel_size=3,
-                            data_format = "channels_last")(out)
-        out = Conv2DTranspose(filters=28,kernel_size=4,
-                                data_format = "channels_last")(out)
-        out = Reshape((784,28))(out)
+    # generator should be improvised to learn features, discriminator should have LSTM
+    # make pipeline adaptable to image pixels
+    def getGenerator(self,latent_dim):
+        in_data = Input(shape=(latent_dim,))
+        out = Dense(128 * 49)(in_data)
+        out = Activation("relu")(out)
+        out = Reshape((49,128))(out)
+        # block 1
+        out = UpSampling1D()(out)
+        out = Conv1D(128, kernel_size=12, padding="same")(out)
+        out = BatchNormalization(momentum=0.8)(out)
+        out = Activation("relu")(out)
+        # block 2
+        out = UpSampling1D()(out)
+        out = Conv1D(64, kernel_size=8, padding="same")(out)
+        out = BatchNormalization(momentum=0.8)(out)
+        out = Activation("relu")(out)
+        # block 3
+        out = UpSampling1D()(out)
+        out = Conv1D(32, kernel_size=4, padding="same")(out)
+        out = BatchNormalization(momentum=0.8)(out)
+        out = Activation("relu")(out)
+        # block 4
+        out = UpSampling1D()(out)
+        out = Conv1D(16, kernel_size=2, padding="same")(out)
+        out = BatchNormalization(momentum=0.8)(out)
+        out = Activation("tanh")(out)
         if len(backend.tensorflow_backend._get_available_gpus()) > 0:
-            out = CuDNNLSTM(1,return_sequences=True,kernel_constraint=max_norm(3),
-                recurrent_constraint=max_norm(3),bias_constraint=max_norm(3))(out)
+            out = Bidirectional(CuDNNLSTM(1,return_sequences=True,kernel_constraint=max_norm(3),
+                                          recurrent_constraint=max_norm(3),bias_constraint=max_norm(3)))(out)
         else:
-            out = LSTM(1,return_sequences=True,kernel_constraint=max_norm(3),
-                recurrent_constraint=max_norm(3),bias_constraint=max_norm(3))(out)
+            out = Bidirectional(LSTM(1,return_sequences=True,kernel_constraint=max_norm(3),
+                recurrent_constraint=max_norm(3),bias_constraint=max_norm(3)))(out)
+        out = Conv1D(1, kernel_size=3, padding="same")(out)
+        out = Activation("relu")(out)
         return Model(inputs=in_data,outputs=out)
 
     # TODO: make similar experimental convolutional recurrent discriminator
     # optionally consider returning sequences with 1 feature and process later
     def getDiscriminator(self,im_dim,droprate):
         in_data = Input(shape=(im_dim**2,1))
-        out = Conv1D(filters=32,kernel_size=4,strides=2)(in_data)
-        out = Conv1D(filters=64,kernel_size=4,strides=2)(out)
         if len(backend.tensorflow_backend._get_available_gpus()) > 0:
-            out = CuDNNLSTM(10,kernel_constraint=max_norm(3),recurrent_constraint
-                   =max_norm(3),bias_constraint=max_norm(3))(out)
+            out = Bidirectional(CuDNNLSTM(1,return_sequences=True,
+                                          kernel_constraint=max_norm(3),recurrent_constraint=max_norm(3),
+                                          bias_constraint=max_norm(3)))(in_data)
         else:
-            out = LSTM(10,recurrent_dropout=droprate,kernel_constraint=max_norm(3),recurrent_constraint
-                   =max_norm(3),bias_constraint=max_norm(3))(out)
-        # out = Dense(100)(out)
-        # out = Activation("relu")(out)
-        # out = Dense(10)(out)
-        # out = Activation("relu")(out)
+            out = Bidirectional(LSTM(1,return_sequences=True,recurrent_dropout=droprate,
+                                     kernel_constraint=max_norm(3),
+                                     recurrent_constraint=max_norm(3),bias_constraint=max_norm(3)))(in_data)
+        # block 1
+        out = Conv1D(32, kernel_size=3, strides=2, padding="same")(out)
+        out = LeakyReLU(alpha=0.2)(out)
+        out = Dropout(0.25)(out)
+        # block 2
+        out = Conv1D(64, kernel_size=3, strides=2, padding="same")(out)
+        out = BatchNormalization(momentum=0.8)(out)
+        out = LeakyReLU(alpha=0.2)(out)
+        out = Dropout(0.25)(out)
+        # block 3
+        out = Conv1D(128, kernel_size=3, strides=2, padding="same")(out)
+        out = BatchNormalization(momentum=0.8)(out)
+        out = LeakyReLU(alpha=0.2)(out)
+        out = Dropout(0.25)(out)
+        # block 4
+        out = Conv1D(256, kernel_size=3, strides=1, padding="same")(out)
+        out = BatchNormalization(momentum=0.8)(out)
+        out = LeakyReLU(alpha=0.2)(out)
+        out = Dropout(0.25)(out)
+        # dense output
+        out = Flatten()(out)
         out = Dense(1)(out)
         out = Activation("sigmoid")(out)
         return Model(inputs=in_data,outputs=out)
@@ -125,7 +165,7 @@ class RGAN():
         csvfile.flush()
         # generate constant noise vector for model comparisons
         np.random.seed(42)
-        constant_noise = np.random.normal(size=(plot_samples,self.latent_dim,self.latent_dim,1))
+        constant_noise = np.random.normal(size=(plot_samples,self.latent_dim,))
         np.random.seed(None)
         real_labels = np.ones((self.batch_size,1))
         fake_labels = np.zeros((self.batch_size,1))
@@ -135,7 +175,7 @@ class RGAN():
                 # randomize data and generate noise
                 idx = np.random.randint(0, data.shape[0],self.batch_size)
                 real = data[idx]
-                noise = np.random.normal(size=(self.batch_size,self.latent_dim,self.latent_dim,1))
+                noise = np.random.normal(size=(self.batch_size,self.latent_dim,))
                 # generate fake data
                 fake = self.generator.predict(noise)
                 # train the discriminator
@@ -143,7 +183,7 @@ class RGAN():
                 d_loss_fake = self.discriminator.train_on_batch(fake, fake_labels)
                 d_loss = 0.5 * np.add(d_loss_real, d_loss_fake)
                 # generate new set of noise
-                noise = np.random.normal(size=(self.batch_size,self.latent_dim,self.latent_dim,1))
+                noise = np.random.normal(size=(self.batch_size,self.latent_dim,))
                 # train generator while freezing discriminator
                 g_loss = self.combined.train_on_batch(noise, real_labels)
                 # plot the progress

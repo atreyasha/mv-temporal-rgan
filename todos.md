@@ -27,6 +27,8 @@
 * extend to 64 pixels faces to check if abstraction possible
 * use TSTR/TRTS methodologies and identification issues to evaluate model
 * use MIMIC data/models for direct TSTR/TRTS validations
+* explore privacy perspective and whether GAN is able to remove personal traits
+* or consider another architecture which can perform this function
 
 #### Grid-search
 * apply some basic filtering such as limits of loss ratios

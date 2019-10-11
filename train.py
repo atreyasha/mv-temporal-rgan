@@ -6,7 +6,7 @@ import os
 import argparse
 import datetime
 import numpy as np
-from obj.RGAN_exp import RGAN
+from obj.RGAN_dev import RGAN
 from keras.datasets import mnist, fashion_mnist
 
 ################################
