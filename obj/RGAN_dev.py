@@ -12,7 +12,7 @@ from keras import backend
 from keras.models import Model
 from keras.constraints import max_norm
 from keras.optimizers import Adam
-from keras.layers import Dense, Activation, Reshape, Conv1D, Conv2D
+from keras.layers import Dense, Activation, Reshape, Conv1D, Conv2D, GlobalMaxPool1D
 from keras.layers import LSTM, CuDNNLSTM, Input, UpSampling1D, Bidirectional
 from keras.layers import BatchNormalization, LeakyReLU, Flatten, Dropout
 from keras.backend.tensorflow_backend import clear_session
@@ -106,26 +106,26 @@ class RGAN():
                                      kernel_constraint=max_norm(3),
                                      recurrent_constraint=max_norm(3),bias_constraint=max_norm(3)))(in_data)
         # block 1
-        out = Conv1D(32, kernel_size=3, strides=2, padding="same")(out)
+        out = Conv1D(256, kernel_size=6, strides=2)(out)
         out = LeakyReLU(alpha=0.2)(out)
         out = Dropout(0.25)(out)
         # block 2
-        out = Conv1D(64, kernel_size=3, strides=2, padding="same")(out)
+        out = Conv1D(128, kernel_size=6, strides=2)(out)
         out = BatchNormalization(momentum=0.8)(out)
         out = LeakyReLU(alpha=0.2)(out)
         out = Dropout(0.25)(out)
         # block 3
-        out = Conv1D(128, kernel_size=3, strides=2, padding="same")(out)
+        out = Conv1D(64, kernel_size=4, strides=2)(out)
         out = BatchNormalization(momentum=0.8)(out)
         out = LeakyReLU(alpha=0.2)(out)
         out = Dropout(0.25)(out)
         # block 4
-        out = Conv1D(256, kernel_size=3, strides=1, padding="same")(out)
+        out = Conv1D(32, kernel_size=4, strides=2)(out)
         out = BatchNormalization(momentum=0.8)(out)
         out = LeakyReLU(alpha=0.2)(out)
         out = Dropout(0.25)(out)
         # dense output
-        out = Flatten()(out)
+        out = GlobalMaxPool1D()(out)
         out = Dense(1)(out)
         out = Activation("sigmoid")(out)
         return Model(inputs=in_data,outputs=out)
