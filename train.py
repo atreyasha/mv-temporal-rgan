@@ -1,6 +1,10 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 
+# define gpu to use
+import sys
+ID = sys.argv[1]
+print(ID)
 # import dependencies
 import os
 import argparse
@@ -29,15 +33,14 @@ def loadData(subtype):
                                         train_images.shape[1]**2,1))/255
 
 def singularTrain(subtype,latent_dim,epochs,batch_size,learning_rate,
-                  g_factor,droprate,model="RGAN"):
-    # ensure subtype input is correct
+                  g_factor,droprate,momentum,alpha,model="RGAN"):
     train_images = loadData(subtype)
     im_dim = int(np.sqrt(train_images.shape[1]))
     log_dir = getCurrentTime()+"_"+model+"_"+subtype
     os.makedirs("./pickles/"+log_dir)
     os.makedirs("./pickles/"+log_dir+"/img")
     rgan = RGAN(latent_dim,im_dim,epochs,batch_size,learning_rate,
-                g_factor,droprate)
+                g_factor,droprate,momentum,alpha)
     rgan.train(train_images,log_dir)
 
 ###############################
@@ -49,21 +52,23 @@ if __name__ == "__main__":
     parser.add_argument("--subtype", type=str, default="mnist",
                         help="which training data subtype to use; either 'mnist', 'fashion' or 'faces' <default:'mnist'>")
     parser.add_argument("--latent-dim", type=int, default=20,
-                        help="latent dimensionality of GAN generator <default:28>")
+                        help="latent dimensionality of GAN generator <default:20>")
     parser.add_argument("--epochs", type=int, default=100,
                         help="number of training epochs <default:100>")
-    parser.add_argument("--batch-size", type=int, default=128,
-                        help="batch size for stochastic gradient descent optimization <default:128>")
+    parser.add_argument("--batch-size", type=int, default=256,
+                        help="batch size for stochastic gradient descent optimization <default:256>")
     parser.add_argument("--learning-rate", type=float, default=0.01,
                         help="learning rate for stochastic gradient descent optimization <default:0.01>")
-    parser.add_argument("--g-factor", type=float, default=1.0,
-                        help="multiplicity factor by which generator learning rate scales to that of discriminator <default:1.0>")
-    parser.add_argument("--droprate", type=float, default=0.2,
-                        help="droprate used across GAN model for generalization/robustness <default:0.2>")
-    parser.add_argument("--grid-search", default=False, action="store_true",
-                        help="option to conduct grid-search, disabled by default")
+    parser.add_argument("--g-factor", type=float, default=1.2,
+                        help="multiplicity factor by which generator learning rate scales to that of discriminator <default:1.2>")
+    parser.add_argument("--droprate", type=float, default=0.25,
+                        help="droprate used across GAN model for generalization/robustness <default:0.25>")
+    parser.add_argument("--momentum", type=float, default=0.8,
+                        help="momentum used in discriminator batch-normalization <default:0.8>")
+    parser.add_argument("--alpha", type=float, default=0.2,
+                        help="alpha paramter used in discriminator leaky relu <default:0.2>")
     args = parser.parse_args()
     assert args.subtype in ["faces","mnist","fashion"]
-    if not args.grid_search:
-        singularTrain(args.subtype,args.latent_dim,args.epochs,args.batch_size,
-                      args.learning_rate,args.g_factor,args.droprate)
+    singularTrain(args.subtype,args.latent_dim,args.epochs,args.batch_size,
+                  args.learning_rate,args.g_factor,args.droprate,args.momentum,
+                  args.alpha)

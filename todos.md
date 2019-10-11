@@ -1,24 +1,27 @@
 ## Workflow to-do's
 
 ### Important
-* redefine model for richer sequential features with CNN and better efficiency; consider return sequences vs. return neurons
-* perhaps keep same timesteps and return sequences and later use cnn to reduce dimensions with global pooling
-* make encoding and decoding lstm with cnn to compact architecture
-* integrate dropout into GPU implementation
-* add batch normalization for better stability
 * configure code to use specific gpus on cluster
+* make function to continue training within train main file
+* make pipeline adaptable to image pixels or modify dimensionality of lfw-faces
 
-### Following
-* try to share memory and tasks between gpus (multi\_gpu\_model)
-* take into account memory of system before running
-* take into account gpu usage before executing
+### Relevant concepts
+* consider return sequences vs. return neurons
+* make encoding and decoding lstm with cnn to compact architecture
+* consider using stacked LSTMs
 
 ### Heuristics
+* set up crowd-sourced grid-search via emails to check results
+* save optimizer to re-use when loading saved model
 * add gradient checks and heuristics for early stopping mechanism
 * add grid-search mechanism for checking more possibilities
 * make mechanism for dynamic g-factor adjustment
 * optionally use tensorboard to analyze learning process
-* find out how to make correlated time series with LSTM
+
+### Extra steps
+* try to share memory and tasks between gpus (multi\_gpu\_model)
+* take into account memory of system before running
+* take into account gpu usage before executing
 
 ### Brainstorming points
 

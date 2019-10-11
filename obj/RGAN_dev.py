@@ -22,8 +22,8 @@ from keras.backend.tensorflow_backend import clear_session
 ################################
 
 class RGAN():
-    def __init__(self,latent_dim=64,im_dim=28,epochs=100,batch_size=128,learning_rate=0.01,
-                 g_factor=1.0,droprate=0.2):
+    def __init__(self,latent_dim=20,im_dim=28,epochs=100,batch_size=256,learning_rate=0.01,
+                 g_factor=1.2,droprate=0.25,momentum=0.8,alpha=0.2):
         # define and store local variables
         clear_session()
         self.epochs = epochs
@@ -35,12 +35,15 @@ class RGAN():
         self.latent_dim = latent_dim
         self.im_dim = im_dim
         self.droprate = droprate
+        self.momentum = momentum
+        self.alpha = alpha
         # define and compile discriminator
-        self.discriminator = self.getDiscriminator(self.im_dim,self.droprate)
+        self.discriminator = self.getDiscriminator(self.im_dim,self.droprate,self.momentum,
+                                                   self.alpha)
         self.discriminator.compile(loss=['binary_crossentropy'], optimizer=self.optimizer_d,
             metrics=['accuracy'])
         # define generator
-        self.generator = self.getGenerator(self.latent_dim)
+        self.generator = self.getGenerator(self.latent_dim,self.momentum)
         self.discriminator.trainable = False
         # define combined network with partial gradient application
         z = Input(shape=(self.latent_dim,))
@@ -50,16 +53,7 @@ class RGAN():
         self.combined.compile(loss=['binary_crossentropy'], optimizer=self.optimizer_g,
                               metrics=['accuracy'])
 
-    # experimental generator
-    # TODO: consider using stacked LSTM at final layer
-    # TODO: incorporate custom conv1D transpose
-    # parameterize momentum, droprate and alpha
-    # make simpler method that will change input dimensions automatically in train
-    # make convolutional lstm's for both processes
-    # ponder later on how to reconcile 2d and 1d convolutions for time series
-    # generator should be improvised to learn features, discriminator should have LSTM
-    # make pipeline adaptable to image pixels
-    def getGenerator(self,latent_dim):
+    def getGenerator(self,latent_dim,momentum):
         in_data = Input(shape=(latent_dim,))
         out = Dense(128 * 49)(in_data)
         out = Activation("relu")(out)
@@ -67,22 +61,22 @@ class RGAN():
         # block 1
         out = UpSampling1D()(out)
         out = Conv1D(128, kernel_size=12, padding="same")(out)
-        out = BatchNormalization(momentum=0.8)(out)
+        out = BatchNormalization(momentum=momentum)(out)
         out = Activation("relu")(out)
         # block 2
         out = UpSampling1D()(out)
         out = Conv1D(64, kernel_size=8, padding="same")(out)
-        out = BatchNormalization(momentum=0.8)(out)
+        out = BatchNormalization(momentum=momentum)(out)
         out = Activation("relu")(out)
         # block 3
         out = UpSampling1D()(out)
         out = Conv1D(32, kernel_size=4, padding="same")(out)
-        out = BatchNormalization(momentum=0.8)(out)
+        out = BatchNormalization(momentum=momentum)(out)
         out = Activation("relu")(out)
         # block 4
         out = UpSampling1D()(out)
         out = Conv1D(16, kernel_size=2, padding="same")(out)
-        out = BatchNormalization(momentum=0.8)(out)
+        out = BatchNormalization(momentum=momentum)(out)
         out = Activation("tanh")(out)
         if len(backend.tensorflow_backend._get_available_gpus()) > 0:
             out = Bidirectional(CuDNNLSTM(1,return_sequences=True,kernel_constraint=max_norm(3),
@@ -94,37 +88,35 @@ class RGAN():
         out = Activation("relu")(out)
         return Model(inputs=in_data,outputs=out)
 
-    # TODO: make similar experimental convolutional recurrent discriminator
-    # optionally consider returning sequences with 1 feature and process later
-    def getDiscriminator(self,im_dim,droprate):
+    def getDiscriminator(self,im_dim,droprate,momentum,alpha):
         in_data = Input(shape=(im_dim**2,1))
         if len(backend.tensorflow_backend._get_available_gpus()) > 0:
             out = Bidirectional(CuDNNLSTM(1,return_sequences=True,
                                           kernel_constraint=max_norm(3),recurrent_constraint=max_norm(3),
                                           bias_constraint=max_norm(3)))(in_data)
         else:
-            out = Bidirectional(LSTM(1,return_sequences=True,recurrent_dropout=droprate,
+            out = Bidirectional(LSTM(1,return_sequences=True,
                                      kernel_constraint=max_norm(3),
                                      recurrent_constraint=max_norm(3),bias_constraint=max_norm(3)))(in_data)
         # block 1
         out = Conv1D(256, kernel_size=6, strides=2)(out)
-        out = LeakyReLU(alpha=0.2)(out)
-        out = Dropout(0.25)(out)
+        out = LeakyReLU(alpha=alpha)(out)
+        out = Dropout(droprate)(out)
         # block 2
         out = Conv1D(128, kernel_size=6, strides=2)(out)
-        out = BatchNormalization(momentum=0.8)(out)
-        out = LeakyReLU(alpha=0.2)(out)
-        out = Dropout(0.25)(out)
+        out = BatchNormalization(momentum=momentum)(out)
+        out = LeakyReLU(alpha=alpha)(out)
+        out = Dropout(droprate)(out)
         # block 3
         out = Conv1D(64, kernel_size=4, strides=2)(out)
-        out = BatchNormalization(momentum=0.8)(out)
-        out = LeakyReLU(alpha=0.2)(out)
-        out = Dropout(0.25)(out)
+        out = BatchNormalization(momentum=momentum)(out)
+        out = LeakyReLU(alpha=alpha)(out)
+        out = Dropout(droprate)(out)
         # block 4
         out = Conv1D(32, kernel_size=4, strides=2)(out)
-        out = BatchNormalization(momentum=0.8)(out)
-        out = LeakyReLU(alpha=0.2)(out)
-        out = Dropout(0.25)(out)
+        out = BatchNormalization(momentum=momentum)(out)
+        out = LeakyReLU(alpha=alpha)(out)
+        out = Dropout(droprate)(out)
         # dense output
         out = GlobalMaxPool1D()(out)
         out = Dense(1)(out)
