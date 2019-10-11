@@ -87,15 +87,7 @@ class RGAN():
         if len(backend.tensorflow_backend._get_available_gpus()) > 0:
             out = Bidirectional(CuDNNLSTM(1,return_sequences=True,kernel_constraint=max_norm(3),
                                           recurrent_constraint=max_norm(3),bias_constraint=max_norm(3)))(out)
-            out = Bidirectional(CuDNNLSTM(1,return_sequences=True,kernel_constraint=max_norm(3),
-                                          recurrent_constraint=max_norm(3),bias_constraint=max_norm(3)))(out)
-            out = Bidirectional(CuDNNLSTM(1,return_sequences=True,kernel_constraint=max_norm(3),
-                                          recurrent_constraint=max_norm(3),bias_constraint=max_norm(3)))(out)
         else:
-            out = Bidirectional(LSTM(1,return_sequences=True,kernel_constraint=max_norm(3),
-                recurrent_constraint=max_norm(3),bias_constraint=max_norm(3)))(out)
-            out = Bidirectional(LSTM(1,return_sequences=True,kernel_constraint=max_norm(3),
-                recurrent_constraint=max_norm(3),bias_constraint=max_norm(3)))(out)
             out = Bidirectional(LSTM(1,return_sequences=True,kernel_constraint=max_norm(3),
                 recurrent_constraint=max_norm(3),bias_constraint=max_norm(3)))(out)
         out = Conv1D(1, kernel_size=3, padding="same")(out)
