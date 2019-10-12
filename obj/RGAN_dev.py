@@ -6,7 +6,7 @@ import re
 import csv
 import numpy as np
 import matplotlib
-# matplotlib.use('Agg')
+matplotlib.use('Agg')
 import matplotlib.pyplot as plt
 from keras import backend
 from keras.models import Model
@@ -145,12 +145,14 @@ class RGAN():
         data_type = re.sub(r".*_","",direct)
         # write init.csv to file for future class reconstruction
         with open("./pickles/"+direct+"/init.csv", "w") as csvfile:
-            fieldnames = ["data", "im_dim", "latent_dim", "epochs", "batch_size", "learning_rate", "droprate", "g_factor"]
+            fieldnames = ["data", "im_dim", "latent_dim", "epochs", "batch_size", "learning_rate", "droprate", "g_factor",
+                          "momentum", "alpha"]
             writer = csv.DictWriter(csvfile, fieldnames=fieldnames)
             writer.writeheader()
             writer.writerow({"data":data_type, "im_dim":str(self.im_dim), "latent_dim":str(self.latent_dim),
                              "epochs":str(self.epochs), "batch_size":str(self.batch_size), "learning_rate":str(self.learning_rate),
-                             "droprate":str(self.droprate), "g_factor":str(self.g_factor)})
+                             "droprate":str(self.droprate), "g_factor":str(self.g_factor), "momentum":str(self.momentum),
+                             "alpha":str(self.alpha)})
         csvfile = open("./pickles/"+direct+"/log.csv", "w")
         fieldnames = ["epoch", "batch", "d_loss", "d_acc", "g_loss", "g_acc"]
         writer = csv.DictWriter(csvfile, fieldnames=fieldnames)

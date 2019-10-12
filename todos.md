@@ -1,14 +1,18 @@
 ## Workflow to-do's
 
+TODO: sync back new init.csv files to cluster 
+
 ### Important
-* configure code to use specific gpus on cluster
-* make function to continue training within train main file
 * make pipeline adaptable to image pixels or modify dimensionality of lfw-faces
+* make function to continue training within train main file with new pickle
+* make function to optionally combine new trained model with old one
+* make function to continue training with arbitrary other instances, need to make workflow to sort old runs temporally and make necessary actions
 
 ### Relevant concepts
 * consider return sequences vs. return neurons
 * make encoding and decoding lstm with cnn to compact architecture
 * consider using stacked LSTMs
+* track how many epochs or batch runs needed to converge and try to optimize this
 
 ### Heuristics
 * set up crowd-sourced grid-search via emails to check results
@@ -17,11 +21,19 @@
 * add grid-search mechanism for checking more possibilities
 * make mechanism for dynamic g-factor adjustment
 * optionally use tensorboard to analyze learning process
+* look for similarity measure metrics which could be used alongside training 
 
 ### Extra steps
 * try to share memory and tasks between gpus (multi\_gpu\_model)
 * take into account memory of system before running
 * take into account gpu usage before executing
+* add configuration for command line gpu usage to readme
+* sync results from cluster directly to computer
+* check for possibility of saving and reconstructing models without weights pipeline
+* add workflow to log init files automatically without manual update of parameters
+* default to single model class instead of dev/legacy when publishing
+* consider allowing user to redefine parameters when continuing training and if this might be useful in application
+* add pipeline to train/manage RCGAN in future steps
 
 ### Brainstorming points
 
