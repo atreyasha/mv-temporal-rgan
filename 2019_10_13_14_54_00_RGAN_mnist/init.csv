@@ -1,2 +1,0 @@
-data,im_dim,latent_dim,epochs,batch_size,learning_rate,g_factor,droprate,momentum,alpha
-mnist,28,100,500,256,0.01,1.2,0.25,0.8,0.2
