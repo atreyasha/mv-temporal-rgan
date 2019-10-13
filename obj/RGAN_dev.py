@@ -29,11 +29,11 @@ class RGAN():
         self.epochs = epochs
         self.batch_size = batch_size
         self.learning_rate = learning_rate
+        self.g_factor = g_factor
         self.optimizer_d = Adam(self.learning_rate)
         self.optimizer_g = Adam(self.learning_rate*self.g_factor)
         self.latent_dim = latent_dim
         self.im_dim = im_dim
-        self.g_factor = g_factor
         self.droprate = droprate
         self.momentum = momentum
         self.alpha = alpha
