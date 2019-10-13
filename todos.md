@@ -1,12 +1,12 @@
 ## Workflow to-do's
 
-TODO: sync back new init.csv files to cluster 
-
 ### Important
 * make pipeline adaptable to image pixels or modify dimensionality of lfw-faces
 * make function to continue training within train main file with new pickle
 * make function to optionally combine new trained model with old one
 * make function to continue training with arbitrary other instances, need to make workflow to sort old runs temporally and make necessary actions
+* consider removing pickles directory necessity for greater flexibility and cli globbing
+* check for possibility of saving and reconstructing models without weights pipeline
 
 ### Relevant concepts
 * consider return sequences vs. return neurons
@@ -29,7 +29,6 @@ TODO: sync back new init.csv files to cluster
 * take into account gpu usage before executing
 * add configuration for command line gpu usage to readme
 * sync results from cluster directly to computer
-* check for possibility of saving and reconstructing models without weights pipeline
 * add workflow to log init files automatically without manual update of parameters
 * default to single model class instead of dev/legacy when publishing
 * consider allowing user to redefine parameters when continuing training and if this might be useful in application

@@ -35,7 +35,7 @@ def loadData(subtype):
                                         train_images.shape[1]**2,1))/255
 
 def singularTrain(subtype,latent_dim,epochs,batch_size,learning_rate,
-                  g_factor,droprate,momentum,alpha,model="RGAN"):
+                  droprate,momentum,alpha,model="RGAN"):
     train_images = loadData(subtype)
     im_dim = int(np.sqrt(train_images.shape[1]))
     log_dir = getCurrentTime()+"_"+model+"_"+subtype
@@ -43,7 +43,7 @@ def singularTrain(subtype,latent_dim,epochs,batch_size,learning_rate,
     os.makedirs("./pickles/"+log_dir+"/img")
     if model == "RGAN":
         model = RGAN(latent_dim,im_dim,epochs,batch_size,learning_rate,
-                    g_factor,droprate,momentum,alpha)
+                     droprate,momentum,alpha)
     model.train(train_images,log_dir)
 
 def continueTrain(direct):
@@ -59,7 +59,6 @@ def continueTrain(direct):
     batch_size = meta.iloc[0]["batch_size"]
     learning_rate = meta.iloc[0]["learning_rate"]
     droprate = meta.iloc[0]["droprate"]
-    g_factor = meta.iloc[0]["g_factor"]
     momentum = meta.iloc[0]["momentum"]
     alpha = meta.iloc[0]["alpha"]
     train_images = loadData(subtype)
@@ -68,7 +67,7 @@ def continueTrain(direct):
     os.makedirs(log_dir)
     os.makedirs(log_dir+"/img")
     rgan = RGAN(latent_dim,im_dim,epochs,batch_size,learning_rate,
-                g_factor,droprate,momentum,alpha)
+                droprate,momentum,alpha)
     rgan.generator.load_weights(directLong+"/gen.h5")
     rgan.discriminator.load_weights(directLong+"/dis.h5")
     rgan.combined.load_weights(directLong+"/comb.h5")
@@ -81,25 +80,23 @@ def continueTrain(direct):
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(formatter_class=argparse.ArgumentDefaultsHelpFormatter)
     parser.add_argument("--subtype", type=str, default="mnist",
-                        help="which training data subtype to use; either 'mnist', 'fashion' or 'faces' ")
+                        help="which training data subtype to use; either mnist, fashion or faces")
     parser.add_argument("--latent-dim", type=int, default=20,
-                        help="latent dimensionality of GAN generator ")
+                        help="latent dimensionality of GAN generator")
     parser.add_argument("--epochs", type=int, default=100,
-                        help="number of training epochs ")
+                        help="number of training epochs")
     parser.add_argument("--batch-size", type=int, default=256,
-                        help="batch size for stochastic gradient descent optimization ")
+                        help="batch size for stochastic gradient descent optimization")
     parser.add_argument("--learning-rate", type=float, default=0.01,
-                        help="learning rate for stochastic gradient descent optimization ")
-    parser.add_argument("--g-factor", type=float, default=1.2,
-                        help="multiplicity factor by which generator learning rate scales to that of discriminator ")
+                        help="learning rate for stochastic gradient descent optimization")
     parser.add_argument("--droprate", type=float, default=0.25,
-                        help="droprate used across GAN model for generalization/robustness ")
+                        help="droprate used in GAN discriminator for generalization/robustness")
     parser.add_argument("--momentum", type=float, default=0.8,
-                        help="momentum used in discriminator batch-normalization ")
+                        help="momentum used across GAN batch-normalization")
     parser.add_argument("--alpha", type=float, default=0.2,
-                        help="alpha parameter used in discriminator leaky relu ")
+                        help="alpha parameter used in discriminator leaky relu")
     parser.add_argument("--continue-train", default=False, action="store_true",
-                         help="option to continue training model within log directory")
+                         help="option to continue training model within log directory; requires --log-dir option to be defined")
     parser.add_argument("--log-dir", required="--continue" in sys.argv,
                         help="log directory whose model should be further trained, only required when --continue-train option is specified")
     args = parser.parse_args()
@@ -108,5 +105,4 @@ if __name__ == "__main__":
         continueTrain(args.log_dir)
     else:
         singularTrain(args.subtype,args.latent_dim,args.epochs,args.batch_size,
-                  args.learning_rate,args.g_factor,args.droprate,args.momentum,
-                  args.alpha)
+                  args.learning_rate,args.droprate,args.momentum,args.alpha)

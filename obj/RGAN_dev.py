@@ -23,15 +23,13 @@ from keras.backend.tensorflow_backend import clear_session
 
 class RGAN():
     def __init__(self,latent_dim=20,im_dim=28,epochs=100,batch_size=256,learning_rate=0.01,
-                 g_factor=1.2,droprate=0.25,momentum=0.8,alpha=0.2):
+                 droprate=0.25,momentum=0.8,alpha=0.2):
         # define and store local variables
         clear_session()
         self.epochs = epochs
         self.batch_size = batch_size
         self.learning_rate = learning_rate
-        self.g_factor = g_factor
-        self.optimizer_d = Adam(self.learning_rate)
-        self.optimizer_g = Adam(self.learning_rate*self.g_factor)
+        self.optimizer = Adam(self.learning_rate)
         self.latent_dim = latent_dim
         self.im_dim = im_dim
         self.droprate = droprate
@@ -40,7 +38,7 @@ class RGAN():
         # define and compile discriminator
         self.discriminator = self.getDiscriminator(self.im_dim,self.droprate,self.momentum,
                                                    self.alpha)
-        self.discriminator.compile(loss=['binary_crossentropy'], optimizer=self.optimizer_d,
+        self.discriminator.compile(loss=['binary_crossentropy'], optimizer=self.optimizer,
             metrics=['accuracy'])
         # define generator
         self.generator = self.getGenerator(self.latent_dim,self.momentum)
@@ -50,7 +48,7 @@ class RGAN():
         img = self.generator(z)
         validity = self.discriminator(img)
         self.combined = Model(z, validity)
-        self.combined.compile(loss=['binary_crossentropy'], optimizer=self.optimizer_g,
+        self.combined.compile(loss=['binary_crossentropy'], optimizer=self.optimizer,
                               metrics=['accuracy'])
 
     def getGenerator(self,latent_dim,momentum):
@@ -145,14 +143,13 @@ class RGAN():
         data_type = re.sub(r".*_","",direct)
         # write init.csv to file for future class reconstruction
         with open("./pickles/"+direct+"/init.csv", "w") as csvfile:
-            fieldnames = ["data", "im_dim", "latent_dim", "epochs", "batch_size", "learning_rate", "droprate", "g_factor",
+            fieldnames = ["data", "im_dim", "latent_dim", "epochs", "batch_size", "learning_rate", "droprate",
                           "momentum", "alpha"]
             writer = csv.DictWriter(csvfile, fieldnames=fieldnames)
             writer.writeheader()
             writer.writerow({"data":data_type, "im_dim":str(self.im_dim), "latent_dim":str(self.latent_dim),
                              "epochs":str(self.epochs), "batch_size":str(self.batch_size), "learning_rate":str(self.learning_rate),
-                             "droprate":str(self.droprate), "g_factor":str(self.g_factor), "momentum":str(self.momentum),
-                             "alpha":str(self.alpha)})
+                             "droprate":str(self.droprate), "momentum":str(self.momentum), "alpha":str(self.alpha)})
         csvfile = open("./pickles/"+direct+"/log.csv", "w")
         fieldnames = ["epoch", "batch", "d_loss", "d_acc", "g_loss", "g_acc"]
         writer = csv.DictWriter(csvfile, fieldnames=fieldnames)
@@ -192,6 +189,6 @@ class RGAN():
             test_img = {str(i+1):test_img[i] for i in range(test_img.shape[0])}
             self._plot_figures(test_img,direct,epoch,sq_dim)
         # save model weights at end of training
-        self.generator.save_weights("./pickles/"+direct+"/gen.h5")
-        self.discriminator.save_weights("./pickles/"+direct+"/dis.h5")
-        self.combined.save_weights("./pickles/"+direct+"/comb.h5")
+        self.generator.save("./pickles/"+direct+"/gen_model.h5")
+        self.discriminator.save("./pickles/"+direct+"/dis_model.h5")
+        self.combined.save("./pickles/"+direct+"/comb_model.h5")
