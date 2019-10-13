@@ -88,9 +88,9 @@ if __name__ == "__main__":
                         help="number of training epochs")
     parser.add_argument("--batch-size", type=int, default=256,
                         help="batch size for stochastic gradient descent optimization")
-    parser.add_argument("--learning-rate", type=float, default=0.01,
+    parser.add_argument("--learning-rate", type=float, default=0.0004,
                         help="learning rate for stochastic gradient descent optimization")
-    parser.add_argument("--g-factor", type=float, default=1.2,
+    parser.add_argument("--g-factor", type=float, default=0.25,
                         help="factor by which generator optimizer scales discriminator optimizer")
     parser.add_argument("--droprate", type=float, default=0.25,
                         help="droprate used in GAN discriminator for generalization/robustness")

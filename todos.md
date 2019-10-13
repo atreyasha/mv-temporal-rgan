@@ -10,6 +10,7 @@
 * check for possibility of saving and reconstructing models without weights pipeline
 * use stabilizing techniques such as noise addition to images, label smoothing, dynamic learning rates for separate optimizers, multi-scale gradient and spectral normalization; mix these with some kind of grid search which optimizes which factor to use; might require porting to tensorflow
 * add some heuristics for stopping training and trying new configuration
+* check out mathematical proofs for convergence on GAN's and relation to Nash equilibrium
 
 ### Relevant concepts
 * consider return sequences vs. return neurons

@@ -22,8 +22,8 @@ from keras.backend.tensorflow_backend import clear_session
 ################################
 
 class RGAN():
-    def __init__(self,latent_dim=100,im_dim=28,epochs=100,batch_size=256,learning_rate=0.01,
-                 g_factor=1.2,droprate=0.25,momentum=0.8,alpha=0.2):
+    def __init__(self,latent_dim=100,im_dim=28,epochs=100,batch_size=256,learning_rate=0.0004,
+                 g_factor=0.25,droprate=0.25,momentum=0.8,alpha=0.2):
         # define and store local variables
         clear_session()
         self.epochs = epochs
@@ -162,7 +162,8 @@ class RGAN():
         np.random.seed(42)
         constant_noise = np.random.normal(size=(plot_samples,self.latent_dim,))
         np.random.seed(None)
-        real_labels = np.ones((self.batch_size,1))
+        # label smoothing by using less-than-one value
+        real_labels = np.full((self.batch_size,1),0.9)
         fake_labels = np.zeros((self.batch_size,1))
         runs = int(np.ceil(data.shape[0]/self.batch_size))
         for epoch in range(self.epochs):
