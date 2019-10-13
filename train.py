@@ -35,7 +35,7 @@ def loadData(subtype):
                                         train_images.shape[1]**2,1))/255
 
 def singularTrain(subtype,latent_dim,epochs,batch_size,learning_rate,
-                  droprate,momentum,alpha,model="RGAN"):
+                  g_factor,droprate,momentum,alpha,model="RGAN"):
     train_images = loadData(subtype)
     im_dim = int(np.sqrt(train_images.shape[1]))
     log_dir = getCurrentTime()+"_"+model+"_"+subtype
@@ -43,7 +43,7 @@ def singularTrain(subtype,latent_dim,epochs,batch_size,learning_rate,
     os.makedirs("./pickles/"+log_dir+"/img")
     if model == "RGAN":
         model = RGAN(latent_dim,im_dim,epochs,batch_size,learning_rate,
-                     droprate,momentum,alpha)
+                     g_factor,droprate,momentum,alpha)
     model.train(train_images,log_dir)
 
 def continueTrain(direct):
@@ -58,6 +58,7 @@ def continueTrain(direct):
     epochs = meta.iloc[0]["epochs"]
     batch_size = meta.iloc[0]["batch_size"]
     learning_rate = meta.iloc[0]["learning_rate"]
+    g_factor = meta.iloc[0]["g_factor"]
     droprate = meta.iloc[0]["droprate"]
     momentum = meta.iloc[0]["momentum"]
     alpha = meta.iloc[0]["alpha"]
@@ -67,7 +68,7 @@ def continueTrain(direct):
     os.makedirs(log_dir)
     os.makedirs(log_dir+"/img")
     rgan = RGAN(latent_dim,im_dim,epochs,batch_size,learning_rate,
-                droprate,momentum,alpha)
+                g_factor,droprate,momentum,alpha)
     rgan.generator.load_weights(directLong+"/gen.h5")
     rgan.discriminator.load_weights(directLong+"/dis.h5")
     rgan.combined.load_weights(directLong+"/comb.h5")
@@ -89,6 +90,8 @@ if __name__ == "__main__":
                         help="batch size for stochastic gradient descent optimization")
     parser.add_argument("--learning-rate", type=float, default=0.01,
                         help="learning rate for stochastic gradient descent optimization")
+    parser.add_argument("--g-factor", type=float, default=1.2,
+                        help="factor by which generator optimizer scales discriminator optimizer")
     parser.add_argument("--droprate", type=float, default=0.25,
                         help="droprate used in GAN discriminator for generalization/robustness")
     parser.add_argument("--momentum", type=float, default=0.8,
@@ -105,4 +108,4 @@ if __name__ == "__main__":
         continueTrain(args.log_dir)
     else:
         singularTrain(args.subtype,args.latent_dim,args.epochs,args.batch_size,
-                  args.learning_rate,args.droprate,args.momentum,args.alpha)
+                      args.learning_rate,args.g_factor,args.droprate,args.momentum,args.alpha)

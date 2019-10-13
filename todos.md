@@ -4,7 +4,7 @@
 * make pipeline adaptable to image pixels or modify dimensionality of lfw-faces
 * make function to continue training within train main file with new pickle
 * continuing training function would need to load models, inter-relationships (trainables) and optimizer states
-* make function to optionally combine new trained model with old one
+* make function to optionally combine new trained model/archives with old one
 * make function to continue training with arbitrary other instances, need to make workflow to sort old runs temporally and make necessary actions
 * consider removing pickles directory necessity for greater flexibility and cli globbing
 * check for possibility of saving and reconstructing models without weights pipeline

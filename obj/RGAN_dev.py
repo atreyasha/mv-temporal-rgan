@@ -23,13 +23,14 @@ from keras.backend.tensorflow_backend import clear_session
 
 class RGAN():
     def __init__(self,latent_dim=100,im_dim=28,epochs=100,batch_size=256,learning_rate=0.01,
-                 droprate=0.25,momentum=0.8,alpha=0.2):
+                 g_factor=1.2,droprate=0.25,momentum=0.8,alpha=0.2):
         # define and store local variables
         clear_session()
         self.epochs = epochs
         self.batch_size = batch_size
         self.learning_rate = learning_rate
-        self.optimizer = Adam(self.learning_rate)
+        self.optimizer_d = Adam(self.learning_rate)
+        self.optimizer_g = Adam(self.learning_rate*self.g_factor)
         self.latent_dim = latent_dim
         self.im_dim = im_dim
         self.droprate = droprate
@@ -38,7 +39,7 @@ class RGAN():
         # define and compile discriminator
         self.discriminator = self.getDiscriminator(self.im_dim,self.droprate,self.momentum,
                                                    self.alpha)
-        self.discriminator.compile(loss=['binary_crossentropy'], optimizer=self.optimizer,
+        self.discriminator.compile(loss=['binary_crossentropy'], optimizer=self.optimizer_d,
             metrics=['accuracy'])
         # define generator
         self.generator = self.getGenerator(self.latent_dim,self.momentum)
@@ -48,7 +49,7 @@ class RGAN():
         img = self.generator(z)
         validity = self.discriminator(img)
         self.combined = Model(z, validity)
-        self.combined.compile(loss=['binary_crossentropy'], optimizer=self.optimizer,
+        self.combined.compile(loss=['binary_crossentropy'], optimizer=self.optimizer_g,
                               metrics=['accuracy'])
 
     def getGenerator(self,latent_dim,momentum):
@@ -143,13 +144,14 @@ class RGAN():
         data_type = re.sub(r".*_","",direct)
         # write init.csv to file for future class reconstruction
         with open("./pickles/"+direct+"/init.csv", "w") as csvfile:
-            fieldnames = ["data", "im_dim", "latent_dim", "epochs", "batch_size", "learning_rate", "droprate",
-                          "momentum", "alpha"]
+            fieldnames = ["data", "im_dim", "latent_dim", "epochs", "batch_size", "learning_rate",
+                          "g_factor", "droprate", "momentum", "alpha"]
             writer = csv.DictWriter(csvfile, fieldnames=fieldnames)
             writer.writeheader()
             writer.writerow({"data":data_type, "im_dim":str(self.im_dim), "latent_dim":str(self.latent_dim),
                              "epochs":str(self.epochs), "batch_size":str(self.batch_size), "learning_rate":str(self.learning_rate),
-                             "droprate":str(self.droprate), "momentum":str(self.momentum), "alpha":str(self.alpha)})
+                             "g_factor":str(self.g_factor), "droprate":str(self.droprate),
+                             "momentum":str(self.momentum), "alpha":str(self.alpha)})
         csvfile = open("./pickles/"+direct+"/log.csv", "w")
         fieldnames = ["epoch", "batch", "d_loss", "d_acc", "g_loss", "g_acc"]
         writer = csv.DictWriter(csvfile, fieldnames=fieldnames)
@@ -180,7 +182,8 @@ class RGAN():
                 g_loss = self.combined.train_on_batch(noise, real_labels)
                 # plot the progress
                 if (batch+1) % 20 == 0:
-                    print("epoch: %d [batch: %d] [D loss: %f, acc.: %.2f%%] [G loss: %f, acc.: %.2f%%]" % (epoch+1,batch+1,d_loss[0],100*d_loss[1],g_loss[0],100*g_loss[1]))
+                    print("epoch: %d [batch: %d] [D loss: %f, acc.: %.2f%%] [G loss: %f, acc.: %.2f%%]" %
+                          (epoch+1,batch+1,d_loss[0],100*d_loss[1],g_loss[0],100*g_loss[1]))
                     writer.writerow({"epoch":str(epoch+1), "batch":str(batch+1), "d_loss":str(d_loss[0]),
                              "d_acc":str(d_loss[1]), "g_loss":str(g_loss[0]), "g_acc":str(g_loss[1])})
                     csvfile.flush()
