@@ -8,6 +8,8 @@
 * make function to continue training with arbitrary other instances, need to make workflow to sort old runs temporally and make necessary actions
 * consider removing pickles directory necessity for greater flexibility and cli globbing
 * check for possibility of saving and reconstructing models without weights pipeline
+* use stabilizing techniques such as noise addition to images, label smoothing, dynamic learning rates for separate optimizers, multi-scale gradient and spectral normalization; mix these with some kind of grid search which optimizes which factor to use; might require porting to tensorflow
+* add some heuristics for stopping training and trying new configuration
 
 ### Relevant concepts
 * consider return sequences vs. return neurons
