@@ -22,7 +22,7 @@ from keras.backend.tensorflow_backend import clear_session
 ################################
 
 class RGAN():
-    def __init__(self,latent_dim=20,im_dim=28,epochs=100,batch_size=256,learning_rate=0.01,
+    def __init__(self,latent_dim=100,im_dim=28,epochs=100,batch_size=256,learning_rate=0.01,
                  droprate=0.25,momentum=0.8,alpha=0.2):
         # define and store local variables
         clear_session()
