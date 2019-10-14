@@ -26,14 +26,14 @@ class RGAN():
                  g_factor=0.25,droprate=0.25,momentum=0.8,alpha=0.2):
         # define and store local variables
         clear_session()
+        self.latent_dim = latent_dim
+        self.im_dim = im_dim
         self.epochs = epochs
         self.batch_size = batch_size
         self.learning_rate = learning_rate
         self.g_factor = g_factor
         self.optimizer_d = Adam(self.learning_rate)
         self.optimizer_g = Adam(self.learning_rate*self.g_factor)
-        self.latent_dim = latent_dim
-        self.im_dim = im_dim
         self.droprate = droprate
         self.momentum = momentum
         self.alpha = alpha
@@ -139,20 +139,20 @@ class RGAN():
             axeslist.ravel()[ind].set_axis_off()
         plt.tight_layout()
         fig.savefig("./pickles/"+direct+"/img/epoch"+str(epoch+1)+".png", format='png', dpi=500)
+        fig.clear()
+        plt.close("all")
 
     def train(self,data,direct,sq_dim=4):
         plot_samples=sq_dim**2
         data_type = re.sub(r".*_","",direct)
+        dict_field = {"data":data_type}
+        dict_field.update({el[0]:el[1] for el in self.__dict__.items() if type(el[1]) in [int,str,float]})
+        fieldnames = list(dict_field.keys())
         # write init.csv to file for future class reconstruction
         with open("./pickles/"+direct+"/init.csv", "w") as csvfile:
-            fieldnames = ["data", "im_dim", "latent_dim", "epochs", "batch_size", "learning_rate",
-                          "g_factor", "droprate", "momentum", "alpha"]
             writer = csv.DictWriter(csvfile, fieldnames=fieldnames)
             writer.writeheader()
-            writer.writerow({"data":data_type, "im_dim":str(self.im_dim), "latent_dim":str(self.latent_dim),
-                             "epochs":str(self.epochs), "batch_size":str(self.batch_size), "learning_rate":str(self.learning_rate),
-                             "g_factor":str(self.g_factor), "droprate":str(self.droprate),
-                             "momentum":str(self.momentum), "alpha":str(self.alpha)})
+            writer.writerow(dict_field)
         csvfile = open("./pickles/"+direct+"/log.csv", "w")
         fieldnames = ["epoch", "batch", "d_loss", "d_acc", "g_loss", "g_acc"]
         writer = csv.DictWriter(csvfile, fieldnames=fieldnames)
@@ -169,7 +169,7 @@ class RGAN():
         for epoch in range(self.epochs):
             for batch in range(runs):
                 # randomize data and generate noise
-                idx = np.random.randint(0, data.shape[0],self.batch_size)
+                idx = np.random.randint(0,data.shape[0],self.batch_size)
                 real = data[idx]
                 noise = np.random.normal(size=(self.batch_size,self.latent_dim,))
                 # generate fake data

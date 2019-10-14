@@ -13,6 +13,7 @@ import argparse
 import datetime
 import numpy as np
 from obj.RGAN import RGAN
+from keras.models import load_model
 from keras.datasets import mnist, fashion_mnist
 
 ################################
@@ -46,32 +47,42 @@ def singularTrain(subtype,latent_dim,epochs,batch_size,learning_rate,
                      g_factor,droprate,momentum,alpha)
     model.train(train_images,log_dir)
 
-def continueTrain(direct):
-    directLong = "./pickles/"+direct
+def continueTrain(direct,arguments):
+    if "./pickles/" in direct:
+        directLong = direct
+        direct = re.sub("./pickles/","",direct)
+    else:
+        directLong = "./pickles/"+direct
     if not os.path.isdir(directLong):
         sys.exit(directLong +" does not exist")
     # read init.csv and return construction parameters
     meta = pd.read_csv(directLong+"/init.csv")
-    subtype = meta.iloc[0]["data"]
-    im_dim = meta.iloc[0]["im_dim"]
-    latent_dim = meta.iloc[0]["latent_dim"]
-    epochs = meta.iloc[0]["epochs"]
-    batch_size = meta.iloc[0]["batch_size"]
-    learning_rate = meta.iloc[0]["learning_rate"]
-    g_factor = meta.iloc[0]["g_factor"]
-    droprate = meta.iloc[0]["droprate"]
-    momentum = meta.iloc[0]["momentum"]
-    alpha = meta.iloc[0]["alpha"]
-    train_images = loadData(subtype)
+    toParse = set(meta.columns)-set(arguments.keys())
+    # add arguments given as variables in memory
+    globals().update(arguments)
+    # read remaining variables which must be parsed
+    rem = {el:meta.iloc[0][el] for el in toParse}
+    # add arguments parsed into memory
+    globals().update(rem)
+    train_images = loadData(data)
     log_dir = re.sub("RGAN_","RGAN_"+getCurrentTime()+"_",directLong)
     log_dir_pass = re.sub("./pickles/","",log_dir)
     os.makedirs(log_dir)
     os.makedirs(log_dir+"/img")
     rgan = RGAN(latent_dim,im_dim,epochs,batch_size,learning_rate,
                 g_factor,droprate,momentum,alpha)
-    rgan.generator.load_weights(directLong+"/gen.h5")
-    rgan.discriminator.load_weights(directLong+"/dis.h5")
-    rgan.combined.load_weights(directLong+"/comb.h5")
+    # load models into memory
+    gen = load_model(directLong+"/gen_model.h5")
+    dis = load_model(directLong+"/dis_model.h5")
+    comb = load_model(directLong+"/comb_model.h5")
+    # load model and optimizer weights into main class
+    rgan.generator.set_weights(gen.get_weights())
+    rgan.discriminator.set_weights(dis.get_weights())
+    rgan.discriminator.optimizer.set_weights(dis.optimizer.get_weights())
+    rgan.combined.set_weights(comb.get_weights())
+    rgan.combined.optimizer.set_weights(comb.optimizer.get_weights())
+    # clear memory
+    del gen, dis, comb
     rgan.train(train_images,log_dir_pass)
 
 ###############################
@@ -99,13 +110,30 @@ if __name__ == "__main__":
     parser.add_argument("--alpha", type=float, default=0.2,
                         help="alpha parameter used in discriminator leaky relu")
     parser.add_argument("--continue-train", default=False, action="store_true",
-                         help="option to continue training model within log directory; requires --log-dir option to be defined")
-    parser.add_argument("--log-dir", required="--continue" in sys.argv,
-                        help="log directory whose model should be further trained, only required when --continue-train option is specified")
+                        help="option to continue training model within log directory; requires --log-dir option to be defined")
+    parser.add_argument("--log-dir", required="--continue-train" in sys.argv,
+                        help="log directory within ./pickles/ whose model should be further trained, only required when --continue-train option is specified")
     args = parser.parse_args()
     assert args.subtype in ["faces","mnist","fashion"]
     if args.continue_train:
-        continueTrain(args.log_dir)
+        # parse specified arguments as kwargs to continueTrain
+        arguments = [el for el in sys.argv[1:] if el != "--continue-train"]
+        for i in range(len(arguments)):
+            if arguments[i] == "--log-dir":
+                del arguments[i:i+2]
+                break
+        arguments = [re.sub("-","_",re.sub("--","",arguments[i])) if i%2 == 0 else
+                     arguments[i] for i in range(len(arguments))]
+        arguments = dict(zip(arguments[::2], arguments[1::2]))
+        for key in arguments.keys():
+            check = str(type(getattr(args,key)))
+            if "int" in check:
+                arguments[key] = int(arguments[key])
+            elif "str" in check:
+                arguments[key] = str(arguments[key])
+            elif "float" in check:
+                arguments[key] = float(arguments[key])
+        continueTrain(args.log_dir,arguments)
     else:
         singularTrain(args.subtype,args.latent_dim,args.epochs,args.batch_size,
                       args.learning_rate,args.g_factor,args.droprate,args.momentum,args.alpha)

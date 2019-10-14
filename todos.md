@@ -1,13 +1,13 @@
 ## Workflow changes
 
-### Model reconstruction and training continuation
-* TODO: consider removing pickles directory necessity for greater flexibility and cli globbing
-* TODO: continuing training function would need to load models, inter-relationships (trainables) and optimizer states
-* make function to temporally combine new trained model/archives with old centroid
-
 ### Model stabilization and abstraction
 * TODO: make pipeline adaptable to image pixels or modify dimensionality of lfw-faces -> test with lfw faces
 * TODO: use stabilizing techniques such as noise addition to images, multi-scale gradient and spectral normalization
+* consider using normally distributed label smoothing for richer distribution
+* use dilations for larger scale temporal relations; might be necessary for images
+
+### Model reconstruction and training continuation
+* make function to temporally combine new trained model/archives with original run
 
 ### Cluster management
 * make more efficient memory management script that can terminate processes and send emails
@@ -26,19 +26,19 @@
 * look for similarity measure metrics which could be used alongside training
 
 ### Clean-code/documentation
-* TODO: add workflow to change training dimensions through code without manual update of parameters
-* add configuration for command line gpu usage to readme
+* make intermediate documentation and add configuration for command line gpu usage to readme 
 * track how many epochs or batch runs needed to converge and try to optimize this
 * add conditions to `train.py` to add separate pipeline in RCGAN training
 
 ### Brainstorming points
+
 #### GAN stabilisation:
 * use stabilizing techniques such as: 
-* label smoothing **(done)** 
-* dynamic learning rates for separate optimizers **(done)**
+* label smoothing (done)
+* differing learning rates for optimizers (done)
 * noise addition to images
-* multi-scale gradient
 * spectral normalization
+* multi-scale gradient
 
 #### Evaluation pipeline
 * use MIMIC data/models for direct TSTR/TRTS validations
