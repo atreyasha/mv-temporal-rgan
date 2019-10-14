@@ -80,12 +80,15 @@ def continueTrain(direct,arguments):
     # load model and optimizer weights into main class
     rgan.generator.set_weights(gen.get_weights())
     rgan.discriminator.set_weights(dis.get_weights())
-    rgan.discriminator.optimizer.set_weights([None for el in dis_optimizer_weights])
     rgan.combined.set_weights(comb.get_weights())
-    rgan.combined.optimizer.set_weights([None for el in comb_optimizer_weights])
     # clear memory
+    hold_epochs = rgan.epochs
+    rgan.epochs = 1
+    rgan.train(train_images[:1],log_dir_pass)
+    rgan.epochs = hold_epochs
+    rgan.discriminator.optimizer.set_weights(dis.optimizer.get_weights())
+    rgan.combined.optimizer.set_weights(comb.optimizer.get_weights())
     del gen, dis, comb
-    # rgan.train(train_images,log_dir_pass)
 
 ###############################
 # main command call
