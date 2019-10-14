@@ -14,6 +14,7 @@ import argparse
 import datetime
 import numpy as np
 from obj.RGAN import RGAN
+from keras.models import load_model
 from keras.datasets import mnist, fashion_mnist
 
 ################################
@@ -69,6 +70,9 @@ def continueTrain(direct,arguments):
     log_dir_pass = re.sub("./pickles/","",log_dir)
     os.makedirs(log_dir)
     os.makedirs(log_dir+"/img")
+    dis = load_model(directLong+"/dis_model.h5")
+    gen = load_model(directLong+"/gen_model.h5")
+    comb = load_model(directLong+"/comb_model.h5")
     # with open(directLong+"/dis_opt_weights.pickle", "rb") as f:
     #     dis_opt_weights = pickle.load(f)
     # with open(directLong+"/comb_opt_weights.pickle", "rb") as f:
@@ -76,9 +80,12 @@ def continueTrain(direct,arguments):
     rgan = RGAN(latent_dim,im_dim,epochs,batch_size,learning_rate,
                 g_factor,droprate,momentum,alpha)
     # load models into memory
-    rgan.generator.load_weights(directLong+"/gen_weights.h5")
-    rgan.discriminator.load_weights(directLong+"/dis_weights.h5")
-    rgan.combined.load_weights(directLong+"/comb_weights.h5")
+    rgan.generator.set_weights(gen.get_weights())
+    rgan.discriminator.set_weights(dis.get_weights())
+    rgan.combined.set_weights(comb.get_weights())
+    # rgan.generator.load_weights(directLong+"/gen_weights.h5")
+    # rgan.discriminator.load_weights(directLong+"/dis_weights.h5")
+    # rgan.combined.load_weights(directLong+"/comb_weights.h5")
     # initialize optimizer weights
     hold_epochs = rgan.epochs
     hold_batch_size = rgan.batch_size
