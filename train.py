@@ -75,15 +75,17 @@ def continueTrain(direct,arguments):
     gen = load_model(directLong+"/gen_model.h5")
     dis = load_model(directLong+"/dis_model.h5")
     comb = load_model(directLong+"/comb_model.h5")
+    dis_optimizer_weights = dis.optimizer.get_weights()
+    comb_optimizer_weights = comb.optimizer.get_weights()
     # load model and optimizer weights into main class
     rgan.generator.set_weights(gen.get_weights())
     rgan.discriminator.set_weights(dis.get_weights())
-    rgan.discriminator.optimizer.set_weights(dis.optimizer.get_weights())
+    rgan.discriminator.optimizer.set_weights([None for el in dis_optimizer_weights])
     rgan.combined.set_weights(comb.get_weights())
-    rgan.combined.optimizer.set_weights(comb.optimizer.get_weights())
+    rgan.combined.optimizer.set_weights([None for el in comb_optimizer_weights])
     # clear memory
     del gen, dis, comb
-    rgan.train(train_images,log_dir_pass)
+    # rgan.train(train_images,log_dir_pass)
 
 ###############################
 # main command call
