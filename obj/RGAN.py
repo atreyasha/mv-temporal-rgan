@@ -12,9 +12,9 @@ from keras import backend
 from keras.models import Model
 from keras.constraints import max_norm
 from keras.optimizers import Adam
-from keras.layers import Dense, Activation, Reshape, Conv1D, Conv2D, GlobalMaxPool1D
+from keras.layers import Dense, Activation, Reshape, Conv1D, GlobalMaxPool1D
 from keras.layers import LSTM, CuDNNLSTM, Input, UpSampling1D, Bidirectional
-from keras.layers import BatchNormalization, LeakyReLU, Flatten, Dropout
+from keras.layers import BatchNormalization, LeakyReLU, Dropout
 from keras.backend.tensorflow_backend import clear_session
 
 ################################
