@@ -3,6 +3,7 @@
 
 # get all dependencies
 import re
+import pickle
 import csv
 import numpy as np
 import matplotlib
@@ -146,7 +147,8 @@ class RGAN():
         plot_samples=sq_dim**2
         data_type = re.sub(r".*_","",direct)
         dict_field = {"data":data_type}
-        dict_field.update({el[0]:el[1] for el in self.__dict__.items() if type(el[1]) in [int,str,float]})
+        dict_field.update({el[0]:el[1] for el in self.__dict__.items()
+                           if type(el[1]) in [int,str,float,np.int64,np.float64]})
         fieldnames = list(dict_field.keys())
         # write init.csv to file for future class reconstruction
         with open("./pickles/"+direct+"/init.csv", "w") as csvfile:
@@ -195,6 +197,10 @@ class RGAN():
             self._plot_figures(test_img,direct,epoch,sq_dim)
             if (epoch+1) % 10 == 0:
                 # save models every 10 epochs
-                self.generator.save("./pickles/"+direct+"/gen_model.h5")
-                self.discriminator.save("./pickles/"+direct+"/dis_model.h5")
-                self.combined.save("./pickles/"+direct+"/comb_model.h5")
+                self.generator.save_weights("./pickles/"+direct+"/gen_weights.h5")
+                self.discriminator.save_weights("./pickles/"+direct+"/dis_weights.h5")
+                self.combined.save_weights("./pickles/"+direct+"/comb_weights.h5")
+                with open("./pickles/"+direct+"/dis_opt_weights.pickle","wb") as f:
+                    pickle.dump(self.discriminator.optimizer.get_weights(),f)
+                with open("./pickles/"+direct+"/comb_opt_weights.pickle","wb") as f:
+                    pickle.dump(self.combined.optimizer.get_weights(),f)

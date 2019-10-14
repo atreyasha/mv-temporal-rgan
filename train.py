@@ -6,6 +6,7 @@ import warnings
 warnings.filterwarnings('ignore')
 # import dependencies
 import os
+import pickle
 import sys
 import re
 import pandas as pd
@@ -13,7 +14,6 @@ import argparse
 import datetime
 import numpy as np
 from obj.RGAN import RGAN
-from keras.models import load_model
 from keras.datasets import mnist, fashion_mnist
 
 ################################
@@ -69,29 +69,31 @@ def continueTrain(direct,arguments):
     log_dir_pass = re.sub("./pickles/","",log_dir)
     os.makedirs(log_dir)
     os.makedirs(log_dir+"/img")
+    with open(directLong+"/dis_opt_weights.pickle", "rb") as f:
+        dis_opt_weights = pickle.load(f)
+    with open(directLong+"/comb_opt_weights.pickle", "rb") as f:
+        comb_opt_weights = pickle.load(f)
     rgan = RGAN(latent_dim,im_dim,epochs,batch_size,learning_rate,
                 g_factor,droprate,momentum,alpha)
     # load models into memory
-    gen = load_model(directLong+"/gen_model.h5")
-    dis = load_model(directLong+"/dis_model.h5")
-    comb = load_model(directLong+"/comb_model.h5")
-    dis_optimizer_weights = dis.optimizer.get_weights()
-    comb_optimizer_weights = comb.optimizer.get_weights()
-    # load model and optimizer weights into main class
-    rgan.generator.set_weights(gen.get_weights())
-    rgan.discriminator.set_weights(dis.get_weights())
-    rgan.combined.set_weights(comb.get_weights())
-    print(len(dis_optimizer_weights))
-    print(len(comb_optimizer_weights))
+    rgan.generator.load_weights(directLong+"/gen_weights.h5")
+    rgan.discriminator.load_weights(directLong+"/dis_weights.h5")
+    rgan.combined.load_weights(directLong+"/comb_weights.h5")
+    # initialize optimizer weights
+    hold_epochs = rgan.epochs
+    hold_batch_size = rgan.batch_size
+    rgan.epochs = 1
+    rgan.batch_size = 1
+    rgan.train(train_images[:1],log_dir_pass)
+    rgan.epochs = hold_epochs
+    rgan.batch_size = hold_batch_size
+    # load previous optimizer weights
+    rgan.discriminator.optimizer.set_weights(dis_opt_weights)
+    rgan.combined.optimizer.set_weights(comb_opt_weights)
     # clear memory
-    # TODO: sort out optimizer weight importing issues due to differing sizes
-    # hold_epochs = rgan.epochs
-    # rgan.epochs = 1
-    # rgan.train(train_images[:1],log_dir_pass)
-    # rgan.epochs = hold_epochs
-    # rgan.discriminator.optimizer.set_weights(dis.optimizer.get_weights())
-    # rgan.combined.optimizer.set_weights(comb.optimizer.get_weights())
-    # del gen, dis, comb
+    del dis_opt_weights, comb_opt_weights
+    # resume training
+    rgan.train(train_images,log_dir_pass)
 
 ###############################
 # main command call

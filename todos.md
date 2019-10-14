@@ -1,6 +1,7 @@
 ## Workflow changes
 
 ### Model stabilization and abstraction
+* TODO: make pickles unglobbing more robust
 * TODO: make pipeline adaptable to image pixels or modify dimensionality of lfw-faces -> test with lfw faces
 * TODO: use stabilizing techniques such as noise addition to images, multi-scale gradient and spectral normalization
 * consider using normally distributed label smoothing for richer distribution
@@ -46,6 +47,7 @@
 * combine various quality indicators to evaluate final model results
 * explore privacy perspective and whether GAN is able to remove personal traits
 * or consider another architecture which can perform this function
+
 
 #### Networks and higher-dimensions abstraction
 * extend to 64 pixels faces to check if abstraction possible
