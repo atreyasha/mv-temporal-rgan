@@ -193,7 +193,8 @@ class RGAN():
             test_img = np.resize(self.generator.predict(constant_noise),(plot_samples,self.im_dim,self.im_dim))
             test_img = {str(i+1):test_img[i] for i in range(test_img.shape[0])}
             self._plot_figures(test_img,direct,epoch,sq_dim)
-        # save model weights at end of training
-        self.generator.save("./pickles/"+direct+"/gen_model.h5")
-        self.discriminator.save("./pickles/"+direct+"/dis_model.h5")
-        self.combined.save("./pickles/"+direct+"/comb_model.h5")
+            if (epoch+1) % 10 == 0:
+                # save models every 10 epochs
+                self.generator.save("./pickles/"+direct+"/gen_model.h5")
+                self.discriminator.save("./pickles/"+direct+"/dis_model.h5")
+                self.combined.save("./pickles/"+direct+"/comb_model.h5")
