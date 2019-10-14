@@ -34,8 +34,8 @@
 ### Brainstorming points
 #### GAN stabilisation:
 * use stabilizing techniques such as: 
-* label smoothing **(done)**
-+ dynamic learning rates for separate optimizers **(done)**
+* label smoothing **(done)** 
+* dynamic learning rates for separate optimizers **(done)**
 * noise addition to images
 * multi-scale gradient
 * spectral normalization
