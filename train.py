@@ -69,10 +69,10 @@ def continueTrain(direct,arguments):
     log_dir_pass = re.sub("./pickles/","",log_dir)
     os.makedirs(log_dir)
     os.makedirs(log_dir+"/img")
-    with open(directLong+"/dis_opt_weights.pickle", "rb") as f:
-        dis_opt_weights = pickle.load(f)
-    with open(directLong+"/comb_opt_weights.pickle", "rb") as f:
-        comb_opt_weights = pickle.load(f)
+    # with open(directLong+"/dis_opt_weights.pickle", "rb") as f:
+    #     dis_opt_weights = pickle.load(f)
+    # with open(directLong+"/comb_opt_weights.pickle", "rb") as f:
+    #     comb_opt_weights = pickle.load(f)
     rgan = RGAN(latent_dim,im_dim,epochs,batch_size,learning_rate,
                 g_factor,droprate,momentum,alpha)
     # load models into memory
