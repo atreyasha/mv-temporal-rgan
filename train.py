@@ -88,8 +88,8 @@ def continueTrain(direct,arguments):
     rgan.epochs = hold_epochs
     rgan.batch_size = hold_batch_size
     # load previous optimizer weights
-    rgan.discriminator.optimizer.set_weights(dis_opt_weights)
-    rgan.combined.optimizer.set_weights(comb_opt_weights)
+    # rgan.discriminator.optimizer.set_weights(dis_opt_weights)
+    # rgan.combined.optimizer.set_weights(comb_opt_weights)
     # clear memory
     del dis_opt_weights, comb_opt_weights
     # resume training
