@@ -81,14 +81,17 @@ def continueTrain(direct,arguments):
     rgan.generator.set_weights(gen.get_weights())
     rgan.discriminator.set_weights(dis.get_weights())
     rgan.combined.set_weights(comb.get_weights())
+    print(len(dis_optimizer_weights))
+    print(len(comb_optimizer_weights))
     # clear memory
-    hold_epochs = rgan.epochs
-    rgan.epochs = 1
-    rgan.train(train_images[:1],log_dir_pass)
-    rgan.epochs = hold_epochs
-    rgan.discriminator.optimizer.set_weights(dis.optimizer.get_weights())
-    rgan.combined.optimizer.set_weights(comb.optimizer.get_weights())
-    del gen, dis, comb
+    # TODO: sort out optimizer weight importing issues due to differing sizes
+    # hold_epochs = rgan.epochs
+    # rgan.epochs = 1
+    # rgan.train(train_images[:1],log_dir_pass)
+    # rgan.epochs = hold_epochs
+    # rgan.discriminator.optimizer.set_weights(dis.optimizer.get_weights())
+    # rgan.combined.optimizer.set_weights(comb.optimizer.get_weights())
+    # del gen, dis, comb
 
 ###############################
 # main command call
