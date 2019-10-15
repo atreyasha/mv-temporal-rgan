@@ -37,7 +37,7 @@ def loadData(subtype):
                                         train_images.shape[1]**2,1))/255
 
 def singularTrain(subtype,latent_dim,epochs,batch_size,learning_rate,
-                  g_factor,droprate,momentum,alpha,model="RGAN"):
+                  g_factor,droprate,momentum,alpha,saving_rate,model="RGAN"):
     train_images = loadData(subtype)
     im_dim = int(np.sqrt(train_images.shape[1]))
     log_dir = getCurrentTime()+"_"+model+"_"+subtype
@@ -46,7 +46,7 @@ def singularTrain(subtype,latent_dim,epochs,batch_size,learning_rate,
     if model == "RGAN":
         model = RGAN(latent_dim,im_dim,epochs,batch_size,learning_rate,
                      g_factor,droprate,momentum,alpha)
-    model.train(train_images,log_dir)
+        model.train(train_images,log_dir,saving_rate=saving_rate)
 
 def continueTrain(direct,arguments):
     if "./pickles/" in direct:
@@ -120,6 +120,8 @@ if __name__ == "__main__":
                         help="momentum used across GAN batch-normalization")
     parser.add_argument("--alpha", type=float, default=0.2,
                         help="alpha parameter used in discriminator leaky relu")
+    parser.add_argument("--saving-rate", type=int, default=10,
+                        help="epoch period on which the model weights should be saved")
     parser.add_argument("--continue-train", default=False, action="store_true",
                         help="option to continue training model within log directory; requires --log-dir option to be defined")
     parser.add_argument("--log-dir", required="--continue-train" in sys.argv,
@@ -147,4 +149,5 @@ if __name__ == "__main__":
         continueTrain(args.log_dir,arguments)
     else:
         singularTrain(args.subtype,args.latent_dim,args.epochs,args.batch_size,
-                      args.learning_rate,args.g_factor,args.droprate,args.momentum,args.alpha)
+                      args.learning_rate,args.g_factor,args.droprate,args.momentum,
+                      args.alpha,args.saving_rate)
