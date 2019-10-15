@@ -135,9 +135,6 @@ if __name__ == "__main__":
     if args.continue_train:
         # parse specified arguments as kwargs to continueTrain
         arguments = [el for el in sys.argv[1:] if el != "--continue-train"]
-        todel = [i for i in range(len(arguments)) if arguments[i] == "--log-dir" or arguments[i] == "--saving-rate"]
-        for i in sorted(todel, reverse=True):
-            del arguments[i:i+2]
         arguments = [re.sub("-","_",re.sub("--","",arguments[i])) if i%2 == 0 else
                      arguments[i] for i in range(len(arguments))]
         arguments = dict(zip(arguments[::2], arguments[1::2]))
