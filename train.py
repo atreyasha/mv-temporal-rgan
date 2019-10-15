@@ -23,23 +23,23 @@ from keras.datasets import mnist, fashion_mnist
 def getCurrentTime():
     return datetime.datetime.now().strftime("%Y_%m_%d_%H_%M_%S")
 
-def loadData(subtype):
-    if subtype == "faces":
+def loadData(data):
+    if data == "faces":
         return np.load("./data/lfw.npy")
-    elif subtype == "mnist":
+    elif data == "mnist":
         (train_images,_), (_,_) = mnist.load_data()
         return np.resize(train_images, (train_images.shape[0],
                                         train_images.shape[1]**2,1))/255
-    elif subtype == "fashion":
+    elif data == "fashion":
         (train_images,_), (_,_) = fashion_mnist.load_data()
         return np.resize(train_images, (train_images.shape[0],
                                         train_images.shape[1]**2,1))/255
 
-def singularTrain(subtype,latent_dim,epochs,batch_size,learning_rate,
+def singularTrain(data,latent_dim,epochs,batch_size,learning_rate,
                   g_factor,droprate,momentum,alpha,saving_rate,model="RGAN"):
-    train_images = loadData(subtype)
+    train_images = loadData(data)
     im_dim = int(np.sqrt(train_images.shape[1]))
-    log_dir = getCurrentTime()+"_"+model+"_"+subtype
+    log_dir = getCurrentTime()+"_"+model+"_"+data
     os.makedirs("./pickles/"+log_dir)
     os.makedirs("./pickles/"+log_dir+"/img")
     if model == "RGAN":
@@ -100,8 +100,8 @@ def continueTrain(direct,arguments):
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(formatter_class=argparse.ArgumentDefaultsHelpFormatter)
-    parser.add_argument("--subtype", type=str, default="mnist",
-                        help="which training data subtype to use; either mnist, fashion or faces")
+    parser.add_argument("--data", type=str, default="mnist",
+                        help="which training data to use; either mnist, fashion or faces")
     parser.add_argument("--latent-dim", type=int, default=100,
                         help="latent dimensionality of GAN generator")
     parser.add_argument("--epochs", type=int, default=100,
@@ -125,14 +125,13 @@ if __name__ == "__main__":
     parser.add_argument("--log-dir", required="--continue-train" in sys.argv,
                         help="log directory within ./pickles/ whose model should be further trained, only required when --continue-train option is specified")
     args = parser.parse_args()
-    assert args.subtype in ["faces","mnist","fashion"]
+    assert args.data in ["faces","mnist","fashion"]
     if args.continue_train:
         # parse specified arguments as kwargs to continueTrain
         arguments = [el for el in sys.argv[1:] if el != "--continue-train"]
-        for i in range(len(arguments)):
-            if arguments[i] == "--log-dir":
-                del arguments[i:i+2]
-                break
+        todel = [i for i in range(len(arguments)) if arguments[i] == "--log-dir" or arguments[i] == "--saving-rate"]
+        for i in sorted(todel, reverse=True):
+            del arguments[i:i+2]
         arguments = [re.sub("-","_",re.sub("--","",arguments[i])) if i%2 == 0 else
                      arguments[i] for i in range(len(arguments))]
         arguments = dict(zip(arguments[::2], arguments[1::2]))
@@ -146,6 +145,6 @@ if __name__ == "__main__":
                 arguments[key] = float(arguments[key])
         continueTrain(args.log_dir,arguments)
     else:
-        singularTrain(args.subtype,args.latent_dim,args.epochs,args.batch_size,
+        singularTrain(args.data,args.latent_dim,args.epochs,args.batch_size,
                       args.learning_rate,args.g_factor,args.droprate,args.momentum,
                       args.alpha,args.saving_rate)
