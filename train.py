@@ -64,8 +64,14 @@ def continueTrain(direct,arguments):
     # add arguments parsed into memory
     globals().update(rem)
     train_images = loadData(data)
-    log_dir = re.sub("RGAN_","RGAN_"+getCurrentTime()+"_",directLong)
-    log_dir_pass = re.sub("./pickles/","",log_dir)
+    # create new log directory depending on left-off training state
+    if "_" not in re.sub(r".*_R(C)?GAN_","",direct):
+        log_dir = re.sub(r"(R(C)?GAN_)","\g<1>"+getCurrentTime()+"_",directLong)
+        log_dir_pass = re.sub("./pickles/","",log_dir)
+    else:
+        temp = re.sub(r"(.*)(_R(C)?GAN_)(.*)(_(.*)$)","\g<4>\g<2>\g<6>",direct)
+        log_dir_pass = re.sub(r"(R(C)?GAN_)","\g<1>"+getCurrentTime()+"_",temp)
+        log_dir = "./pickles/"+log_dir_pass
     os.makedirs(log_dir)
     os.makedirs(log_dir+"/img")
     with open(directLong+"/dis_opt_weights.pickle", "rb") as f:
