@@ -195,7 +195,7 @@ class RGAN():
             test_img = np.resize(self.generator.predict(constant_noise),(plot_samples,self.im_dim,self.im_dim))
             test_img = {str(i+1):test_img[i] for i in range(test_img.shape[0])}
             self._plot_figures(test_img,direct,epoch,sq_dim)
-            if (epoch+1) % saving_rate == 0:
+            if (epoch+1) % saving_rate == 0 or (epoch+1) == self.epochs:
                 # save models with defined periodicity
                 self.generator.save_weights("./pickles/"+direct+"/gen_weights.h5")
                 self.discriminator.save_weights("./pickles/"+direct+"/dis_weights.h5")

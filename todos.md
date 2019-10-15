@@ -7,7 +7,6 @@
 * use dilations for larger scale temporal relations; might be necessary for images
 
 ### Model reconstruction and training continuation
-* TODO: in naming continuation pickles directory, need to fix folder renaming issues when resuming from already resumed
 * make function to temporally combine new trained model/archives with original run
 
 ### Cluster management
