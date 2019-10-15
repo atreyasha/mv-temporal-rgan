@@ -14,7 +14,6 @@ import argparse
 import datetime
 import numpy as np
 from obj.RGAN import RGAN
-from keras.models import load_model
 from keras.datasets import mnist, fashion_mnist
 
 ################################
@@ -49,11 +48,10 @@ def singularTrain(subtype,latent_dim,epochs,batch_size,learning_rate,
         model.train(train_images,log_dir,saving_rate=saving_rate)
 
 def continueTrain(direct,arguments):
-    if "./pickles/" in direct:
-        directLong = direct
-        direct = re.sub("./pickles/","",direct)
-    else:
-        directLong = "./pickles/"+direct
+    direct = re.sub(r"(\/)?$","",direct)
+    if "pickles/" in direct:
+        direct = re.sub(r"(\.\/)?pickles\/","",direct)
+    directLong = "./pickles/"+direct
     if not os.path.isdir(directLong):
         sys.exit(directLong +" does not exist")
     # read init.csv and return construction parameters

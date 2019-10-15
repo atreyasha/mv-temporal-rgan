@@ -1,8 +1,6 @@
 ## Workflow changes
 
 ### Model stabilization and abstraction
-* TODO: make pickles unglobbing more robust
-* TODO: extract model and optimizer weights manually from colab run
 * TODO: make pipeline adaptable to image pixels or modify dimensionality of lfw-faces -> test with lfw faces
 * TODO: use stabilizing techniques such as noise addition to images, multi-scale gradient and spectral normalization
 * consider using normally distributed label smoothing for richer distribution
