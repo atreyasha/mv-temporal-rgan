@@ -11,7 +11,7 @@
 * make function to temporally combine new trained model/archives with original run
 
 ### Cluster management
-* make more efficient memory management script that can terminate processes and send emails
+* make efficient memory management daemon that can terminate processes and send emails
 * sync results from cluster directly to computer
 * try to share memory and tasks between gpus (multi\_gpu\_model)
 
