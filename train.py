@@ -47,7 +47,7 @@ def singularTrain(data,latent_dim,epochs,batch_size,learning_rate,
                      g_factor,droprate,momentum,alpha)
         model.train(train_images,log_dir,saving_rate=saving_rate)
 
-def continueTrain(direct,arguments):
+def continueTrain(direct,saving_rate,arguments):
     direct = re.sub(r"(\/)?$","",direct)
     if "pickles/" in direct:
         direct = re.sub(r"(\.\/)?pickles\/","",direct)
@@ -98,7 +98,7 @@ def continueTrain(direct,arguments):
     # clear memory
     del dis_opt_weights, comb_opt_weights
     # resume training
-    rgan.train(train_images,log_dir_pass)
+    rgan.train(train_images,log_dir_pass,saving_rate=saving_rate)
 
 ###############################
 # main command call
@@ -135,6 +135,10 @@ if __name__ == "__main__":
     if args.continue_train:
         # parse specified arguments as kwargs to continueTrain
         arguments = [el for el in sys.argv[1:] if el != "--continue-train"]
+        todel = [i for i in range(len(arguments))
+                 if arguments[i] == "--log-dir" or arguments[i] == "--saving-rate"]
+        for i in sorted(todel, reverse=True):
+            del arguments[i:i+2]
         arguments = [re.sub("-","_",re.sub("--","",arguments[i])) if i%2 == 0 else
                      arguments[i] for i in range(len(arguments))]
         arguments = dict(zip(arguments[::2], arguments[1::2]))
@@ -146,7 +150,7 @@ if __name__ == "__main__":
                 arguments[key] = str(arguments[key])
             elif "float" in check:
                 arguments[key] = float(arguments[key])
-        continueTrain(args.log_dir,arguments)
+        continueTrain(args.log_dir,args.saving_rate,arguments)
     else:
         singularTrain(args.data,args.latent_dim,args.epochs,args.batch_size,
                       args.learning_rate,args.g_factor,args.droprate,args.momentum,

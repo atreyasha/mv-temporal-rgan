@@ -7,10 +7,11 @@
 * use dilations for larger scale temporal relations; might be necessary for images
 
 ### Model reconstruction and training continuation
+* TODO: leave models training on cluster for up to 500 epochs after setting up memory management system
 * make function to temporally combine new trained model/archives with original run
 
 ### Cluster management
-* make efficient memory management daemon that can terminate processes and send emails
+* TODO: prepare memory management cronie daemon for cluster using smtplib in python and dummy gmail for mail sending
 * sync results from cluster directly to computer
 * try to share memory and tasks between gpus (multi\_gpu\_model)
 
@@ -46,7 +47,6 @@
 * combine various quality indicators to evaluate final model results
 * explore privacy perspective and whether GAN is able to remove personal traits
 * or consider another architecture which can perform this function
-
 
 #### Networks and higher-dimensions abstraction
 * extend to 64 pixels faces to check if abstraction possible
