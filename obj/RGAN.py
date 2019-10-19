@@ -187,7 +187,8 @@ class RGAN():
                 if (batch+1) % 20 == 0:
                     print("epoch: %d [batch: %d] [D loss: %f, acc.: %.2f%%] [G loss: %f, acc.: %.2f%%]" %
                           (epoch+1,batch+1,d_loss[0],100*d_loss[1],g_loss[0],100*g_loss[1]))
-                    with open("./pickles/"+direct+"/log.csv", "w") as csvfile:
+                    with open("./pickles/"+direct+"/log.csv", "a") as csvfile:
+                        writer = csv.DictWriter(csvfile, fieldnames=fieldnames)
                         writer.writerow({"epoch":str(epoch+1), "batch":str(batch+1), "d_loss":str(d_loss[0]),
                              "d_acc":str(d_loss[1]), "g_loss":str(g_loss[0]), "g_acc":str(g_loss[1])})
             # at every epoch, generate images for reference
