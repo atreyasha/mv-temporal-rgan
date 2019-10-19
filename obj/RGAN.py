@@ -155,11 +155,10 @@ class RGAN():
             writer = csv.DictWriter(csvfile, fieldnames=fieldnames)
             writer.writeheader()
             writer.writerow(dict_field)
-        csvfile = open("./pickles/"+direct+"/log.csv", "w")
         fieldnames = ["epoch", "batch", "d_loss", "d_acc", "g_loss", "g_acc"]
-        writer = csv.DictWriter(csvfile, fieldnames=fieldnames)
-        writer.writeheader()
-        csvfile.flush()
+        with open("./pickles/"+direct+"/log.csv", "w") as csvfile:
+            writer = csv.DictWriter(csvfile, fieldnames=fieldnames)
+            writer.writeheader()
         # generate constant noise vector for model comparisons
         np.random.seed(42)
         constant_noise = np.random.normal(size=(plot_samples,self.latent_dim,))
@@ -188,9 +187,9 @@ class RGAN():
                 if (batch+1) % 20 == 0:
                     print("epoch: %d [batch: %d] [D loss: %f, acc.: %.2f%%] [G loss: %f, acc.: %.2f%%]" %
                           (epoch+1,batch+1,d_loss[0],100*d_loss[1],g_loss[0],100*g_loss[1]))
-                    writer.writerow({"epoch":str(epoch+1), "batch":str(batch+1), "d_loss":str(d_loss[0]),
+                    with open("./pickles/"+direct+"/log.csv", "w") as csvfile:
+                        writer.writerow({"epoch":str(epoch+1), "batch":str(batch+1), "d_loss":str(d_loss[0]),
                              "d_acc":str(d_loss[1]), "g_loss":str(g_loss[0]), "g_acc":str(g_loss[1])})
-                    csvfile.flush()
             # at every epoch, generate images for reference
             test_img = np.resize(self.generator.predict(constant_noise),(plot_samples,self.im_dim,self.im_dim))
             test_img = {str(i+1):test_img[i] for i in range(test_img.shape[0])}

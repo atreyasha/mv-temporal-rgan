@@ -49,18 +49,19 @@ def singularTrain(data,latent_dim,epochs,batch_size,learning_rate,
 
 def continueTrain(direct,saving_rate,arguments):
     direct = re.sub(r"(\/)?$","",direct)
-    if "pickles/" in direct:
-        direct = re.sub(r"(\.\/)?pickles\/","",direct)
+    direct = re.sub(r"(\.\/)?pickles\/","",direct)
     directLong = "./pickles/"+direct
     if not os.path.isdir(directLong):
         sys.exit(directLong +" does not exist")
     # read init.csv and return construction parameters
     meta = pd.read_csv(directLong+"/init.csv")
-    toParse = set(meta.columns)-set(arguments.keys())
+    # remove "until" in case file is a combined type
+    toParse = set(meta.columns)-set(arguments.keys())-{"until"}
     # add arguments given as variables in memory
     globals().update(arguments)
     # read remaining variables which must be parsed
-    rem = {el:meta.iloc[0][el] for el in toParse}
+    # read from last row of init.csv in case file has been combined
+    rem = {el:meta.iloc[-1][el] for el in toParse}
     # add arguments parsed into memory
     globals().update(rem)
     train_images = loadData(data)
