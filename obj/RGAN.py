@@ -24,7 +24,7 @@ from keras.backend.tensorflow_backend import clear_session
 
 class RGAN():
     def __init__(self,latent_dim=100,im_dim=28,epochs=100,batch_size=256,learning_rate=0.0004,
-                 g_factor=0.25,droprate=0.25,momentum=0.8,alpha=0.2):
+                 g_factor=0.25,droprate=0.25,momentum=0.8,alpha=0.2,saving_rate=10):
         # define and store local variables
         clear_session()
         self.latent_dim = latent_dim
@@ -38,6 +38,7 @@ class RGAN():
         self.droprate = droprate
         self.momentum = momentum
         self.alpha = alpha
+        self.saving_rate = saving_rate
         # define and compile discriminator
         self.discriminator = self.getDiscriminator(self.im_dim,self.droprate,self.momentum,
                                                    self.alpha)
@@ -143,7 +144,7 @@ class RGAN():
         fig.clear()
         plt.close("all")
 
-    def train(self,data,direct,sq_dim=4,saving_rate=10):
+    def train(self,data,direct,sq_dim=4):
         plot_samples=sq_dim**2
         data_type = re.sub(r".*_","",direct)
         dict_field = {"data":data_type}
@@ -195,7 +196,7 @@ class RGAN():
             test_img = np.resize(self.generator.predict(constant_noise),(plot_samples,self.im_dim,self.im_dim))
             test_img = {str(i+1):test_img[i] for i in range(test_img.shape[0])}
             self._plot_figures(test_img,direct,epoch,sq_dim)
-            if (epoch+1) % saving_rate == 0 or (epoch+1) == self.epochs:
+            if (epoch+1) % self.saving_rate == 0 or (epoch+1) == self.epochs:
                 # save models with defined periodicity
                 self.generator.save_weights("./pickles/"+direct+"/gen_weights.h5")
                 self.discriminator.save_weights("./pickles/"+direct+"/dis_weights.h5")

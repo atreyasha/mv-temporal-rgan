@@ -8,6 +8,7 @@ import os
 import glob
 import shutil
 import argparse
+import numpy as np
 import pandas as pd
 
 ################################
@@ -35,11 +36,42 @@ def iter_temporal_find(direct):
                 break
     return chron
 
+def prune_dirs(chron):
+    for dr in chron:
+        local = glob.glob(dr+"/*csv")
+        local_log_file = [fl for fl in local if "log.csv" in fl]
+        local_init_file = [fl for fl in local if "init.csv" in fl][0]
+        local_init_df = pd.read_csv(local_init_file)
+        if "until" in local_init_df.columns:
+            continue
+        saving_rate = local_init_df.iloc[-1]["saving_rate"]
+        intention_epochs = local_init_df["epochs"][0]
+        run_epochs = len(glob.glob(dr+"/img/*"))
+        if len(local_log_file) == 0:
+            # if no log.csv is present, make dummy one
+            local_log_df = make_fake_df(run_epochs)
+        else:
+            # if log.csv is present, remove incomplete epochs
+            local_log_file = local_log_file[0]
+            local_log_df = pd.read_csv(local_log_file)
+            local_log_df = local_log_df[local_log_df.epoch <= run_epochs]
+        local_log_df.to_csv(dr+"/log.csv",index=False)
+        if run_epochs == intention_epochs:
+            # if completed epochs are same as intended epochs, nothing to prune
+            continue
+        else:
+            # if not, find last saved epoch and prune all files to that point
+            offset = run_epochs % saving_rate
+            last_saved_epochs = run_epochs - offset
+            local_log_df = local_log_df[local_log_df.epoch <= last_saved_epochs]
+            local_log_df.to_csv(dr+"/log.csv",index=False)
+            [os.rename(img,re.sub(".png",".bak",img)) for img in glob.glob(dr+"/img/*") if int(re.sub(r".*epoch([0-9]+)\.png","\g<1>",img)) > last_saved_epochs]
+
 def copy_increment_images(chron,new_direct_long):
     # recursively combine images
     for dr in chron:
         # image copying/combination pipeline
-        imgs = glob.glob(dr+"/img/*")
+        imgs = glob.glob(dr+"/img/*png")
         src = glob.glob(new_direct_long+"/img/*")
         if len(src) == 0:
             [shutil.copy(img,new_direct_long+"/img/") for img in imgs]
@@ -50,20 +82,20 @@ def copy_increment_images(chron,new_direct_long):
 
 def copy_log_init(chron,new_direct_long):
     for dr in chron:
-        # image copying/combination pipeline
         local = glob.glob(dr+"/*csv")
         src = glob.glob(new_direct_long+"/*csv")
         if len(src) == 0:
             [shutil.copy(loc,new_direct_long) for loc in local]
             src = glob.glob(new_direct_long+"/*csv")
             # pipeline to merge log.csv
-            src_log_file = [fl for fl in src if "log.csv" in fl][0]
-            src_log_df = pd.read_csv(src_log_file)
-            max_epoch = max(src_log_df["epoch"])
             src_init_file = [fl for fl in src if "init.csv" in fl][0]
             src_init_df = pd.read_csv(src_init_file)
-            src_init_df["until"] = max_epoch
-            src_init_df.to_csv(src_init_file,index=False)
+            if "until" not in src_init_df.columns:
+                src_log_file = [fl for fl in src if "log.csv" in fl][0]
+                src_log_df = pd.read_csv(src_log_file)
+                max_epoch = max(src_log_df["epoch"])
+                src_init_df["until"] = max_epoch
+                src_init_df.to_csv(src_init_file,index=False)
         else:
             # pipeline to merge log.csv
             src_log_file = [fl for fl in src if "log.csv" in fl][0]
@@ -83,6 +115,15 @@ def copy_log_init(chron,new_direct_long):
             local_init_df["until"] = max_epoch
             pd.concat([src_init_df,local_init_df]).to_csv(src_init_file,index=False)
 
+def make_fake_df(epochs):
+    fieldnames = {"epoch":np.arange(1,epochs+1),
+                  "batch":np.full(epochs,np.nan),
+                  "d_loss":np.full(epochs,np.nan),
+                  "d_acc":np.full(epochs,np.nan),
+                  "g_loss":np.full(epochs,np.nan),
+                  "g_acc":np.full(epochs,np.nan)}
+    return pd.DataFrame(fieldnames)
+
 def combineLogs(direct):
     # clean up directory input
     direct = re.sub(r"(\/)?$","",direct)
@@ -98,6 +139,8 @@ def combineLogs(direct):
     new_direct_long = "./pickles/"+new_direct
     os.mkdir(new_direct_long)
     os.mkdir(new_direct_long+"/img")
+    # prune existing directories
+    prune_dirs(chron)
     # copy and combine images
     copy_increment_images(chron,new_direct_long)
     # copy and combine log's and init's

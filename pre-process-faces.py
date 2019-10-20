@@ -6,8 +6,8 @@ import glob
 import argparse
 import numpy as np
 import matplotlib.image as mpimg
-from tqdm import tqdm
 from scipy.ndimage import zoom
+from tqdm import tqdm
 
 ###############################
 # define function

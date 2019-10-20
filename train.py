@@ -44,10 +44,10 @@ def singularTrain(data,latent_dim,epochs,batch_size,learning_rate,
     os.makedirs("./pickles/"+log_dir+"/img")
     if model == "RGAN":
         model = RGAN(latent_dim,im_dim,epochs,batch_size,learning_rate,
-                     g_factor,droprate,momentum,alpha)
-        model.train(train_images,log_dir,saving_rate=saving_rate)
+                     g_factor,droprate,momentum,alpha,saving_rate)
+        model.train(train_images,log_dir)
 
-def continueTrain(direct,saving_rate,arguments):
+def continueTrain(direct,arguments):
     direct = re.sub(r"(\/)?$","",direct)
     direct = re.sub(r"(\.\/)?pickles\/","",direct)
     directLong = "./pickles/"+direct
@@ -80,7 +80,7 @@ def continueTrain(direct,saving_rate,arguments):
     with open(directLong+"/comb_opt_weights.pickle", "rb") as f:
         comb_opt_weights = pickle.load(f)
     rgan = RGAN(latent_dim,im_dim,epochs,batch_size,learning_rate,
-                g_factor,droprate,momentum,alpha)
+                g_factor,droprate,momentum,alpha,saving_rate)
     # load models into memory
     rgan.generator.load_weights(directLong+"/gen_weights.h5")
     rgan.discriminator.load_weights(directLong+"/dis_weights.h5")
@@ -99,7 +99,7 @@ def continueTrain(direct,saving_rate,arguments):
     # clear memory
     del dis_opt_weights, comb_opt_weights
     # resume training
-    rgan.train(train_images,log_dir_pass,saving_rate=saving_rate)
+    rgan.train(train_images,log_dir_pass)
 
 ###############################
 # main command call
@@ -136,8 +136,7 @@ if __name__ == "__main__":
     if args.continue_train:
         # parse specified arguments as kwargs to continueTrain
         arguments = [el for el in sys.argv[1:] if el != "--continue-train"]
-        todel = [i for i in range(len(arguments))
-                 if arguments[i] == "--log-dir" or arguments[i] == "--saving-rate"]
+        todel = [i for i in range(len(arguments)) if arguments[i] == "--log-dir"]
         for i in sorted(todel, reverse=True):
             del arguments[i:i+2]
         arguments = [re.sub("-","_",re.sub("--","",arguments[i])) if i%2 == 0 else
@@ -151,7 +150,7 @@ if __name__ == "__main__":
                 arguments[key] = str(arguments[key])
             elif "float" in check:
                 arguments[key] = float(arguments[key])
-        continueTrain(args.log_dir,args.saving_rate,arguments)
+        continueTrain(args.log_dir,arguments)
     else:
         singularTrain(args.data,args.latent_dim,args.epochs,args.batch_size,
                       args.learning_rate,args.g_factor,args.droprate,args.momentum,
