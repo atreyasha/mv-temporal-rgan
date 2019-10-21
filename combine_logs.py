@@ -137,8 +137,8 @@ def combineLogs(direct):
     # create new directory to replace old ones
     new_direct = re.sub("(.*)(_R(C)?GAN)(_)(.*)(_.*)$","\g<5>\g<2>\g<6>",chron[-1:][0])
     new_direct_long = "./pickles/"+new_direct
-    os.mkdir(new_direct_long)
-    os.mkdir(new_direct_long+"/img")
+    os.makedirs(new_direct_long,exist_ok=True)
+    os.makedirs(new_direct_long+"/img",exist_ok=True)
     # prune existing directories
     prune_dirs(chron)
     # copy and combine images
