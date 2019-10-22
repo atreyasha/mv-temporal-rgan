@@ -1,13 +1,5 @@
 ** Workflow changes
 
-*** Model visualization
-***** TODO use plotnine/ggplot2 to add graphs for loss with time given different combinations/model-types
-***** add to readme that gif-progress must be installed on system
-***** add epoch numbers/status bar to gifs for better visualization
-***** add quick routine for visualization which can benefit investigations later on
-***** change matplotlib backend default back to instant working version when necessary
-***** add function to generate best samples from trained model aside from already generated image
-
 *** Model stabilization and abstraction
 ***** TODO use Gaussian noise addition to images (to prevent mode collapse and add robustness) and Gaussian-noise label smoothing (non-model)
 ***** TODO use multi-scale gradient and spectral normalization (model), first non-model then model-based changes 
@@ -18,6 +10,13 @@
 ***** extend models to RCGANs once results are satisfactory
 ***** make pipeline adaptable to higher dimensional data in case of 64 dimensional lfw faces
 ***** work on more efficient hard model memory handling (saving only one instance of weights in comb.h5 and abstracting to all models)
+
+*** Model visualization
+***** add to readme that gif-progress must be installed on system
+***** add epoch numbers/status bar to gifs for better visualization
+***** add quick routine for visualization which can benefit investigations later on
+***** change matplotlib backend default back to instant working version when necessary
+***** add function to generate best samples from trained model aside from already generated image
 
 *** Backup Google Colab
 ***** work on google drive cli access for streamlined model runs
