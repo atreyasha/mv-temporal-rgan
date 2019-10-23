@@ -18,7 +18,7 @@ A thorough development log for our ideas/progress can be found [here](/docs/todo
 
 Relevant BibTeX citations for the above-mentioned papers can be found below:
 
-1. Harutyunyan et al. 2019
+**Harutyunyan et al. 2019** 
 
 ```
 @article{Harutyunyan_2019,
@@ -37,7 +37,7 @@ Relevant BibTeX citations for the above-mentioned papers can be found below:
 }
 ```
 
-2. Esteban et al. 2017
+**Esteban et al. 2017**
 
 ```
 @misc{esteban2017realvalued,
