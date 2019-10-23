@@ -30,7 +30,8 @@ Relevant BibTeX citations for the above-mentioned papers can be found below:
    number={1},
    journal={Scientific Data},
    publisher={Springer Science and Business Media LLC},
-   author={Harutyunyan, Hrayr and Khachatrian, Hrant and Kale, David C. and Ver Steeg, Greg and Galstyan, Aram},
+   author={Harutyunyan, Hrayr and Khachatrian, Hrant and Kale, David C. 
+   and Ver Steeg, Greg and Galstyan, Aram},
    year={2019},
    month={Jun}
 }
@@ -48,3 +49,7 @@ Relevant BibTeX citations for the above-mentioned papers can be found below:
     primaryClass={stat.ML}
 }
 ```
+
+### Author
+
+Atreya Shankar, German Research Centre for Artificial Intelligence (DFKI)
