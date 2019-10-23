@@ -2,7 +2,7 @@
 
 ### Overview
 
-This project is focused on developing a recurrent GAN architecture that can imitate and generate real-time biomedical time series. As this project is still in development, there will be multiple changes to the documentation and workflow.
+This project is focused on developing a recurrent GAN architecture that can imitate and generate real-time biomedical time series.
 
 In terms of biomedical data, we will be working with the existing MIMIC-III benchmarks which are documented in [Harutyunyan, Khachatrian, Kale, Ver Steeg and Galstyan 2019](https://arxiv.org/abs/1703.07771). The MIMIC-III benchmark workflows can be found in the following public GitHub [repository](https://github.com/YerevaNN/mimic3-benchmarks).
 
