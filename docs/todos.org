@@ -1,20 +1,37 @@
 ** Workflow changes
 
+*** Model visualization
+***** TODO work on readme based on current results
+***** add to readme that gif-progress/R must be installed on system
+***** make waveform type of visualization of datasets and generated products
+***** change matplotlib backend default back to instant working version when necessary
+***** add function to generate best samples from trained model aside from already generated image
+
 *** Model stabilization and abstraction
 ***** TODO use Gaussian noise addition to images (to prevent mode collapse and add robustness) and Gaussian-noise label smoothing (non-model)
 ***** TODO use multi-scale gradient and spectral normalization (model), first non-model then model-based changes 
 ***** TODO make network deeper and review eth rgan model for comparison
-***** TODO use dilations for larger scale temporal relations
+***** TODO use Wasserstein loss and dilations for larger scale temporal relations
 ***** TODO consider removing LSTM in generator and adding additional LSTM in discriminator
+***** TODO use rows as channels, separate rows from temporal pipeline for better convergence
 ***** after making above mode-based changes, run all 3 data-based models to see results
 ***** extend models to RCGANs once results are satisfactory
 ***** make pipeline adaptable to higher dimensional data in case of 64 dimensional lfw faces
 ***** work on more efficient hard model memory handling (saving only one instance of weights in comb.h5 and abstracting to all models)
 
-*** Model visualization
-***** add to readme that gif-progress/R must be installed on system
-***** change matplotlib backend default back to instant working version when necessary
-***** add function to generate best samples from trained model aside from already generated image
+*** Model application to biomedical time series
+***** TODO visualize data from MIMIC-III github repository to see smoothness or roughness
+***** TODO apply RGAN technique towards this process and verify results with existing models
+
+*** Feedback from discussion
+***** convert each row to embedding
+***** pooling/attention LSTMs for higher look-back capability
+***** pass that to next LSTM row by row
+***** try extra time distribution between rows/sequences
+***** try layer vs. batch normalization vs. spectral normalization
+***** attempt SELU layer if easily available
+***** try more stable implementations of generative models such as R-autoencoders
+***** try architectures which do not suffer from mode collapse, eg. autoencoder/non-variational/transformer
 
 *** Backup Google Colab
 ***** work on google drive cli access for streamlined model runs
