@@ -30,9 +30,11 @@ plot_evolution <- function(direct,ideal_ticks = 10){
   tick_interval_x <- round_any(max_tick_x/ideal_ticks,50)
   tick_interval_y <- round_any(max_tick_y/ideal_ticks,0.5)
   # make basic plot
+  pdf(paste0(direct,"/vis/evolution.pdf"), width=14, height=7)
   g <- ggplot() +
     geom_line(data=log_df,aes(x=epoch, y=loss, colour=Model),size=0.5) +
     xlab("\nEpoch") + ylab("Batch-Averaged Cross Entropy Loss\n") +
+    theme_bw() +
     theme(text = element_text(size=13, family="CM Roman"),
           legend.text=element_text(size=10),
           legend.title=element_text(size=10,face = "bold"),
@@ -54,6 +56,7 @@ plot_evolution <- function(direct,ideal_ticks = 10){
       plot_breaks <- FALSE
     } else {
       plot_breaks <- TRUE
+      breaks$"xmin" <- breaks$"xmin"-1
     }
     until = init_df$until
     until = until[-length(until)]
@@ -64,7 +67,6 @@ plot_evolution <- function(direct,ideal_ticks = 10){
       guides(color=guide_legend(order=1),fill=guide_legend(order=2))
   }
   # print object
-  pdf(paste0(direct,"/vis/evolution.pdf"), width=14, height=7)
   print(g)
   dev.off()
   # embed latex CM modern

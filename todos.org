@@ -12,9 +12,7 @@
 ***** work on more efficient hard model memory handling (saving only one instance of weights in comb.h5 and abstracting to all models)
 
 *** Model visualization
-***** add to readme that gif-progress must be installed on system
-***** add epoch numbers/status bar to gifs for better visualization
-***** add quick routine for visualization which can benefit investigations later on
+***** add to readme that gif-progress/R must be installed on system
 ***** change matplotlib backend default back to instant working version when necessary
 ***** add function to generate best samples from trained model aside from already generated image
 

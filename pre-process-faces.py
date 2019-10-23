@@ -15,7 +15,6 @@ from tqdm import tqdm
 
 # save raw images into numpy binary
 def makeBin(out):
-    # train_images = [skimage.measure.block_reduce(mpimg.imread(file),(kernel,kernel),np.max) for file in tqdm(glob.glob("./data/lfwcrop_grey/faces/*"))]
     train_images = [zoom(mpimg.imread(file),0.4375,mode="mirror") for file in tqdm(glob.glob("./data/lfwcrop_grey/faces/*"))]
     train_images = np.asarray(train_images,dtype="float32")
     train_images /= 255
@@ -28,8 +27,6 @@ def makeBin(out):
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
-    # parser.add_argument("--kernel", type=int, default=2,
-    #                     help="kernel size to downsample lfw-faces <default:2>")
     parser.add_argument("--out", type=str, default="lfw.npy",
                         help="output file name <default:'lfw.npy'>")
     args = parser.parse_args()
