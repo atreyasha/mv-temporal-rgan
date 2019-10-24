@@ -87,7 +87,7 @@ optional arguments:
   --log-dir LOG_DIR     log directory within ./pickles/ whose model should be
                         further trained, only required when --continue-train
                         option is specified (default: None)
-  --plot-model          option to plot keras model (default: False
+  --plot-model          option to plot keras model (default: False)
 ```
 
 This script will train a RGAN/RCGAN model based on the above specifications. An example of running this script is as shown:
@@ -127,8 +127,8 @@ usage: train.py [-h] [--data DATA] [--latent-dim LATENT_DIM] [--epochs EPOCHS]
                 [--batch-size BATCH_SIZE] [--learning-rate LEARNING_RATE]
                 [--g-factor G_FACTOR] [--droprate DROPRATE]
                 [--momentum MOMENTUM] [--alpha ALPHA]
-                [--saving-rate SAVING_RATE] [--continue-train] --log-dir
-                LOG_DIR [--plot-model]
+                [--saving-rate SAVING_RATE] [--continue-train] [--plot-model]
+                --log-dir LOG_DIR
 
 optional arguments:
   -h, --help            show this help message and exit
@@ -158,8 +158,6 @@ optional arguments:
                         directory; requires --log-dir option to be defined
                         (default: False)
   --plot-model          option to plot keras model (default: False)
-
-required name arguments:
   --log-dir LOG_DIR     log directory within ./pickles/ whose model should be
                         further trained, only required when --continue-train
                         option is specified (default: None)
