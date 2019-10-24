@@ -96,7 +96,7 @@ This script will train a RGAN/RCGAN model based on the above specifications. An 
 $ python3 train.py --data faces --epochs 500
 ```
 
-The training process will create a log directory within the `./pickles` directory, where an initialization file `init.csv`, log file `log.csv` and constant noise vector image generations will be saved. Furthermore, model weights will also be saved according to the `saving-rate` defined above. An example of a log-directory name is `2019\_10\_20\_19\_02\_22\_RGAN\_faces`, which can be simplied in the three naming subgroups: `(datetime_string)(model)(data)`.
+The training process will create a log directory within the `./pickles` directory, where an initialization file `init.csv`, log file `log.csv` and constant noise vector image generations will be saved. Furthermore, model weights will also be saved according to the `saving-rate` defined above. An example of a log-directory name is `2019_10_20_19_02_22_RGAN_faces`, which can be simplied in the three naming subgroups: `(datetime_string)(model)(data)`.
 
 An example tree structure of a log directory is as shown:
 
@@ -118,7 +118,7 @@ $ tree -L 1
 
 ### 2.ii. Continuation of model training
 
-Given the dynamic nature of model training, sometimes training procedures need to be stopped and started again at a later point in time. Our script `train.py` provides a utility for doing so. Assume you already ran a model and it was saved in the following log directory `2019\_10\_20\_19\_02\_22\_RGAN\_faces`. To continue training it, you could run the following implementation:
+Given the dynamic nature of model training, sometimes training procedures need to be stopped and started again at a later point in time. Our script `train.py` provides a utility for doing so. Assume you already ran a model and it was saved in the following log directory `2019_10_20_19_02_22_RGAN_faces`. To continue training it, you could run the following implementation:
 
 ```
 $ python3 train.py --continue-train --log-dir ./pickles/2019_10_20_19_02_22_RGAN_faces --epochs 200
