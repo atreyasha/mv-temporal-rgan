@@ -12,7 +12,7 @@ In terms of methodologies, we are inspired by the RGAN and RCGAN architecture pr
 
 Our workflow and source code can be found in the `src` directory of this repository. Additionally, the [readme](/src/README.md) in the `src` directory documents our functions, scripts and results.
 
-A thorough development log for our ideas/progress can be found in `/docs/todos.org` or [here](/docs/todos.org).
+A thorough development log for our ideas/progress can be found [here](/docs/todos.org).
 
 ### Citations
 

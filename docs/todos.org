@@ -2,7 +2,7 @@
 
 *** Model visualization and presentation
 ***** TODO work on readme based on current results, add possible table of contents to readme in src for easier reading
-***** TODO make todos.org look better on github with proper dates and all
+***** TODO make todos.org look better on github with proper dates and formatting
 ***** add to readme that gif-progress/R must be installed on system
 ***** make waveform type of visualization of datasets and generated products
 ***** add MIMIC-III 2d projection depiction as gif on initial readme
