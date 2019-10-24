@@ -1,9 +1,11 @@
 ** Workflow changes
 
-*** Model visualization
-***** TODO work on readme based on current results
+*** Model visualization and presentation
+***** TODO work on readme based on current results, add possible table of contents to readme in src for easier reading
+***** TODO make todos.org look better on github with proper dates and all
 ***** add to readme that gif-progress/R must be installed on system
 ***** make waveform type of visualization of datasets and generated products
+***** add MIMIC-III 2d projection depiction as gif on initial readme
 ***** change matplotlib backend default back to instant working version when necessary
 ***** add function to generate best samples from trained model aside from already generated image
 
@@ -21,9 +23,10 @@
 
 *** Model application to biomedical time series
 ***** TODO visualize data from MIMIC-III github repository to see smoothness or roughness
-***** TODO apply RGAN technique towards this process and verify results with existing models
+***** TODO apply RGAN technique towards this process and verify results with existing models through TSTR/TRTS and MMD checks
 
 *** Feedback from discussion
+***** try out Wasserstein loss function and dilations in CNNs
 ***** convert each row to embedding
 ***** pooling/attention LSTMs for higher look-back capability
 ***** pass that to next LSTM row by row
