@@ -14,6 +14,7 @@ import argparse
 import datetime
 import numpy as np
 from obj.RGAN import RGAN
+from keras.utils import plot_model
 from keras.datasets import mnist, fashion_mnist
 
 ################################
@@ -45,7 +46,7 @@ def singularTrain(data,latent_dim,epochs,batch_size,learning_rate,
     if model == "RGAN":
         model = RGAN(latent_dim,im_dim,epochs,batch_size,learning_rate,
                      g_factor,droprate,momentum,alpha,saving_rate)
-        model.train(train_images,log_dir)
+    model.train(train_images,log_dir)
 
 def continueTrain(direct,arguments):
     direct = re.sub(r"(\/)?$","",direct)
@@ -101,6 +102,12 @@ def continueTrain(direct,arguments):
     # resume training
     rgan.train(train_images,log_dir_pass)
 
+def plot_M(model="RGAN"):
+    if model == "RGAN":
+        model = RGAN()
+    plot_model(model.generator,to_file="./img/gen.png",show_shapes=True)
+    plot_model(model.discriminator,to_file="./img/dis.png",show_shapes=True)
+
 ###############################
 # main command call
 ###############################
@@ -129,9 +136,14 @@ if __name__ == "__main__":
                         help="epoch period on which the model weights should be saved")
     parser.add_argument("--continue-train", default=False, action="store_true",
                         help="option to continue training model within log directory; requires --log-dir option to be defined")
+    parser.add_argument("--plot-model", default=False, action="store_true",
+                        help="option to plot keras model")
     parser.add_argument("--log-dir", required="--continue-train" in sys.argv,
                         help="log directory within ./pickles/ whose model should be further trained, only required when --continue-train option is specified")
     args = parser.parse_args()
+    if args.plot_model:
+        plot_M()
+        sys.exit()
     assert args.data in ["faces","mnist","fashion"]
     if args.continue_train:
         # parse specified arguments as kwargs to continueTrain
