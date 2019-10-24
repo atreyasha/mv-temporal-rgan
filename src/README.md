@@ -4,7 +4,7 @@
 
 * [Motivation](#Motivation)
 * [Dependencies](#Dependencies)
-* [1. Data acquisition](#1. Data-acquisition)
+* [1. Data acquisition](#1-Data-acquisition)
 * [2.i. Model training](#Model-training)
 * [2.ii. Continuation of model training](#Continuation-of-model-training)
 * [3. Combinination of log directories](#Combinination-of-log-directories)
