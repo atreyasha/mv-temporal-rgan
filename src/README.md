@@ -6,8 +6,8 @@
 * [Dependencies](#Dependencies)
 * [1. Data acquisition](#1-Data-acquisition)
 * [2.i. Model training](#2i-Model-training)
-* [2.ii. Continuation of model training](#2iiContinuation-of-model-training)
-* [3. Combinination of log directories](#3-Combinination-of-log-directories)
+* [2.ii. Continuation of model training](#2ii-Continuation-of-model-training)
+* [3. Combination of log directories](#3-Combination-of-log-directories)
 * [4. Visualization](#4-Visualization)
 
 ### Motivation
