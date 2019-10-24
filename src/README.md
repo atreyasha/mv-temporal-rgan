@@ -1,5 +1,15 @@
 ## Multivariate recurrent GANs for generating biomedical time-series
 
+## Table of Contents
+
+* [Motivation](#Motivation)
+* [Dependencies](#Dependencies)
+* [1. Data acquisition](#Data-acquisition)
+* [2.i. Model training](#Model-training)
+* [2.ii. Continuation of model training](#Continuation-of-model-training)
+* [3. Combinination of log directories](#Combinination-of-log-directories)
+* [4. Visualization](#Visualization)
+
 ### Motivation
 
 As mentioned in our base readme, we are motivated to generate realistic biomedical time series from the existing [MIMIC-III](https://github.com/YerevaNN/mimic3-benchmarks) benchmark dataset. In regards to our proposed GAN architecture, we are inspired by the RGAN and RCGAN architectures proposed by [Esteban et al. 2017](https://arxiv.org/abs/1706.02633). In order to evaluate the quality of generated time series, we aim to use the evaluation techniques proposed by Esteban et al. 2017; namely utilizing Maximum Mean Discrepancy and the "Train on Sythetic, Test on Real"/"Train on Real, Test on Synthetic" frameworks.
@@ -7,6 +17,22 @@ As mentioned in our base readme, we are motivated to generate realistic biomedic
 However, we must acknowledge that a jump to these frameworks is difficult since the pipeline from data generation to evaluation is long and complex. In order to simplify this process and to establish a benchmark or proof-of-concept, we utilize a similar strategy as in Esteban et al. 2017; namely to treat existing image data as time series and to attempt to generate realistic looking images through a time series framework. One clear advantage of this technique is that generated data evaluation becomes simplified since we can (crudely) visually inspect generated images to see if they at least look realistic.
 
 From this, we can make a simplified assumption that a recurrent GAN model that can arbitrarily generate complex images can also (probably) abstract its performance to other time series of similar dimensionality and complexity. As a result, we aim to start off by generating realistic images (modeled as time series) and to eventually extend our application to MIMIC-III biomedical data.
+
+### Dependencies
+
+1. Install python dependencies located in `requirements.txt`:
+
+```
+$ pip install --user -r requirements.txt
+```
+
+2. Install R-based dependencies used in `gg.R`:
+
+```R
+> install.packages(c("ggplot2","tools","extrafont","reshape2","optparse","plyr"))
+```
+
+3. Optional: Install [binary](https://github.com/nwtgck/gif-progress) for adding progress bar to produced gif's.
 
 ### 1. Data acquisition
 
@@ -171,14 +197,18 @@ Here, the log directory argument becomes a required argument. To put this more c
 $ python3 train.py --continue-train --log-dir ./pickles/2019_10_20_19_02_22_RGAN_faces --epochs 200
 ```
 
-All input features to the model (other than `--data`) can be redefined; providing the user with the ability to modify some aspects of the training evolution. Upon continuing training, a new log file with the following structure will be created: `(old_datetime_string)(model)(new_datetime_string)(data)` and the same corresponding model data will be saved here. An example of a resulting continuation log directory is `2019_10_20_19_02_22_RGAN_2019_10_24_13_45_01_faces`.
+All input features to the model (other than `--data`) can be redefined; providing the user with the ability to modify some aspects of the training evolution. All undefined input features will default to those of the previous run. Upon continuing training, a new log file with the following structure will be created: `(old_datetime_string)(model)(new_datetime_string)(data)` and the same corresponding model data will be saved here. An example of a resulting continuation log directory is `2019_10_20_19_02_22_RGAN_2019_10_24_13_45_01_faces`.
+
+### Combination of log directories
+
+### Visualization
 
 ### Comments
 
 * show utility of combine logs
 * show visualizations
 * add TOC to long readme
-* add caveat section at end with link to some areas with all exceptions due to current development
+* add caveat section at end with link to some areas with all exceptions due to current development (link to this in descriptions)
 * mention RCGAN is still under development
 
 * provide links to model developments and stabilization techniques
@@ -186,5 +216,6 @@ All input features to the model (other than `--data`) can be redefined; providin
 * different flattening techniques, ie. as 1d time series or with more dimensions
 * section on current performance of models and next steps based on performances
 
+* add first section on all dependencies ie. python, R and progress-bar binary (link to this in descriptions)
 * add acknowledgements for keras GAN implementations
 * run spell-check on readme
