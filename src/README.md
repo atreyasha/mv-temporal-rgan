@@ -4,11 +4,11 @@
 
 * [Motivation](#Motivation)
 * [Dependencies](#Dependencies)
-* [1. Data acquisition](#Data-acquisition)
-* [2.i. Model training](#Model-training)
-* [2.ii. Continuation of model training](#Continuation-of-model-training)
-* [3. Combinination of log directories](#Combinination-of-log-directories)
-* [4. Visualization](#Visualization)
+* [1. Data acquisition](#1-Data-acquisition)
+* [2.i. Model training](#2i-Model-training)
+* [2.ii. Continuation of model training](#2iiContinuation-of-model-training)
+* [3. Combinination of log directories](#3-Combinination-of-log-directories)
+* [4. Visualization](#4-Visualization)
 
 ### Motivation
 
@@ -199,9 +199,9 @@ $ python3 train.py --continue-train --log-dir ./pickles/2019_10_20_19_02_22_RGAN
 
 All input features to the model (other than `--data`) can be redefined; providing the user with the ability to modify some aspects of the training evolution. All undefined input features will default to those of the previous run. Upon continuing training, a new log file with the following structure will be created: `(old_datetime_string)(model)(new_datetime_string)(data)` and the same corresponding model data will be saved here. An example of a resulting continuation log directory is `2019_10_20_19_02_22_RGAN_2019_10_24_13_45_01_faces`.
 
-### Combination of log directories
+### 3. Combination of log directories
 
-### Visualization
+### 4. Visualization
 
 ### Comments
 
