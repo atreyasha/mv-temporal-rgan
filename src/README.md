@@ -201,21 +201,85 @@ All input features to the model (other than `--data`) can be redefined; providin
 
 ### 3. Combination of log directories
 
+Suppose you ran multiple training sessions for a given log directory. As a result of this, you may end up having multiple sequential log directories, such as `2019_10_20_19_02_22_RGAN_faces` and `2019_10_20_19_02_22_RGAN_2019_10_24_13_45_01_faces`. At the end of your training sessions, you can combine these directories into a single directory by using `combine-logs.py`:
+
+```
+usage: combine_logs.py [-h] --log-dir LOG_DIR
+
+optional arguments:
+  -h, --help         show this help message and exit
+
+required name arguments:
+  --log-dir LOG_DIR  base directory within pickles from which to combine
+                     recursively forward in time
+```
+
+In the above defined example, you could combine both logs by running the following on the `base` or oldest directory:
+
+```
+$ python3 combine_logs.py --log-dir ./pickles/2019_10_20_19_02_22_RGAN_faces 
+```
+
+This process prunes old directories and combines only the relevant results. The resulting final log directory can then be used for visualization or perhaps even further training. The final combined director will use newest `datetime` string in the form: `(newest_datetime_string)(model)(data)`; which would be `2019_10_24_13_45_01_RGAN_faces` in our previous example. 
+
 ### 4. Visualization
 
-### Comments
+Once we have our pruned and combined log directories, we can proceed with plotting some of the training metrics.
 
-* show utility of combine logs
-* show visualizations
-* add TOC to long readme
-* add caveat section at end with link to some areas with all exceptions due to current development (link to this in descriptions)
-* mention RCGAN is still under development
+```
+usage: vis.py [-h] --log-dir LOG_DIR [--number-ticks NUMBER_TICKS]
+              [--create-gif] [--shrink-factor SHRINK_FACTOR]
+              [--skip-rate SKIP_RATE] [--interval INTERVAL] [--until UNTIL]
+              [--progress-bar]
 
-* provide links to model developments and stabilization techniques
-* link actual model performances and descriptions below
-* different flattening techniques, ie. as 1d time series or with more dimensions
-* section on current performance of models and next steps based on performances
+optional arguments:
+  -h, --help            show this help message and exit
+  --number-ticks NUMBER_TICKS
+                        number of x-axis ticks to use in main plots (default:
+                        10)
+  --create-gif          option to active gif creation (default: False)
+  --shrink-factor SHRINK_FACTOR
+                        shrinking factor for images, applies only when
+                        --create-gif is supplied (default: 4)
+  --skip-rate SKIP_RATE
+                        skip interval when using images to construct gif,
+                        applies only when --create-gif is supplied (default:
+                        2)
+  --interval INTERVAL   time interval when constructing gifs from images,
+                        applies only when --create-gif is supplied (default:
+                        0.1)
+  --until UNTIL         set upper epoch limit for gif creation, applies only
+                        when --create-gif is supplied (default: None)
+  --progress-bar        option to add progress bar to gifs, applies only when
+                        --create-gif is supplied; check readme for additional
+                        go package installation instructions (default: False)
 
-* add first section on all dependencies ie. python, R and progress-bar binary (link to this in descriptions)
-* add acknowledgements for keras GAN implementations
-* run spell-check on readme
+required name arguments:
+  --log-dir LOG_DIR     base directory within pickles from which to visualize
+                        (default: None)
+```
+
+An example of running this script is as follows:
+
+```
+$ python3 vis.py --log-dir ./pickles/2019_10_20_19_02_22_RGAN_faces --create-gif --progress-bar
+```
+
+This will create resulting loss evolution graphs and a gif with a progress bar showing how constant noise vector image generations evolved with training epochs.
+
+<!-- ### Comments -->
+<!-- * show utility of combine logs -->
+<!-- * show visualizations -->
+<!-- * add caveat section at end with link to some areas with all exceptions due to current development (link to this in descriptions) -->
+<!-- * mention RCGAN is still under development -->
+<!-- * add section for showing model results and add caveat for plotting gradients -->
+<!-- * perhaps link caveats to development log for more consistency -->
+
+<!-- * provide links to model developments and stabilization techniques -->
+<!-- * link actual model performances and descriptions below -->
+<!-- * different flattening techniques, ie. as 1d time series or with more dimensions -->
+<!-- * section on current performance of models and next steps based on performances -->
+
+<!-- * add first section on all dependencies ie. python, R and progress-bar binary (link to this in descriptions) -->
+<!-- * add acknowledgements for keras GAN implementations -->
+<!-- * run spell-check on readme -->
