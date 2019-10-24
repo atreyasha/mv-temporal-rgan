@@ -54,8 +54,8 @@ usage: train.py [-h] [--data DATA] [--latent-dim LATENT_DIM] [--epochs EPOCHS]
                 [--batch-size BATCH_SIZE] [--learning-rate LEARNING_RATE]
                 [--g-factor G_FACTOR] [--droprate DROPRATE]
                 [--momentum MOMENTUM] [--alpha ALPHA]
-                [--saving-rate SAVING_RATE] [--continue-train] [--plot-model]
-                [--log-dir LOG_DIR]
+                [--saving-rate SAVING_RATE] [--continue-train]
+                [--log-dir LOG_DIR] [--plot-model]
 
 optional arguments:
   -h, --help            show this help message and exit
@@ -84,10 +84,10 @@ optional arguments:
   --continue-train      option to continue training model within log
                         directory; requires --log-dir option to be defined
                         (default: False)
-  --plot-model          option to plot keras model (default: False)
   --log-dir LOG_DIR     log directory within ./pickles/ whose model should be
                         further trained, only required when --continue-train
                         option is specified (default: None)
+  --plot-model          option to plot keras model (default: False
 ```
 
 This script will train a RGAN/RCGAN model based on the above specifications. An example of running this script is as shown:
@@ -96,7 +96,7 @@ This script will train a RGAN/RCGAN model based on the above specifications. An 
 $ python3 train.py --data faces --epochs 500
 ```
 
-The training process will create a log directory within the `./pickles` directory, where an initialization file `init.csv`, log file `log.csv` and constant noise vector image generations will be saved. Furthermore, model weights will also be saved according to the `saving-rate` defined above. An example of a log-directory name is `2019_10_20_19_02_22_RGAN_faces`, which can be simplied in the three naming subgroups: `(datetime_string)(model)(data)`.
+The training process will create a log directory within the `./pickles` directory, where an initialization file `init.csv`, log file `log.csv` and constant noise vector image generations will be saved. Furthermore, model weights will also be saved according to the `saving-rate` defined above. An example of a log directory name is `2019_10_20_19_02_22_RGAN_faces`, which can be simplied in the three naming subgroups: `(datetime_string)(model)(data)`.
 
 An example tree structure of a log directory is as shown:
 
@@ -127,8 +127,8 @@ usage: train.py [-h] [--data DATA] [--latent-dim LATENT_DIM] [--epochs EPOCHS]
                 [--batch-size BATCH_SIZE] [--learning-rate LEARNING_RATE]
                 [--g-factor G_FACTOR] [--droprate DROPRATE]
                 [--momentum MOMENTUM] [--alpha ALPHA]
-                [--saving-rate SAVING_RATE] [--continue-train] [--plot-model]
-                --log-dir LOG_DIR
+                [--saving-rate SAVING_RATE] [--continue-train] --log-dir
+                LOG_DIR [--plot-model]
 
 optional arguments:
   -h, --help            show this help message and exit
@@ -158,6 +158,8 @@ optional arguments:
                         directory; requires --log-dir option to be defined
                         (default: False)
   --plot-model          option to plot keras model (default: False)
+
+required name arguments:
   --log-dir LOG_DIR     log directory within ./pickles/ whose model should be
                         further trained, only required when --continue-train
                         option is specified (default: None)
@@ -173,13 +175,16 @@ All input features to the model (other than `--data`) can be redefined; providin
 
 ### Comments
 
-* add TOC to long readme
-* add caveat section at end with link to some areas with all exceptions due to current development
-* provide links to model developments and stabilization techniques
-* mention RCGAN is still under development
 * show utility of combine logs
 * show visualizations
+* add TOC to long readme
+* add caveat section at end with link to some areas with all exceptions due to current development
+* mention RCGAN is still under development
+
+* provide links to model developments and stabilization techniques
 * link actual model performances and descriptions below
 * different flattening techniques, ie. as 1d time series or with more dimensions
 * section on current performance of models and next steps based on performances
-* run spell-check
+
+* add acknowledgements for keras GAN implementations
+* run spell-check on readme

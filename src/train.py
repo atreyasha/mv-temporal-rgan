@@ -136,10 +136,15 @@ if __name__ == "__main__":
                         help="epoch period on which the model weights should be saved")
     parser.add_argument("--continue-train", default=False, action="store_true",
                         help="option to continue training model within log directory; requires --log-dir option to be defined")
+    if "--continue-train" in sys.argv:
+        required = parser.add_argument_group("required name arguments")
+        required.add_argument("--log-dir", required=True,
+                        help="log directory within ./pickles/ whose model should be further trained, only required when --continue-train option is specified")
+    else:
+        parser.add_argument("--log-dir", required=False,
+                        help="log directory within ./pickles/ whose model should be further trained, only required when --continue-train option is specified")
     parser.add_argument("--plot-model", default=False, action="store_true",
                         help="option to plot keras model")
-    parser.add_argument("--log-dir", required="--continue-train" in sys.argv,
-                        help="log directory within ./pickles/ whose model should be further trained, only required when --continue-train option is specified")
     args = parser.parse_args()
     if args.plot_model:
         plot_M()
