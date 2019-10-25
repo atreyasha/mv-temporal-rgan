@@ -3,50 +3,47 @@ Workflow changes
 
 ### Model visualization and presentation
 
-1.  [TODO]{.todo .TODO} consider case where pruning/combining is done on
-    single file without any other chrons, what will be the process
-
-2.  [TODO]{.todo .TODO} work on readme based on current results, add
+1.  **TODO** work on readme based on current results, add
     possible table of contents to readme in src for easier reading
 
-3.  [TODO]{.todo .TODO} make todos.org look better on github with proper
+2.  **TODO** make todos.org look better on github with proper
     dates and formatting
 
-4.  add to readme that gif-progress/R must be installed on system
+3.  add to readme that gif-progress/R must be installed on system
 
-5.  make waveform type of visualization of datasets and generated
+4.  make waveform type of visualization of datasets and generated
     products
 
-6.  add MIMIC-III 2d projection depiction as gif on initial readme
+5.  add MIMIC-III 2d projection depiction as gif on initial readme
 
-7.  change matplotlib backend default back to instant working version
+6.  change matplotlib backend default back to instant working version
     when necessary
 
-8.  add function to generate best samples from trained model aside from
+7.  add function to generate best samples from trained model aside from
     already generated image
 
 ### Model stabilization and abstraction
 
-1.  [TODO]{.todo .TODO} use Gaussian noise addition to images (to
+1.  **TODO** use Gaussian noise addition to images (to
     prevent mode collapse and add robustness) and Gaussian-noise label
     smoothing (non-model)
 
-2.  [TODO]{.todo .TODO} use multi-scale gradient and spectral
+2.  **TODO** use multi-scale gradient and spectral
     normalization (model), first non-model then model-based changes
 
-3.  [TODO]{.todo .TODO} make network deeper and review eth rgan model
+3.  **TODO** make network deeper and review eth rgan model
     for comparison
 
-4.  [TODO]{.todo .TODO} use Wasserstein loss and dilations for larger
+4.  **TODO** use Wasserstein loss and dilations for larger
     scale temporal relations
 
-5.  [TODO]{.todo .TODO} consider removing LSTM in generator and adding
+5.  **TODO** consider removing LSTM in generator and adding
     additional LSTM in discriminator
 
-6.  [TODO]{.todo .TODO} use rows as channels, separate rows from
+6.  **TODO** use rows as channels, separate rows from
     temporal pipeline for better convergence
 
-7.  [TODO]{.todo .TODO} work on more efficient hard model memory
+7.  **TODO** work on more efficient hard model memory
     handling (saving only one instance of weights in comb.h5 and
     abstracting via layer numbers)
 
@@ -60,11 +57,15 @@ Workflow changes
 
 ### Model application to biomedical time series
 
-1.  [TODO]{.todo .TODO} visualize data from MIMIC-III github repository
+1.  **TODO** visualize data from MIMIC-III github repository
     to see smoothness or roughness
 
-2.  [TODO]{.todo .TODO} apply RGAN technique towards this process and
+2.  **TODO** apply RGAN technique towards this process and
     verify results with existing models through TSTR/TRTS and MMD checks
+
+### Caveats
+
+1.  add points here which will go to main readme
 
 ### Feedback from discussion
 

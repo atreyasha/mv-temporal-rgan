@@ -13,6 +13,9 @@ pipreqs --force .
 # convert todos.org to todos.md
 pandoc -f org -t markdown -o ./docs/todos.md ./docs/todos.org
 
+# replace TODOs cleanly
+sed -i 's/\[.*\]{.*}/**TODO**/g' ./docs/todos.md
+
 # add requirements.txt to stage for commit
 git add requirements.txt
 git add ./docs/todos.md
