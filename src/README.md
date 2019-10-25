@@ -335,7 +335,7 @@ $ tree ./pickles/2019_10_24_13_45_01_RGAN_faces -L 1
 2 directories, 7 files
 ```
 
-## Acknowledgements
+## Acknowledgments
 
 @eriklindernoren Keras-GAN GitHub [repository](https://github.com/eriklindernoren/Keras-GAN) (inspired source code for this repository)
 
