@@ -343,7 +343,7 @@ $ tree ./pickles/2019_10_24_13_45_01_RGAN_faces -L 1
 
 2. RCGAN support is still under development and will come after successful development of our RGAN
 
-3. Model architectures are not fixed as yet and will undergo further changes in terms of increased depth and stabilization techniques
+3. Model architectures are not fixed as yet and will undergo further changes in terms of increased depth and enhanced stabilization techniques
 
 ## Developments
 
