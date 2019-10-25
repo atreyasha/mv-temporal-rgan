@@ -7,16 +7,15 @@
 #
 # To enable this hook, rename this file to "pre-commit".
 
-test=$(python3 -m pip list | grep -F "pipreqs")
+# update requirements.txt
+pipreqs --force .
 
-if [ ${#test} -gt 0 ]
-then
-	# execute to update requirements
-	pipreqs --force .
-fi
+# convert todos.org to todos.md
+pandoc -f org -t markdown -o todos.md todos.org
 
 # add requirements.txt to stage for commit
 git add requirements.txt
+
 
 if git rev-parse --verify HEAD >/dev/null 2>&1
 then

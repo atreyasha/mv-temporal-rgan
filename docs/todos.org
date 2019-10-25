@@ -1,16 +1,16 @@
-* Workflow developments
+** Workflow changes
 
-** Model visualization and presentation
+*** Model visualization and presentation
 ***** TODO consider case where pruning/combining is done on single file without any other chrons, what will be the process
 ***** TODO work on readme based on current results, add possible table of contents to readme in src for easier reading
 ***** TODO make todos.org look better on github with proper dates and formatting
 ***** add to readme that gif-progress/R must be installed on system
-***** make waveform type of visualization of datasets and generated products 
+***** make waveform type of visualization of datasets and generated products
 ***** add MIMIC-III 2d projection depiction as gif on initial readme
 ***** change matplotlib backend default back to instant working version when necessary
 ***** add function to generate best samples from trained model aside from already generated image
 
-** Model stabilization and abstraction
+*** Model stabilization and abstraction
 ***** TODO use Gaussian noise addition to images (to prevent mode collapse and add robustness) and Gaussian-noise label smoothing (non-model)
 ***** TODO use multi-scale gradient and spectral normalization (model), first non-model then model-based changes 
 ***** TODO make network deeper and review eth rgan model for comparison
@@ -22,69 +22,69 @@
 ***** extend models to RCGANs once results are satisfactory
 ***** make pipeline adaptable to higher dimensional data in case of 64 dimensional lfw faces
 
-** Model application to biomedical time series
+*** Model application to biomedical time series
 ***** TODO visualize data from MIMIC-III github repository to see smoothness or roughness
 ***** TODO apply RGAN technique towards this process and verify results with existing models through TSTR/TRTS and MMD checks
 
-** Feedback from discussion
-   - try out Wasserstein loss function and dilations in CNNs
-   - convert each row to embedding
-   - pooling/attention LSTMs for higher look-back capability
-   - pass that to next LSTM row by row
-   - try extra time distribution between rows/sequences
-   - try layer vs. batch normalization vs. spectral normalization
-   - attempt SELU layer if easily available
-   - try more stable implementations of generative models such as R-autoencoders
-   - try architectures which do not suffer from mode collapse, eg. autoencoder/non-variational/transformer
+*** Feedback from discussion
+***** try out Wasserstein loss function and dilations in CNNs
+***** convert each row to embedding
+***** pooling/attention LSTMs for higher look-back capability
+***** pass that to next LSTM row by row
+***** try extra time distribution between rows/sequences
+***** try layer vs. batch normalization vs. spectral normalization
+***** attempt SELU layer if easily available
+***** try more stable implementations of generative models such as R-autoencoders
+***** try architectures which do not suffer from mode collapse, eg. autoencoder/non-variational/transformer
 
-** Backup Google Colab
-   - work on google drive cli access for streamlined model runs
-   - link google colab to local jupyter runtime
-   - run multiple notebooks directly from computer without browser
-   - sync google drive to localhost for easy access
+*** Backup Google Colab
+***** work on google drive cli access for streamlined model runs
+***** link google colab to local jupyter runtime
+***** run multiple notebooks directly from computer without browser
+***** sync google drive to localhost for easy access
 
-** GPU management
-   - try to share memory and tasks between gpus (multi_gpu_model)
-   - try to use memory limiting in code in case GPUs are already being used
+*** GPU management
+***** try to share memory and tasks between gpus (multi_gpu_model)
+***** try to use memory limiting in code in case GPUs are already being used
 
-** Heuristics
-   - add gradient checks for logging and change vis.py to include colour on loss line for gradients
-   - set up crowd-sourced grid-search via emails to check results
-   - optionally use tensorboard to analyze learning process
-   - look for similarity measure metrics which could be used alongside training
+*** Heuristics
+***** add gradient checks for logging and change vis.py to include colour on loss line for gradients
+***** set up crowd-sourced grid-search via emails to check results
+***** optionally use tensorboard to analyze learning process
+***** look for similarity measure metrics which could be used alongside training
 
-** Clean-code/documentation
-   - make intermediate documentation and add configuration for command line gpu usage to readme
-   - track how many epochs or batch runs needed to converge and try to optimize this (~1000 for good results)
-   - add conditions to "train.py" to add separate pipeline in RCGAN training
+*** Clean-code/documentation
+***** make intermediate documentation and add configuration for command line gpu usage to readme
+***** track how many epochs or batch runs needed to converge and try to optimize this (~1000 for good results)
+***** add conditions to "train.py" to add separate pipeline in RCGAN training
 
-** Additional checks
-   - look into unsupervised feature extraction in ML
-   - isolate personal identification features in discriminator from generated time series
-   - use adversarial samples to generate bad data that network falsely predicts
+*** Additional checks
+***** look into unsupervised feature extraction in ML
+***** isolate personal identification features in discriminator from generated time series
+***** use adversarial samples to generate bad data that network falsely predicts
 
-** Brainstorming points
-*** GAN stabilisation:
-    - Gaussian label smoothing
-    - differing learning rates for optimizers
-    - Gaussian noise addition to images
-    - spectral normalization
-    - multi-scale gradient
-*** Evaluation pipeline
-    - use MIMIC data/models for direct TSTR/TRTS validations
-    - use TSTR/TRTS methodologies and identification issues to evaluate model
-    - combine various quality indicators to evaluate final model results
-    - explore privacy perspective and whether GAN is able to remove personal traits
-    - or consider another architecture which can perform this function
-*** Networks and higher-dimensions abstraction
-    - extend to 64 pixels faces to check if abstraction possible
-    - make model more complex to learn arbitrary sequences more efficiently
-    - extend to RCGAN with realistic conditionings for actual usable data genration
-    - check out mathematical proofs for convergence on GAN's and relation to Nash equilibrium
-*** Input images and feature masking
-    - come up with mask to create or ignore feature differences
-    - consider normalizing in a different way, via local max or possible integration
-    - plot input time series as normalized 2d images to show variation
-*** Documentation and code-health:
-    - fix unused imports and sort with python tools
-    - encode proper documentation and model visualizations
+*** Brainstorming points
+**** GAN stabilisation:
+***** Gaussian label smoothing
+***** differing learning rates for optimizers
+***** Gaussian noise addition to images
+***** spectral normalization
+***** multi-scale gradient
+**** Evaluation pipeline
+***** use MIMIC data/models for direct TSTR/TRTS validations
+***** use TSTR/TRTS methodologies and identification issues to evaluate model
+***** combine various quality indicators to evaluate final model results
+***** explore privacy perspective and whether GAN is able to remove personal traits
+***** or consider another architecture which can perform this function
+**** Networks and higher-dimensions abstraction
+***** extend to 64 pixels faces to check if abstraction possible
+***** make model more complex to learn arbitrary sequences more efficiently
+***** extend to RCGAN with realistic conditionings for actual usable data genration
+***** check out mathematical proofs for convergence on GAN's and relation to Nash equilibrium
+**** Input images and feature masking
+***** come up with mask to create or ignore feature differences
+***** consider normalizing in a different way, via local max or possible integration
+***** plot input time series as normalized 2d images to show variation
+**** Documentation and code-health:
+***** fix unused imports and sort with python tools
+***** encode proper documentation and model visualizations
