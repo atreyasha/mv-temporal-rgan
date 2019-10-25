@@ -1,6 +1,7 @@
 ** Workflow changes
 
 *** Model visualization and presentation
+***** TODO consider case where pruning/combining is done on single file without any other chrons, what will be the process
 ***** TODO work on readme based on current results, add possible table of contents to readme in src for easier reading
 ***** TODO make todos.org look better on github with proper dates and formatting
 ***** add to readme that gif-progress/R must be installed on system
@@ -8,7 +9,6 @@
 ***** add MIMIC-III 2d projection depiction as gif on initial readme
 ***** change matplotlib backend default back to instant working version when necessary
 ***** add function to generate best samples from trained model aside from already generated image
-***** consider case where pruning/combining is done on single file without any other chrons, what will be the process
 
 *** Model stabilization and abstraction
 ***** TODO use Gaussian noise addition to images (to prevent mode collapse and add robustness) and Gaussian-noise label smoothing (non-model)
