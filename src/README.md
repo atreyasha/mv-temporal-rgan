@@ -10,7 +10,7 @@
     * [2.ii. Continuation of model training](#2ii-Continuation-of-model-training)
     * [3. Pruning and combination of log directories](#3-Pruning-and-combination-of-log-directories)
     * [4. Visualization](#4-Visualization)
-* [Acknowledgements](#acknowledgments)
+* [Acknowledgements](#Acknowledgments)
 
 ## Motivation
 
