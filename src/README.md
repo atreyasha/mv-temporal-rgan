@@ -73,7 +73,7 @@ optional arguments:
   --out OUT             output file name (default: lfw.npy)
 ```
 
-The motivation for having LFWcrop greyscale faces is that it has much fewer data instances compared to its MNIST counterparts (13,000 vs. 60,000; similar to MIMIC-III), and faces tend to be much more complex in terms of sequential pixel patterns. As a result, we believe that effectively generating LFWcrop faces through a recurrent GAN architecture could provide a stronger backing for the ability to abstract to other complex time series such as those in the biomedical field.
+The motivation for having LFWcrop greyscale faces is that it has much fewer data instances compared to its MNIST counterparts (~13,000 vs. 60,000; similar to MIMIC-III), and faces tend to be much more complex in terms of sequential pixel patterns. As a result, we believe that effectively generating LFWcrop faces through a recurrent GAN architecture could provide a stronger backing for the ability to abstract to other complex time series such as those in the biomedical field.
 
 ### 2.i. Model training[*](#Caveats)
 
