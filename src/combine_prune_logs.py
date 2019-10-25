@@ -124,7 +124,7 @@ def make_fake_df(epochs):
                   "g_acc":np.full(epochs,np.nan)}
     return pd.DataFrame(fieldnames)
 
-def combineLogs(direct):
+def combine_prune_logs(direct):
     # clean up directory input
     direct = re.sub(r"(\/)?$","",direct)
     direct = re.sub(r"(\.\/)?pickles\/","",direct)
@@ -133,24 +133,40 @@ def combineLogs(direct):
         sys.exit(directLong+" does not exist")
     # list related directories chronologically
     chron = iter_temporal_find(direct)
-    assert len(chron[-1:]) == 1
-    # create new directory to replace old ones
-    new_direct = re.sub("(.*)(_R(C)?GAN)(_)(.*)(_.*)$","\g<5>\g<2>\g<6>",chron[-1:][0])
-    new_direct_long = "./pickles/"+new_direct
-    os.makedirs(new_direct_long,exist_ok=True)
-    os.makedirs(new_direct_long+"/img",exist_ok=True)
-    # prune existing directories
-    prune_dirs(chron)
-    # copy and combine images
-    copy_increment_images(chron,new_direct_long)
-    # copy and combine log's and init's
-    copy_log_init(chron,new_direct_long)
-    # copy over final weights
-    weights = glob.glob(chron[-1:][0]+"/*h5")
-    weights.extend(glob.glob(chron[-1:][0]+"/*pickle"))
-    [shutil.copy(weight,new_direct_long) for weight in weights]
-    # move all processed directories into archive
-    [shutil.move(dr,"./pickles/archive/") for dr in chron]
+    if len(chron) > 1:
+        # create new directory to replace old ones
+        new_direct = re.sub("(.*)(_R(C)?GAN)(_)(.*)(_.*)$","\g<5>\g<2>\g<6>",chron[-1:][0])
+        new_direct_long = "./pickles/"+new_direct
+        os.makedirs(new_direct_long,exist_ok=True)
+        os.makedirs(new_direct_long+"/img",exist_ok=True)
+        # prune existing directories
+        prune_dirs(chron)
+        # copy and combine images
+        copy_increment_images(chron,new_direct_long)
+        # copy and combine log's and init's
+        copy_log_init(chron,new_direct_long)
+        # copy over final weights
+        weights = glob.glob(chron[-1:][0]+"/*h5")
+        weights.extend(glob.glob(chron[-1:][0]+"/*pickle"))
+        [shutil.copy(weight,new_direct_long) for weight in weights]
+        # move all processed directories into archive
+        [shutil.move(dr,"./pickles/archive/") for dr in chron]
+    else:
+        # prune existing directories
+        prune_dirs(chron)
+        backup_images = glob.glob(directLong+"/img/*bak")
+        if len(backup_images) > 0:
+            [os.remove(img) for img in backup_images]
+        src = glob.glob(directLong+"/*csv")
+        # pipeline to merge log.csv
+        src_init_file = [fl for fl in src if "init.csv" in fl][0]
+        src_init_df = pd.read_csv(src_init_file)
+        if "until" not in src_init_df.columns:
+            src_log_file = [fl for fl in src if "log.csv" in fl][0]
+            src_log_df = pd.read_csv(src_log_file)
+            max_epoch = max(src_log_df["epoch"])
+            src_init_df["until"] = max_epoch
+            src_init_df.to_csv(src_init_file,index=False)
 
 ###############################
 # main command call
@@ -160,6 +176,6 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     required = parser.add_argument_group("required name arguments")
     required.add_argument("--log-dir", type=str, required=True,
-                        help="base directory within pickles from which to combine recursively forward in time")
+                        help="base directory within pickles from which to combine/prune recursively forward in time")
     args = parser.parse_args()
-    combineLogs(args.log_dir)
+    combine_prune_logs(args.log_dir)

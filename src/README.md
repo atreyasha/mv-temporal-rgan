@@ -41,9 +41,9 @@ The process of acquiring MIMIC-III and other proof-of-concept datasets (MNIST, f
 
 The process of training a RGAN/RCGAN model on relevant datasets, as well as resuming previously trained models is documented [here](/src/docs/model_training.md).
 
-### 3. Combination of log directories
+### 3. Pruning and combination of log directories
 
-Training of models results in the production of log directories. The process of combining multiple log directories into a single directory is documented [here](/src/docs/combine_logs.md).
+Training of models results in the production of log directories. The process of pruning and combining multiple (or individual) log directories into a single directory is documented [here](/src/docs/combine_prune_logs.md).
 
 ### 4. Visualization
 
