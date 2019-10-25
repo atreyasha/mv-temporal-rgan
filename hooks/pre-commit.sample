@@ -11,7 +11,7 @@
 pipreqs --force .
 
 # convert todos.org to todos.md
-pandoc -f org -t markdown -o todos.md ./docs/todos.org
+pandoc -f org -t markdown -o ./docs/todos.md ./docs/todos.org
 
 # add requirements.txt to stage for commit
 git add requirements.txt
