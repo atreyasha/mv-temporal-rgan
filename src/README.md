@@ -50,9 +50,9 @@ $ ./init.sh
 
 Upon running this script, three prompts will appear sequentially. 
 
-1. The first requests for initiliazing a pre-commit git hook to keep python dependencies in `requirements.txt` up-to-date.
+1. The first requests initiliazing a pre-commit git hook to keep python dependencies in `requirements.txt` up-to-date.
 
-2. The next prompt asks if the user wants to download and unzip the LFWcrop greyscale faces
+2. The next prompt requests if the user wants to download and unzip the LFWcrop greyscale faces
 
 3. The final prompt requests if the user wants to downsample the native LFWcrop greyscale faces from 64x64 to 28x28, such that it can be easier to run unit tests.
 
@@ -206,9 +206,9 @@ All input features to the model (other than `--data`) can be redefined; providin
 An example of the resulting tree structure (after continuing training) in `./pickles` would be:
 
 ```
-$ tree pickles -L 1
+$ tree ./pickles -L 1
 
-pickles
+./pickles
 ├── archive
 ├── 2019_10_20_19_02_22_RGAN_faces 
 └── 2019_10_20_19_02_22_RGAN_2019_10_24_13_45_01_faces
@@ -228,9 +228,9 @@ $ python3 train.py --continue-train \
 Suppose you ran multiple training sessions for a given log directory. As a result of this, you may end up having multiple sequential log directories, such as below:
 
 ```
-$ tree pickles -L 1
+$ tree ./pickles -L 1
 
-pickles
+./pickles
 ├── archive
 ├── 2019_10_20_19_02_22_RGAN_faces 
 └── 2019_10_20_19_02_22_RGAN_2019_10_24_13_45_01_faces
@@ -260,9 +260,9 @@ $ python3 combine_prune_logs.py --log-dir ./pickles/2019_10_20_19_02_22_RGAN_fac
 This process prunes old directories and combines only the relevant results. The resulting final log directory can then be used for visualization or perhaps even further training. The final combined directory will use the newest `datetime` string in the form: `(newest_datetime_string)(model)(data)`; which would be `2019_10_24_13_45_01_RGAN_faces` in our previous example. The previous or old log directories will be moved into `./pickles/archive`, resulting in a new tree structure as below:
 
 ```
-$ tree pickles -L 1
+$ tree ./pickles -L 1
 
-pickles
+./pickles
 ├── archive
 └── 2019_10_24_13_45_01_RGAN_faces
 
@@ -340,12 +340,14 @@ $ tree ./pickles/2019_10_24_13_45_01_RGAN_faces -L 1
 @eriklindernoren Keras-GAN GitHub [repository](https://github.com/eriklindernoren/Keras-GAN) (inspired source code for this repository)
 
 <!-- ### Comments -->
+<!-- * improve look and feel of todos.org and place hook to put caveats into readmde -->
+
 <!-- * add caveat section at end with link to some areas with all exceptions due to current development (link to this in descriptions) -->
 <!-- * add hook to migrate caveats from todos.org directly into relevant files -->
-
-<!-- * provide links to model developments and stabilization techniques -->
 <!-- * mention RCGAN is still under development -->
 <!-- * add section for showing model results and add caveat for plotting gradients -->
 <!-- * different flattening techniques, ie. as 1d time series or with more dimensions -->
+
+<!-- * provide links to model developments and stabilization techniques -->
 
 <!-- * run spell-check on readme -->
