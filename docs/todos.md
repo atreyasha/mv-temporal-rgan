@@ -23,7 +23,7 @@ Workflow changes
     when necessary
 
 7.  add MIMIC-III 2d projection depiction and learning as gif on initial
-    readmue
+    readme
 
 8.  remove caveats in readme once relevant developments are complete
 
@@ -52,12 +52,15 @@ Workflow changes
     handling (saving only one instance of weights in comb.h5 and
     abstracting via layer numbers)
 
-8.  after making above mode-based changes, run all 3 data-based models
+8.  **TODO** export optimizer weights as h5 instead of pickle
+    for data consistency and compactness
+
+9.  after making above mode-based changes, run all 3 data-based models
     to see results
 
-9.  extend models to RCGANs once results are satisfactory
+10. extend models to RCGANs once results are satisfactory
 
-10. make pipeline variable/adaptable/scalable to higher dimensional data
+11. make pipeline variable/adaptable/scalable to higher dimensional data
     in case of 64 dimensional lfw faces
 
 ### Model application to biomedical time series
