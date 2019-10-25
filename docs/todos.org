@@ -1,5 +1,7 @@
 ** Workflow changes
 
+- consider recombining into single readme 
+
 *** Model visualization and presentation
 ***** TODO consider case where pruning/combining is done on single file without any other chrons, what will be the process
 ***** TODO work on readme based on current results, add possible table of contents to readme in src for easier reading
