@@ -2,12 +2,13 @@
 
 *** Model visualization and presentation
 ***** TODO add initial model summary/architectures/feedback/performance into readme
-***** work on better connection between readme and development-log by piping certain points on pre-commit hooks
+***** work on better connection between readme and development-log by piping certain points on pre-commit hooks; or otherwise manage caveats in readme actively
 ***** make todos.org look better on github with proper dates and formatting
 ***** make waveform type of visualization of datasets and generated products for preliminary datasets and MIMIC-III
 ***** add function to generate best samples from trained model aside from already generated image
 ***** change matplotlib backend default back to instant working version when necessary
-***** add MIMIC-III 2d projection depiction and learning as gif on initial readme
+***** add MIMIC-III 2d projection depiction and learning as gif on initial readmue
+***** remove caveats in readme once relevant developments are complete
 
 *** Model stabilization and abstraction
 ***** TODO use Gaussian noise addition to images (to prevent mode collapse and add robustness) and Gaussian-noise label smoothing (non-model)

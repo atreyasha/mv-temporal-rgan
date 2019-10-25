@@ -7,7 +7,8 @@ Workflow changes
     summary/architectures/feedback/performance into readme
 
 2.  work on better connection between readme and development-log by
-    piping certain points on pre-commit hooks
+    piping certain points on pre-commit hooks; or otherwise manage
+    caveats in readme actively
 
 3.  make todos.org look better on github with proper dates and
     formatting
@@ -22,7 +23,9 @@ Workflow changes
     when necessary
 
 7.  add MIMIC-III 2d projection depiction and learning as gif on initial
-    readme
+    readmue
+
+8.  remove caveats in readme once relevant developments are complete
 
 ### Model stabilization and abstraction
 
