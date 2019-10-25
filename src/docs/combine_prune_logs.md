@@ -16,7 +16,7 @@ required name arguments:
 In the above defined example, you could combine both logs by running the following on the `base` or oldest directory:
 
 ```
-$ python3 combine_logs.py --log-dir ./pickles/2019_10_20_19_02_22_RGAN_faces 
+$ python3 combine_prune_logs.py --log-dir ./pickles/2019_10_20_19_02_22_RGAN_faces 
 ```
 
 This process prunes old directories and combines only the relevant results. The resulting final log directory can then be used for visualization or perhaps even further training. The final combined director will use newest `datetime` string in the form: `(newest_datetime_string)(model)(data)`; which would be `2019_10_24_13_45_01_RGAN_faces` in our previous example.
