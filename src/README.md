@@ -10,11 +10,13 @@
     * [2.ii. Continuation of model training](#2ii-Continuation-of-model-training)
     * [3. Pruning and combination of log directories](#3-Pruning-and-combination-of-log-directories)
     * [4. Visualization](#4-Visualization)
+* [Caveats](#Caveats)
+* [Developments](#Developments)
 * [Acknowledgements](#Acknowledgments)
 
 ## Motivation
 
-As mentioned in our base readme, we are motivated to generate realistic biomedical time series from the existing [MIMIC-III](https://github.com/YerevaNN/mimic3-benchmarks) benchmark dataset. In regards to our proposed GAN architecture, we are inspired by the RGAN and RCGAN architectures proposed by [Esteban et al. 2017](https://arxiv.org/abs/1706.02633). In order to evaluate the quality of generated time series, we aim to use the evaluation techniques proposed by Esteban et al. 2017; namely utilizing Maximum Mean Discrepancy and the "Train on Sythetic, Test on Real"/"Train on Real, Test on Synthetic" frameworks.
+As mentioned in our base readme, we are motivated to generate realistic biomedical time series from the existing [MIMIC-III](https://github.com/YerevaNN/mimic3-benchmarks) benchmark dataset. In regards to our proposed GAN architecture, we are inspired by the RGAN and RCGAN (conditional RGAN) architectures proposed by [Esteban et al. 2017](https://arxiv.org/abs/1706.02633). In order to evaluate the quality of generated time series, we aim to use the evaluation techniques proposed by Esteban et al. 2017; namely utilizing Maximum Mean Discrepancy and the "Train on Sythetic, Test on Real"/"Train on Real, Test on Synthetic" frameworks.
 
 However, we must acknowledge that a jump to these frameworks is difficult since the pipeline from data generation to evaluation is long and complex. In order to simplify this process and to establish a benchmark or proof-of-concept, we utilize a similar strategy as in Esteban et al. 2017; namely to treat existing image data as time series and to attempt to generate realistic looking images through a time series framework. One clear advantage of this technique is that generated data evaluation becomes simplified since we can (crudely) visually inspect generated images to see if they at least look realistic.
 
@@ -73,7 +75,7 @@ optional arguments:
 
 The motivation for having LFWcrop greyscale faces is that it has much fewer data instances compared to its MNIST counterparts (13,000 vs. 60,000; similar to MIMIC-III), and faces tend to be much more complex in terms of sequential pixel patterns. As a result, we believe that effectively generating LFWcrop faces through a recurrent GAN architecture could provide a stronger backing for the ability to abstract to other complex time series such as those in the biomedical field.
 
-### 2.i. Model training
+### 2.i. Model training[*](#Caveats)
 
 In order to train a RGAN/RCGAN model, you can run `train.py`. Following is the usage documentation:
 
@@ -146,7 +148,7 @@ $ tree ./pickles/2019_10_20_19_02_22_RGAN_faces -L 1
 1 directory, 7 files
 ```
 
-### 2.ii. Continuation of model training
+### 2.ii. Continuation of model training[*](#Caveats)
 
 Given the dynamic nature of model training, sometimes training procedures need to be stopped and started again at a later point in time. Our script `train.py` provides a `--continue-train` feature for doing so: 
 
@@ -334,6 +336,18 @@ $ tree ./pickles/2019_10_24_13_45_01_RGAN_faces -L 1
 
 2 directories, 7 files
 ```
+
+## Caveats
+
+1. The models are still being tested on preliminary datasets such as MNIST; support for MIMIC-III is under development and will properly commence once performance is verified on preliminary datasets
+
+2. RCGAN support is still under development and will come after successful development of our RGAN
+
+3. Model architectures are not fixed as yet and will undergo further changes in terms of increased depth and stabilization techniques
+
+## Developments
+
+Developments to this repository and its workflow are documented in our development log [here](/docs/todos.md).
 
 ## Acknowledgments
 

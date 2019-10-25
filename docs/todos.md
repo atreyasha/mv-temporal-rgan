@@ -1,26 +1,34 @@
 Workflow changes
 ----------------
 
+**TODO**
+====================================================================
+
 ### Model visualization and presentation
 
-1.  **TODO** work on readme based on current results, add
+1.  **TODO** improve todos.org to todos.md pipelina and
+    cavets piping
+
+2.  **TODO** work on readme based on current results, add
     possible table of contents to readme in src for easier reading
 
-2.  **TODO** make todos.org look better on github with proper
+3.  **TODO** make todos.org look better on github with proper
     dates and formatting
 
-3.  add to readme that gif-progress/R must be installed on system
+4.  add to readme that gif-progress/R must be installed on system
 
-4.  make waveform type of visualization of datasets and generated
+5.  make waveform type of visualization of datasets and generated
     products
 
-5.  add MIMIC-III 2d projection depiction as gif on initial readme
+6.  add MIMIC-III 2d projection depiction as gif on initial readme
 
-6.  change matplotlib backend default back to instant working version
+7.  change matplotlib backend default back to instant working version
     when necessary
 
-7.  add function to generate best samples from trained model aside from
+8.  add function to generate best samples from trained model aside from
     already generated image
+
+9.  change readme information once models are developed
 
 ### Model stabilization and abstraction
 

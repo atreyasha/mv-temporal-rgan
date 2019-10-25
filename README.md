@@ -6,7 +6,7 @@ This project is focused on developing a recurrent GAN architecture that can imit
 
 In terms of biomedical data, we will be working with the existing MIMIC-III benchmarks which are documented in [Harutyunyan, Khachatrian, Kale, Ver Steeg and Galstyan 2019](https://arxiv.org/abs/1703.07771). The MIMIC-III benchmark workflows can be found in the following public GitHub [repository](https://github.com/YerevaNN/mimic3-benchmarks).
 
-In terms of methodologies, we are inspired by the RGAN and RCGAN architecture proposed by [Esteban, Hyland and Rätsch 2017](https://arxiv.org/abs/1706.02633). We aim to modify and further develop existing frameworks. The end goal of this project is to generate realistic biomedical time series which could enrich/mix salient medical features and possibly better encrypt/privatize biomedical data in order to inhibit retroactive patient identification.
+In terms of methodologies, we are inspired by the RGAN and RCGAN (conditional RGAN) architecture proposed by [Esteban, Hyland and Rätsch 2017](https://arxiv.org/abs/1706.02633). We aim to modify and further develop existing frameworks. The end goal of this project is to generate realistic biomedical time series which could enrich/mix salient medical features and possibly better encrypt/privatize biomedical data in order to inhibit retroactive patient identification.
 
 ### Workflow
 
