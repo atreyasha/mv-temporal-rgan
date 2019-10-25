@@ -8,6 +8,7 @@
 ***** add MIMIC-III 2d projection depiction as gif on initial readme
 ***** change matplotlib backend default back to instant working version when necessary
 ***** add function to generate best samples from trained model aside from already generated image
+***** consider case where pruning/combining is done on single file without any other chrons, what will be the process
 
 *** Model stabilization and abstraction
 ***** TODO use Gaussian noise addition to images (to prevent mode collapse and add robustness) and Gaussian-noise label smoothing (non-model)
@@ -16,10 +17,10 @@
 ***** TODO use Wasserstein loss and dilations for larger scale temporal relations
 ***** TODO consider removing LSTM in generator and adding additional LSTM in discriminator
 ***** TODO use rows as channels, separate rows from temporal pipeline for better convergence
+***** TODO work on more efficient hard model memory handling (saving only one instance of weights in comb.h5 and abstracting via layer numbers)
 ***** after making above mode-based changes, run all 3 data-based models to see results
 ***** extend models to RCGANs once results are satisfactory
 ***** make pipeline adaptable to higher dimensional data in case of 64 dimensional lfw faces
-***** work on more efficient hard model memory handling (saving only one instance of weights in comb.h5 and abstracting to all models)
 
 *** Model application to biomedical time series
 ***** TODO visualize data from MIMIC-III github repository to see smoothness or roughness
