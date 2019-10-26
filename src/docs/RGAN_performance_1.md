@@ -30,7 +30,7 @@
 
 ### Performance
 
-#### MNIST
+#### i. MNIST
 
 <p align="center">
 <img src="/src/img/rgan_1/evolution_mnist.png" width="800">
@@ -40,7 +40,7 @@
 <img src="/src/img/rgan_1/out_mnist.gif" width="650">
 </p>
 
-#### Fashion-MNIST
+#### ii. Fashion-MNIST
 
 <p align="center">
 <img src="/src/img/rgan_1/evolution_fashion.png" width="800">
@@ -50,7 +50,7 @@
 <img src="/src/img/rgan_1/out_fashion.gif" width="650">
 </p>
 
-#### LFWcrop faces
+#### iii. LFWcrop faces
 
 <p align="center">
 <img src="/src/img/rgan_1/evolution_faces.png" width="800">
