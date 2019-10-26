@@ -311,7 +311,7 @@ required name arguments:
                         (default: None)
 ```
 
-This script requires a log directory or `--log-dir` as an input. It creates a subfolder `vis` in the log directory and places visualizations there. Specifically, this will create resulting loss evolution graphs and a gif with an optional progress bar showing how constant noise vector image generations evolved with training epochs.
+This script requires a log directory or `--log-dir` as an input. It creates a subfolder `vis` in the log directory and places visualizations there. Specifically, this will create resulting loss evolution graphs and optionally a gif with a (optional) progress bar showing how constant noise vector image generations evolved with training epochs.
 
 An example of running this script is as follows:
 
