@@ -65,4 +65,4 @@
 
 2. We could implement more stabilization techniques such as noise addition, spectral normalization and multi-scale gradients.
 
-3. Currently, the images are modeled as 1d strings or vectors of length 784. We could attempt to model them as smaller vectors with channels or depth, such that each time step will be encoded as a discrete event instead of diffuse in a 1d string situation.
+3. Currently, the images are modeled as 1d strings or vectors of length 784. We could attempt to model them as smaller vectors with channels or depth, such that each time step will be encoded as a multi-dimensional event instead of diffuse in a 1d string situation.
