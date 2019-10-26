@@ -61,7 +61,7 @@
 </p>
 
 ### Improvements
-1. We can observe mode incomplete convergence in the case of MNIST and LFWcrop faces. This could be due to mode collapse. We would need to incorporate some strategies such as noise introduction to overcome mode collapse.
+1. We can observe incomplete convergence in the case of MNIST and LFWcrop faces. This could be due to mode collapse. We would need to incorporate some strategies such as noise introduction to overcome mode collapse.
 
 2. We could implement more stabilization techniques such as noise addition, spectral normalization and multi-scale gradients.
 
