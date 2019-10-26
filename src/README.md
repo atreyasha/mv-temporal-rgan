@@ -13,11 +13,11 @@
 * [Model development performance](#Model-development-performance)
 * [Caveats](#Caveats)
 * [Workflow changes](#Workflow-changes)
-* [Acknowledgements](#Acknowledgments)
+* [Acknowledgments](#Acknowledgments)
 
 ## Motivation
 
-As mentioned in our base readme, we are motivated to generate realistic biomedical time series from the existing [MIMIC-III](https://github.com/YerevaNN/mimic3-benchmarks) benchmark dataset. In regards to our proposed GAN architecture, we are inspired by the RGAN and RCGAN (conditional RGAN) architectures proposed by [Esteban et al. 2017](https://arxiv.org/abs/1706.02633). In order to evaluate the quality of generated time series, we aim to use the evaluation techniques proposed by Esteban et al. 2017; namely utilizing Maximum Mean Discrepancy and the "Train on Sythetic, Test on Real"/"Train on Real, Test on Synthetic" frameworks.
+As mentioned in our base readme, we are motivated to generate realistic biomedical time series from the existing [MIMIC-III](https://github.com/YerevaNN/mimic3-benchmarks) benchmark dataset. In regards to our proposed GAN architecture, we are inspired by the RGAN and RCGAN (conditional RGAN) architectures proposed by [Esteban et al. 2017](https://arxiv.org/abs/1706.02633). In order to evaluate the quality of generated time series, we aim to use the evaluation techniques proposed by Esteban et al. 2017; namely utilizing Maximum Mean Discrepancy and the "Train on Synthetic, Test on Real"/"Train on Real, Test on Synthetic" frameworks.
 
 However, we must acknowledge that a jump to these frameworks is difficult since the pipeline from data generation to evaluation is long and complex. In order to simplify this process and to establish a benchmark or proof-of-concept, we utilize a similar strategy as in Esteban et al. 2017; namely to treat existing image data as time series and to attempt to generate realistic looking images through a time series framework. One clear advantage of this technique is that generated data evaluation becomes simplified since we can (crudely) visually inspect generated images to see if they at least look realistic.
 
@@ -53,7 +53,7 @@ $ ./init.sh
 
 Upon running this script, three prompts will appear sequentially. 
 
-1. The first requests initiliazing a pre-commit git hook to keep python dependencies in `requirements.txt` up-to-date.
+1. The first requests initializing a pre-commit git hook to keep python dependencies in `requirements.txt` up-to-date.
 
 2. The next prompt requests if the user wants to download and unzip the LFWcrop greyscale faces
 
@@ -272,7 +272,7 @@ $ tree ./pickles -L 1
 2 directories
 ```
 
-**Note:** This process can also be conducted on a lone directory with no temporal descendents; in which case only that directory will be pruned for incomplete epochs and log results where the latest saved models do not apply.
+**Note:** This process can also be conducted on a lone directory with no temporal descendants; in which case only that directory will be pruned for incomplete epochs and log results where the latest saved models do not apply.
 
 ### 4. Visualization
 

@@ -1,32 +1,6 @@
 Workflow changes
 ----------------
 
-### Model visualization and presentation
-
-1.  **TODO** add initial model
-    summary/architectures/feedback/performance into readme
-
-2.  work on better connection between readme and development-log by
-    piping certain points on pre-commit hooks; or otherwise manage
-    caveats in readme actively
-
-3.  make todos.org look better on github with proper dates and
-    formatting
-
-4.  make waveform type of visualization of datasets and generated
-    products for preliminary datasets and MIMIC-III
-
-5.  add function to generate best samples from trained model aside from
-    already generated image
-
-6.  change matplotlib backend default back to instant working version
-    when necessary
-
-7.  add MIMIC-III 2d projection depiction and learning as gif on initial
-    readme
-
-8.  remove caveats in readme once relevant developments are complete
-
 ### Model stabilization and abstraction
 
 1.  **TODO** use Gaussian noise addition to images (to
@@ -62,6 +36,29 @@ Workflow changes
 
 11. make pipeline variable/adaptable/scalable to higher dimensional data
     in case of 64 dimensional lfw faces
+
+### Model visualization and presentation
+
+1.  work on better connection between readme and development-log by
+    piping certain points on pre-commit hooks; or otherwise manage
+    caveats in readme actively
+
+2.  make todos.org look better on github with proper dates and
+    formatting
+
+3.  make waveform type of visualization of datasets and generated
+    products for preliminary datasets and MIMIC-III
+
+4.  add function to generate best samples from trained model aside from
+    already generated image
+
+5.  change matplotlib backend default back to instant working version
+    when necessary
+
+6.  add MIMIC-III 2d projection depiction and learning as gif on initial
+    readme
+
+7.  remove caveats in readme once relevant developments are complete
 
 ### Model application to biomedical time series
 

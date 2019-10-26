@@ -1,15 +1,5 @@
 ** Workflow changes
 
-*** Model visualization and presentation
-***** TODO add initial model summary/architectures/feedback/performance into readme
-***** work on better connection between readme and development-log by piping certain points on pre-commit hooks; or otherwise manage caveats in readme actively
-***** make todos.org look better on github with proper dates and formatting
-***** make waveform type of visualization of datasets and generated products for preliminary datasets and MIMIC-III
-***** add function to generate best samples from trained model aside from already generated image
-***** change matplotlib backend default back to instant working version when necessary
-***** add MIMIC-III 2d projection depiction and learning as gif on initial readme
-***** remove caveats in readme once relevant developments are complete
-
 *** Model stabilization and abstraction
 ***** TODO use Gaussian noise addition to images (to prevent mode collapse and add robustness) and Gaussian-noise label smoothing (non-model)
 ***** TODO use multi-scale gradient and spectral normalization (model), first non-model then model-based changes 
@@ -22,6 +12,15 @@
 ***** after making above mode-based changes, run all 3 data-based models to see results
 ***** extend models to RCGANs once results are satisfactory
 ***** make pipeline variable/adaptable/scalable to higher dimensional data in case of 64 dimensional lfw faces
+
+*** Model visualization and presentation
+***** work on better connection between readme and development-log by piping certain points on pre-commit hooks; or otherwise manage caveats in readme actively
+***** make todos.org look better on github with proper dates and formatting
+***** make waveform type of visualization of datasets and generated products for preliminary datasets and MIMIC-III
+***** add function to generate best samples from trained model aside from already generated image
+***** change matplotlib backend default back to instant working version when necessary
+***** add MIMIC-III 2d projection depiction and learning as gif on initial readme
+***** remove caveats in readme once relevant developments are complete
 
 *** Model application to biomedical time series
 ***** visualize data from MIMIC-III github repository in 2-dimensions to see smoothness or roughness
