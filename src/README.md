@@ -12,7 +12,7 @@
     * [4. Visualization](#4-Visualization)
 * [Model development performance](#Model-development-performance)
 * [Caveats](#Caveats)
-* [Developments](#Developments)
+* [Workflow changes](#Workflow-changes)
 * [Acknowledgements](#Acknowledgments)
 
 ## Motivation
@@ -352,7 +352,7 @@ As our repository and models are still under development, we document various st
 
 3. Model architectures are not fixed as yet and will undergo further changes in terms of increased depth and enhanced stabilization techniques
 
-## Developments
+## Workflow changes
 
 Developments to this repository and its workflow are documented in our development log [here](/docs/todos.md).
 
