@@ -10,6 +10,7 @@
     * [2.ii. Continuation of model training](#2ii-Continuation-of-model-training)
     * [3. Pruning and combination of log directories](#3-Pruning-and-combination-of-log-directories)
     * [4. Visualization](#4-Visualization)
+* [Model development performance](#Model-development-performance)
 * [Caveats](#Caveats)
 * [Developments](#Developments)
 * [Acknowledgements](#Acknowledgments)
@@ -336,6 +337,12 @@ $ tree ./pickles/2019_10_24_13_45_01_RGAN_faces -L 1
 
 2 directories, 7 files
 ```
+
+### Model development performance
+
+As our repository and models are still under development, we document various stages and performances of our models here. Below is an itemized list:
+
+1. [RGAN Model Performance Summary I](/src/docs/RGAN_performance_1.md)
 
 ## Caveats
 

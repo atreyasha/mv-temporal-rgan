@@ -17,7 +17,7 @@
 ***** TODO use Wasserstein loss and dilations for larger scale temporal relations
 ***** TODO consider removing LSTM in generator and adding additional LSTM in discriminator
 ***** TODO use rows as channels/time-steps, separate rows from temporal pipeline for better convergence
-***** TODO work on more efficient hard model memory handling (saving only one instance of weights in comb.h5 and abstracting via layer numbers)
+***** TODO work on more efficient (automated) hard model memory handling (saving only one instance of weights in comb.h5 and abstracting via layer numbers) -> necessary for github push
 ***** TODO export optimizer weights as h5 instead of pickle for data consistency and compactness
 ***** after making above mode-based changes, run all 3 data-based models to see results
 ***** extend models to RCGANs once results are satisfactory
@@ -36,7 +36,7 @@
 ***** architectures which do not suffer from mode collapse, eg. autoencoder/non-variational/transformer
 
 *** GPU management
-***** try to share memory and tasks between gpus (multi_gpu_model)
+***** try to share memory and tasks between gpus (multi-gpu-model)
 ***** try to use memory limiting in code in case GPUs are already being used
 
 *** Heuristics

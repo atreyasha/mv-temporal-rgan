@@ -48,9 +48,9 @@ Workflow changes
 6.  **TODO** use rows as channels/time-steps, separate rows
     from temporal pipeline for better convergence
 
-7.  **TODO** work on more efficient hard model memory
-    handling (saving only one instance of weights in comb.h5 and
-    abstracting via layer numbers)
+7.  **TODO** work on more efficient (automated) hard model
+    memory handling (saving only one instance of weights in comb.h5 and
+    abstracting via layer numbers) -\> necessary for github push
 
 8.  **TODO** export optimizer weights as h5 instead of pickle
     for data consistency and compactness
@@ -89,7 +89,7 @@ Workflow changes
 
 ### GPU management
 
-1.  try to share memory and tasks between gpus (multi~gpumodel~)
+1.  try to share memory and tasks between gpus (multi-gpu-model)
 
 2.  try to use memory limiting in code in case GPUs are already being
     used
