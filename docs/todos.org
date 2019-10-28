@@ -1,15 +1,12 @@
 ** Workflow changes
 
-# remove all string type operations in code
-# change way of plotting etc
-
 *** Model stabilization and abstraction
 ***** TODO make incremental step-wise changes to model and run on all three datasets with similar settings
 ***** TODO use rows as channels/time-steps, separate rows from temporal pipeline for better convergence, would require shift to 2d structure
 ***** TODO make network deeper, dilations for larger scale temporal relations
 ***** TODO use Gaussian noise addition to images (to prevent mode collapse and add robustness) and Gaussian-noise label smoothing (non-model)
-***** TODO use spectral normalization for convolutional layers
-***** thoroughly review eth rgan model for comparison
+***** TODO use spectral normalization for convolutional layers, add citation for it in due time
+***** thoroughly review eth rgan model for comparison, look into ConvSN1D rate rank 1 error
 ***** use Wasserstein loss with standard or improved structure with resnet architecture  
 ***** use multi-scale gradient structure, first non-model then model-based changes
 ***** use feature matching and minibatch discrimination to prevent mode collapse

@@ -18,9 +18,10 @@ Workflow changes
     smoothing (non-model)
 
 5.  **TODO** use spectral normalization for convolutional
-    layers
+    layers, add citation for it in due time
 
-6.  thoroughly review eth rgan model for comparison
+6.  thoroughly review eth rgan model for comparison, look into ConvSN1D
+    rate rank 1 error
 
 7.  use Wasserstein loss with standard or improved structure with resnet
     architecture
