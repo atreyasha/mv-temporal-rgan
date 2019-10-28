@@ -5,7 +5,9 @@
 ***** TODO use rows as channels/time-steps, separate rows from temporal pipeline for better convergence, would require shift to 2d structure
 ***** TODO make network deeper, dilations for larger scale temporal relations
 ***** TODO use Gaussian noise addition to images (to prevent mode collapse and add robustness) and Gaussian-noise label smoothing (non-model)
-***** TODO use spectral normalization for convolutional layers, add citation for it in due time
+***** TODO use spectral normalization for convolutional layers, add citation for it in due time, think of how to deal with mode collapse which appears to happen
+***** TODO test and leave all products running for similar epochs to check performance, push updates regarding versions to readme
+***** TODO make concise changes and to-do developments so details are clear
 ***** thoroughly review eth rgan model for comparison, look into ConvSN1D rate rank 1 error
 ***** use Wasserstein loss with standard or improved structure with resnet architecture  
 ***** use multi-scale gradient structure, first non-model then model-based changes

@@ -17,7 +17,6 @@ from keras.layers import Dense, Activation, Reshape, Conv2D, GlobalMaxPool2D
 from keras.layers import LSTM, CuDNNLSTM, Input, UpSampling2D, Bidirectional
 from keras.layers import BatchNormalization, LeakyReLU, Dropout, Conv1D
 from keras.backend.tensorflow_backend import clear_session
-from sn.SpectralNormalizationKeras import DenseSN, ConvSN2D
 
 ################################
 # define class and functions
@@ -59,21 +58,21 @@ class RGAN():
     def getGenerator(self,latent_dim,momentum):
         in_data = Input(shape=(latent_dim,))
         # major upsampling
-        out = DenseSN(128 * 49)(in_data)
+        out = Dense(128 * 49)(in_data)
         out = Activation("relu")(out)
         out = Reshape((7,7,128))(out)
         # block 1
         out = UpSampling2D()(out)
-        out = ConvSN2D(128, kernel_size=3, padding="same")(out)
+        out = Conv2D(128, kernel_size=3, padding="same")(out)
         out = BatchNormalization(momentum=momentum)(out)
         out = Activation("relu")(out)
         # block 2
         out = UpSampling2D()(out)
-        out = ConvSN2D(64, kernel_size=3, padding="same")(out)
+        out = Conv2D(64, kernel_size=3, padding="same")(out)
         out = BatchNormalization(momentum=momentum)(out)
         out = Activation("relu")(out)
         # block 3
-        out = ConvSN2D(28, kernel_size=3, padding="same")(out)
+        out = Conv2D(28, kernel_size=3, padding="same")(out)
         out = BatchNormalization(momentum=momentum)(out)
         out = Activation("tanh")(out)
         out = Reshape((28,28*28))(out)
@@ -101,27 +100,27 @@ class RGAN():
         out = Activation("relu")(out)
         out = Reshape((im_dim,im_dim,1))(out)
         # block 1
-        out = ConvSN2D(256, kernel_size=4, dilation_rate=2)(out)
+        out = Conv2D(256, kernel_size=4, dilation_rate=2)(out)
         out = LeakyReLU(alpha=alpha)(out)
         out = Dropout(droprate)(out)
         # block 2
-        out = ConvSN2D(128, kernel_size=3, dilation_rate=2)(out)
+        out = Conv2D(128, kernel_size=3, dilation_rate=2)(out)
         out = BatchNormalization(momentum=momentum)(out)
         out = LeakyReLU(alpha=alpha)(out)
         out = Dropout(droprate)(out)
         # block 3
-        out = ConvSN2D(64, kernel_size=2, dilation_rate=2)(out)
+        out = Conv2D(64, kernel_size=2, dilation_rate=2)(out)
         out = BatchNormalization(momentum=momentum)(out)
         out = LeakyReLU(alpha=alpha)(out)
         out = Dropout(droprate)(out)
         # block 4
-        out = ConvSN2D(32, kernel_size=2, dilation_rate=2)(out)
+        out = Conv2D(32, kernel_size=2, dilation_rate=2)(out)
         out = BatchNormalization(momentum=momentum)(out)
         out = LeakyReLU(alpha=alpha)(out)
         out = Dropout(droprate)(out)
         # dense output
         out = GlobalMaxPool2D()(out)
-        out = DenseSN(1)(out)
+        out = Dense(1)(out)
         out = Activation("sigmoid")(out)
         return Model(inputs=in_data,outputs=out)
 

@@ -18,35 +18,43 @@ Workflow changes
     smoothing (non-model)
 
 5.  **TODO** use spectral normalization for convolutional
-    layers, add citation for it in due time
+    layers, add citation for it in due time, think of how to deal with
+    mode collapse which appears to happen
 
-6.  thoroughly review eth rgan model for comparison, look into ConvSN1D
+6.  **TODO** test and leave all products running for similar
+    epochs to check performance, push updates regarding versions to
+    readme
+
+7.  **TODO** make concise changes and to-do developments so
+    details are clear
+
+8.  thoroughly review eth rgan model for comparison, look into ConvSN1D
     rate rank 1 error
 
-7.  use Wasserstein loss with standard or improved structure with resnet
+9.  use Wasserstein loss with standard or improved structure with resnet
     architecture
 
-8.  use multi-scale gradient structure, first non-model then model-based
+10. use multi-scale gradient structure, first non-model then model-based
     changes
 
-9.  use feature matching and minibatch discrimination to prevent mode
+11. use feature matching and minibatch discrimination to prevent mode
     collapse
 
-10. consider averaging with various dilations for discriminator phase,
+12. consider averaging with various dilations for discriminator phase,
     could be linked to resnet
 
-11. work on more efficient (automated) hard model memory handling
+13. work on more efficient (automated) hard model memory handling
     (saving only one instance of weights in comb.h5 and abstracting via
     layer numbers) -\> necessary for github push
 
-12. export optimizer weights as h5 instead of pickle for data
+14. export optimizer weights as h5 instead of pickle for data
     consistency and compactness
 
-13. make pipeline variable/adaptable/scalable to higher (possibly
+15. make pipeline variable/adaptable/scalable to higher (possibly
     non-square) dimensional data in case of 64 dimensional lfw faces
     (user more variables in models instead of hard-coding)
 
-14. extend models to RCGANs once results are satisfactory
+16. extend models to RCGANs once results are satisfactory
 
 ### Model visualization and presentation
 
