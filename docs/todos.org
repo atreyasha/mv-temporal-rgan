@@ -1,17 +1,23 @@
 ** Workflow changes
 
+# remove all string type operations in code
+# change way of plotting etc
+
 *** Model stabilization and abstraction
+***** TODO make incremental step-wise changes to model and run on all three datasets with similar settings
+***** TODO use rows as channels/time-steps, separate rows from temporal pipeline for better convergence, would require shift to 2d structure
+***** TODO make network deeper, dilations for larger scale temporal relations
 ***** TODO use Gaussian noise addition to images (to prevent mode collapse and add robustness) and Gaussian-noise label smoothing (non-model)
-***** TODO use multi-scale gradient and spectral normalization (model), first non-model then model-based changes 
-***** TODO make network deeper and review eth rgan model for comparison
-***** TODO use Wasserstein loss and dilations for larger scale temporal relations
-***** TODO consider removing LSTM in generator and adding additional LSTM in discriminator
-***** TODO use rows as channels/time-steps, separate rows from temporal pipeline for better convergence
-***** TODO work on more efficient (automated) hard model memory handling (saving only one instance of weights in comb.h5 and abstracting via layer numbers) -> necessary for github push
-***** TODO export optimizer weights as h5 instead of pickle for data consistency and compactness
-***** after making above mode-based changes, run all 3 data-based models to see results
+***** TODO use spectral normalization for convolutional layers
+***** thoroughly review eth rgan model for comparison
+***** use Wasserstein loss with standard or improved structure with resnet architecture  
+***** use multi-scale gradient structure, first non-model then model-based changes
+***** use feature matching and minibatch discrimination to prevent mode collapse
+***** consider averaging with various dilations for discriminator phase, could be linked to resnet
+***** work on more efficient (automated) hard model memory handling (saving only one instance of weights in comb.h5 and abstracting via layer numbers) -> necessary for github push
+***** export optimizer weights as h5 instead of pickle for data consistency and compactness
+***** make pipeline variable/adaptable/scalable to higher (possibly non-square) dimensional data in case of 64 dimensional lfw faces (user more variables in models instead of hard-coding)
 ***** extend models to RCGANs once results are satisfactory
-***** make pipeline variable/adaptable/scalable to higher dimensional data in case of 64 dimensional lfw faces
 
 *** Model visualization and presentation
 ***** work on better connection between readme and development-log by piping certain points on pre-commit hooks; or otherwise manage caveats in readme actively
