@@ -83,7 +83,7 @@ class RGAN():
             out = Bidirectional(LSTM(28,return_sequences=True,kernel_constraint=max_norm(3),
                 recurrent_constraint=max_norm(3),bias_constraint=max_norm(3)))(out)
         out = Conv1D(28, kernel_size=3, padding="same")(out)
-        out = Activation("tanh")(out)
+        out = Activation("relu")(out)
         return Model(inputs=in_data,outputs=out)
 
     def getDiscriminator(self,im_dim,droprate,momentum,alpha):
