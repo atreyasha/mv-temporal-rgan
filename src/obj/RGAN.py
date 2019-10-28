@@ -17,7 +17,7 @@ from keras.layers import Dense, Activation, Reshape, Conv2D, GlobalMaxPool2D
 from keras.layers import LSTM, CuDNNLSTM, Input, UpSampling2D, Bidirectional
 from keras.layers import BatchNormalization, LeakyReLU, Dropout, Conv1D
 from keras.backend.tensorflow_backend import clear_session
-from SpectralNormalizationKeras import DenseSN, ConvSN2D
+from sn.SpectralNormalizationKeras import DenseSN, ConvSN2D
 
 ################################
 # define class and functions
