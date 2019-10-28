@@ -74,7 +74,7 @@ class RGAN():
         # block 3
         out = Conv2D(28, kernel_size=3, padding="same")(out)
         out = BatchNormalization(momentum=momentum)(out)
-        out = Activation("relu")(out)
+        out = Activation("tanh")(out)
         out = Reshape((28,28*28))(out)
         if len(backend.tensorflow_backend._get_available_gpus()) > 0:
             out = Bidirectional(CuDNNLSTM(28,return_sequences=True,kernel_constraint=max_norm(3),
