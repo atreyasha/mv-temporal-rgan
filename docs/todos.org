@@ -1,17 +1,14 @@
 ** Workflow changes
 
 *** Model stabilization and abstraction
-***** TODO make incremental step-wise changes to model and run on all three datasets with similar settings
-***** TODO use rows as channels/time-steps, separate rows from temporal pipeline for better convergence, would require shift to 2d structure
-***** TODO make network deeper, dilations for larger scale temporal relations
-***** TODO use Gaussian noise addition to images (to prevent mode collapse and add robustness) and Gaussian-noise label smoothing (non-model)
-***** TODO use spectral normalization for convolutional layers, add citation for it in due time, think of how to deal with mode collapse which appears to happen
-***** TODO test and leave all products running for similar epochs to check performance, push updates regarding versions to readme
-***** TODO make concise changes and to-do developments so details are clear
-***** thoroughly review eth rgan model for comparison, look into ConvSN1D rate rank 1 error
-***** use Wasserstein loss with standard or improved structure with resnet architecture  
-***** use multi-scale gradient structure, first non-model then model-based changes
+***** TODO make network deeper with more in-place convolutions; might show efficacy with faces
+***** TODO consider adding Gaussian noise to images for stability (mixed outcomes predicted)
+***** TODO spectral normalization for convolutional layers without batch normalization (check if works), add citation for it in due time
+***** consider having online similarity checks, MMD and TRTS to check quality of samples
+***** use Wasserstein loss with standard or improved training
+***** consider resnet architecture for certain skip-connections, could be linked to multi-scale gradient structure
 ***** use feature matching and minibatch discrimination to prevent mode collapse
+***** look into ConvSN1D rate rank 1 error, thoroughly review eth rgan model for comparison 
 ***** consider averaging with various dilations for discriminator phase, could be linked to resnet
 ***** work on more efficient (automated) hard model memory handling (saving only one instance of weights in comb.h5 and abstracting via layer numbers) -> necessary for github push
 ***** export optimizer weights as h5 instead of pickle for data consistency and compactness
@@ -19,6 +16,7 @@
 ***** extend models to RCGANs once results are satisfactory
 
 *** Model visualization and presentation
+***** TODO update RGAN version 2 with performance summary
 ***** work on better connection between readme and development-log by piping certain points on pre-commit hooks; or otherwise manage caveats in readme actively
 ***** make todos.org look better on github with proper dates and formatting
 ***** make waveform type of visualization of datasets and generated products for preliminary datasets and MIMIC-III

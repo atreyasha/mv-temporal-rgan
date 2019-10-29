@@ -3,81 +3,70 @@ Workflow changes
 
 ### Model stabilization and abstraction
 
-1.  **TODO** make incremental step-wise changes to model and
-    run on all three datasets with similar settings
+1.  **TODO** make network deeper with more in-place
+    convolutions; might show efficacy with faces
 
-2.  **TODO** use rows as channels/time-steps, separate rows
-    from temporal pipeline for better convergence, would require shift
-    to 2d structure
+2.  **TODO** consider adding Gaussian noise to images for
+    stability (mixed outcomes predicted)
 
-3.  **TODO** make network deeper, dilations for larger scale
-    temporal relations
+3.  **TODO** spectral normalization for convolutional layers
+    without batch normalization (check if works), add citation for it in
+    due time
 
-4.  **TODO** use Gaussian noise addition to images (to
-    prevent mode collapse and add robustness) and Gaussian-noise label
-    smoothing (non-model)
+4.  consider having online similarity checks, MMD and TRTS to check
+    quality of samples
 
-5.  **TODO** use spectral normalization for convolutional
-    layers, add citation for it in due time, think of how to deal with
-    mode collapse which appears to happen
+5.  use Wasserstein loss with standard or improved training
 
-6.  **TODO** test and leave all products running for similar
-    epochs to check performance, push updates regarding versions to
-    readme
+6.  consider resnet architecture for certain skip-connections, could be
+    linked to multi-scale gradient structure
 
-7.  **TODO** make concise changes and to-do developments so
-    details are clear
-
-8.  thoroughly review eth rgan model for comparison, look into ConvSN1D
-    rate rank 1 error
-
-9.  use Wasserstein loss with standard or improved structure with resnet
-    architecture
-
-10. use multi-scale gradient structure, first non-model then model-based
-    changes
-
-11. use feature matching and minibatch discrimination to prevent mode
+7.  use feature matching and minibatch discrimination to prevent mode
     collapse
 
-12. consider averaging with various dilations for discriminator phase,
+8.  look into ConvSN1D rate rank 1 error, thoroughly review eth rgan
+    model for comparison
+
+9.  consider averaging with various dilations for discriminator phase,
     could be linked to resnet
 
-13. work on more efficient (automated) hard model memory handling
+10. work on more efficient (automated) hard model memory handling
     (saving only one instance of weights in comb.h5 and abstracting via
     layer numbers) -\> necessary for github push
 
-14. export optimizer weights as h5 instead of pickle for data
+11. export optimizer weights as h5 instead of pickle for data
     consistency and compactness
 
-15. make pipeline variable/adaptable/scalable to higher (possibly
+12. make pipeline variable/adaptable/scalable to higher (possibly
     non-square) dimensional data in case of 64 dimensional lfw faces
     (user more variables in models instead of hard-coding)
 
-16. extend models to RCGANs once results are satisfactory
+13. extend models to RCGANs once results are satisfactory
 
 ### Model visualization and presentation
 
-1.  work on better connection between readme and development-log by
+1.  **TODO** update RGAN version 2 with performance summary
+
+2.  work on better connection between readme and development-log by
     piping certain points on pre-commit hooks; or otherwise manage
     caveats in readme actively
 
-2.  make todos.org look better on github with proper dates and
+3.  make todos.org look better on github with proper dates and
     formatting
 
-3.  make waveform type of visualization of datasets and generated
+4.  make waveform type of visualization of datasets and generated
     products for preliminary datasets and MIMIC-III
 
-4.  add function to generate best samples from trained model aside from
+5.  add function to generate best samples from trained model aside from
     already generated image
 
-5.  change matplotlib backend default back to instant working version
+6.  change matplotlib backend default back to instant working version
     when necessary
 
-6.  add MIMIC-III 2d projection depiction and learning as gif on initial
+7.  add MIMIC-III 2d projection depiction and learning as gif on initial
     readme
 
-7.  remove caveats in readme once relevant developments are complete
+8.  remove caveats in readme once relevant developments are complete
 
 ### Model application to biomedical time series
 
