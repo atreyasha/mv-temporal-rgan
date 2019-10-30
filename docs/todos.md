@@ -16,43 +16,45 @@ Workflow changes
     without batch normalization (check if works), add citation for it in
     due time
 
-5.  consider using stacked LSTMs which only look at some timesteps at a
+5.  consider using attention layer for encoder-decoder archtecture
+
+6.  consider using stacked LSTMs which only look at some timesteps at a
     time, since complete evaluation leads to seeming independence in
     time
 
-6.  consider having online similarity checks, MMD and TRTS to check
+7.  consider having online similarity checks, MMD and TRTS to check
     quality of samples
 
-7.  use Wasserstein loss with standard or improved training
+8.  use Wasserstein loss with standard or improved training
 
-8.  consider resnet architecture for certain skip-connections, could be
+9.  consider resnet architecture for certain skip-connections, could be
     linked to multi-scale gradient structure
 
-9.  use feature matching and minibatch discrimination to prevent mode
+10. use feature matching and minibatch discrimination to prevent mode
     collapse
 
-10. look into ConvSN1D rate rank 1 error, thoroughly review eth rgan
+11. look into ConvSN1D rate rank 1 error, thoroughly review eth rgan
     model for comparison
 
-11. consider averaging with various dilations for discriminator phase,
+12. consider averaging with various dilations for discriminator phase,
     could be linked to resnet
 
-12. work on more efficient (automated) hard model memory handling
+13. work on more efficient (automated) hard model memory handling
     (saving only one instance of weights in comb.h5 and abstracting via
     layer numbers) -\> necessary for github push
 
-13. export optimizer weights as h5 instead of pickle for data
+14. export optimizer weights as h5 instead of pickle for data
     consistency and compactness
 
-14. make pipeline variable/adaptable/scalable to higher (possibly
+15. make pipeline variable/adaptable/scalable to higher (possibly
     non-square) dimensional data in case of 64 dimensional lfw faces
     (user more variables in models instead of hard-coding)
 
-15. extend models to RCGANs once results are satisfactory
+16. extend models to RCGANs once results are satisfactory
 
 ### Model visualization and presentation
 
-1.  **TODO** update RGAN version 2 with performance summary
+1.  **TODO** update RGAN version 2/3 with performance summary
     and manage branches
 
 2.  work on better connection between readme and development-log by
