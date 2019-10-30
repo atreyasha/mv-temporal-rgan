@@ -1,5 +1,10 @@
 ** Workflow changes
 
+# notes: adding stacked dis-LSTM and seq-2-seq makes row-wise generators again
+# removing seq-2-seq in generator seems more promising
+# or trying seq-2-seq without cnn's in generator
+# or perhaps revert with these characteristics back to 2d convolutions
+
 *** Model stabilization and abstraction
 ***** TODO adapt workflow from existing successful GAN architecture and modify for our task
 ***** TODO make network deeper with more in-place convolutions; might show efficacy with faces

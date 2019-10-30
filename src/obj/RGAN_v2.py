@@ -77,21 +77,27 @@ class RGAN():
         out = Activation("tanh")(out)
         out = Reshape((28,28*28))(out)
         if len(backend.tensorflow_backend._get_available_gpus()) > 0:
-            out = Bidirectional(CuDNNLSTM(28,return_sequences=True,kernel_constraint=max_norm(3),
-                                          recurrent_constraint=max_norm(3),bias_constraint=max_norm(3)))(out)
+            out = CuDNNLSTM(56,kernel_constraint=max_norm(3),
+                            recurrent_constraint=max_norm(3),bias_constraint=max_norm(3))(out)
+            out = RepeatVector(28)(out)
+            out = CuDNNLSTM(28,return_sequences=True,kernel_constraint=max_norm(3),
+                recurrent_constraint=max_norm(3),bias_constraint=max_norm(3))(out)
         else:
             out = Bidirectional(LSTM(28,return_sequences=True,kernel_constraint=max_norm(3),
                 recurrent_constraint=max_norm(3),bias_constraint=max_norm(3)))(out)
-        out = Conv1D(28, kernel_size=3, padding="same")(out)
-        out = Activation("relu")(out)
+        # out = Conv1D(28, kernel_size=3, padding="same")(out)
+        # out = Activation("relu")(out)
         return Model(inputs=in_data,outputs=out)
 
     def getDiscriminator(self,im_dim,droprate,momentum,alpha):
         in_data = Input(shape=(im_dim,im_dim))
         if len(backend.tensorflow_backend._get_available_gpus()) > 0:
-            out = Bidirectional(CuDNNLSTM(im_dim,return_sequences=True,
+            out = Bidirectional(CuDNNLSTM(20,return_sequences=True,
                                           kernel_constraint=max_norm(3),recurrent_constraint=max_norm(3),
-                                          bias_constraint=max_norm(3)))(in_data)
+                                           bias_constraint=max_norm(3)))(in_data)
+            out = CuDNNLSTM(12,return_sequences=True,
+                                          kernel_constraint=max_norm(3),recurrent_constraint=max_norm(3),
+                                           bias_constraint=max_norm(3))(out)
         else:
             out = Bidirectional(LSTM(im_dim,return_sequences=True,
                                      kernel_constraint=max_norm(3),
