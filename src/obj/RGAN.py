@@ -55,7 +55,7 @@ class RGAN():
         self.combined.compile(loss=['binary_crossentropy'], optimizer=self.optimizer_g,
                               metrics=['accuracy'])
 
-    def getGenerator(latent_dim,momentum):
+    def getGenerator(self,latent_dim,momentum):
         in_data = Input(shape=(latent_dim,))
         out = Dense(256 * 7)(in_data)
         out = Activation("relu")(out)
