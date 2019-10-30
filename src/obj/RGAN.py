@@ -85,7 +85,7 @@ class RGAN():
             out = CuDNNLSTM(56,kernel_constraint=max_norm(3),
                             recurrent_constraint=max_norm(3),bias_constraint=max_norm(3))(out)
             out = RepeatVector(28)(out)
-            out = CUDNNLSTM(28,return_sequences=True,kernel_constraint=max_norm(3),
+            out = CuDNNLSTM(28,return_sequences=True,kernel_constraint=max_norm(3),
                 recurrent_constraint=max_norm(3),bias_constraint=max_norm(3))(out)
         else:
             out = LSTM(56,kernel_constraint=max_norm(3),
