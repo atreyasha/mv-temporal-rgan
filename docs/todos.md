@@ -3,49 +3,57 @@ Workflow changes
 
 ### Model stabilization and abstraction
 
-1.  **TODO** make network deeper with more in-place
+1.  **TODO** adapt workflow from existing successful GAN
+    architecture and modify for our task
+
+2.  **TODO** make network deeper with more in-place
     convolutions; might show efficacy with faces
 
-2.  **TODO** consider adding Gaussian noise to images for
+3.  **TODO** consider adding Gaussian noise to images for
     stability (mixed outcomes predicted)
 
-3.  **TODO** spectral normalization for convolutional layers
+4.  **TODO** spectral normalization for convolutional layers
     without batch normalization (check if works), add citation for it in
     due time
 
-4.  consider having online similarity checks, MMD and TRTS to check
+5.  consider using stacked LSTMs which only look at some timesteps at a
+    time, since complete evaluation leads to seeming independence in
+    time
+
+6.  consider having online similarity checks, MMD and TRTS to check
     quality of samples
 
-5.  use Wasserstein loss with standard or improved training
+7.  use Wasserstein loss with standard or improved training
 
-6.  consider resnet architecture for certain skip-connections, could be
+8.  consider resnet architecture for certain skip-connections, could be
     linked to multi-scale gradient structure
 
-7.  use feature matching and minibatch discrimination to prevent mode
+9.  use feature matching and minibatch discrimination to prevent mode
     collapse
 
-8.  look into ConvSN1D rate rank 1 error, thoroughly review eth rgan
+10. look into ConvSN1D rate rank 1 error, thoroughly review eth rgan
     model for comparison
 
-9.  consider averaging with various dilations for discriminator phase,
+11. consider averaging with various dilations for discriminator phase,
     could be linked to resnet
 
-10. work on more efficient (automated) hard model memory handling
+12. work on more efficient (automated) hard model memory handling
     (saving only one instance of weights in comb.h5 and abstracting via
     layer numbers) -\> necessary for github push
 
-11. export optimizer weights as h5 instead of pickle for data
+13. export optimizer weights as h5 instead of pickle for data
     consistency and compactness
 
-12. make pipeline variable/adaptable/scalable to higher (possibly
+14. make pipeline variable/adaptable/scalable to higher (possibly
     non-square) dimensional data in case of 64 dimensional lfw faces
     (user more variables in models instead of hard-coding)
 
-13. extend models to RCGANs once results are satisfactory
+15. extend models to RCGANs once results are satisfactory
 
 ### Model visualization and presentation
 
 1.  **TODO** update RGAN version 2 with performance summary
+    and manage branches
 
 2.  work on better connection between readme and development-log by
     piping certain points on pre-commit hooks; or otherwise manage

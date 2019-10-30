@@ -61,7 +61,7 @@ plot_evolution <- function(direct,ideal_ticks = 10){
     until = init_df$until
     until = until[-length(until)]
     g <- g + {if(plot_breaks)geom_rect(data = breaks,aes(xmin=xmin,xmax=xmax,ymin=-Inf,ymax=Inf,fill="Missing data"),alpha=0.4)} +
-      geom_vline(aes(xintercept=until,linetype="dashed"),size=0.3) +
+      {if(length(until) != 0)geom_vline(aes(xintercept=until,linetype="dashed"),size=0.3)} +
       scale_fill_manual(name="",values="lightblue") +
       scale_linetype_manual(name="",values="dashed",labels="Training\nbreak point") +
       guides(color=guide_legend(order=1),fill=guide_legend(order=2))
