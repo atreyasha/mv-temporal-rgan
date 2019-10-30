@@ -55,7 +55,7 @@ class RGAN():
         self.combined.compile(loss=['binary_crossentropy'], optimizer=self.optimizer_g,
                               metrics=['accuracy'])
 
-    def getGenerator(self,latent_dim,momentum):
+    def getGenerator(latent_dim,momentum):
         in_data = Input(shape=(latent_dim,))
         out = Dense(256 * 7)(in_data)
         out = Activation("relu")(out)
@@ -66,7 +66,7 @@ class RGAN():
         out = BatchNormalization(momentum=momentum)(out)
         out = Activation("relu")(out)
         # block 2
-        out = UpSampling1D()(out)
+        # out = UpSampling1D()(out)
         out = Conv1D(128, kernel_size=4, padding="same")(out)
         out = BatchNormalization(momentum=momentum)(out)
         out = Activation("relu")(out)
@@ -76,23 +76,23 @@ class RGAN():
         out = BatchNormalization(momentum=momentum)(out)
         out = Activation("relu")(out)
         # block 4
-        out = UpSampling1D()(out)
-        out = Conv1D(128, kernel_size=3, padding="same")(out)
+        # out = UpSampling1D()(out)
+        out = Conv1D(28, kernel_size=3, padding="same")(out)
         out = BatchNormalization(momentum=momentum)(out)
         out = Activation("tanh")(out)
         # use seq2seq architecture
-        if len(backend.tensorflow_backend._get_available_gpus()) > 0:
-            out = CuDNNLSTM(56,kernel_constraint=max_norm(3),
-                            recurrent_constraint=max_norm(3),bias_constraint=max_norm(3))(out)
-            out = RepeatVector(28)(out)
-            out = CuDNNLSTM(28,return_sequences=True,kernel_constraint=max_norm(3),
-                recurrent_constraint=max_norm(3),bias_constraint=max_norm(3))(out)
-        else:
-            out = LSTM(56,kernel_constraint=max_norm(3),
-                recurrent_constraint=max_norm(3),bias_constraint=max_norm(3))(out)
-            out = RepeatVector(28)(out)
-            out = LSTM(28,return_sequences=True,kernel_constraint=max_norm(3),
-                recurrent_constraint=max_norm(3),bias_constraint=max_norm(3))(out)
+        # if len(backend.tensorflow_backend._get_available_gpus()) > 0:
+        #     out = CuDNNLSTM(56,kernel_constraint=max_norm(3),
+        #                     recurrent_constraint=max_norm(3),bias_constraint=max_norm(3))(out)
+        #     out = RepeatVector(28)(out)
+        #     out = CuDNNLSTM(28,return_sequences=True,kernel_constraint=max_norm(3),
+        #         recurrent_constraint=max_norm(3),bias_constraint=max_norm(3))(out)
+        # else:
+        #     out = LSTM(56,kernel_constraint=max_norm(3),
+        #         recurrent_constraint=max_norm(3),bias_constraint=max_norm(3))(out)
+        #     out = RepeatVector(28)(out)
+        #     out = LSTM(28,return_sequences=True,kernel_constraint=max_norm(3),
+        #         recurrent_constraint=max_norm(3),bias_constraint=max_norm(3))(out)
         return Model(inputs=in_data,outputs=out)
 
     def getDiscriminator(self,im_dim,droprate,momentum,alpha):
