@@ -14,13 +14,13 @@
 ### Generator
 
 <p align="center">
-<img src="/src/img/rgan_v1/gen.png" width="300">
+<img src="/src/img/RGAN_v1/gen.png" width="300">
 </p>
 
 ### Discriminator
 
 <p align="center">
-<img src="/src/img/rgan_v1/dis.png" width="300">
+<img src="/src/img/RGAN_v1/dis.png" width="300">
 </p>
 
 ### Stabilizing Techniques
@@ -33,31 +33,31 @@
 #### i. MNIST
 
 <p align="center">
-<img src="/src/img/rgan_v1/evolution_mnist.png" width="800">
+<img src="/src/img/RGAN_v1/evolution_mnist.png" width="800">
 </p>
 
 <p align="center">
-<img src="/src/img/rgan_v1/out_mnist.gif" width="650">
+<img src="/src/img/RGAN_v1/out_mnist.gif" width="650">
 </p>
 
 #### ii. Fashion-MNIST
 
 <p align="center">
-<img src="/src/img/rgan_v1/evolution_fashion.png" width="800">
+<img src="/src/img/RGAN_v1/evolution_fashion.png" width="800">
 </p>
 
 <p align="center">
-<img src="/src/img/rgan_v1/out_fashion.gif" width="650">
+<img src="/src/img/RGAN_v1/out_fashion.gif" width="650">
 </p>
 
 #### iii. LFWcrop faces
 
 <p align="center">
-<img src="/src/img/rgan_v1/evolution_faces.png" width="800">
+<img src="/src/img/RGAN_v1/evolution_faces.png" width="800">
 </p>
 
 <p align="center">
-<img src="/src/img/rgan_v1/out_faces.gif" width="650">
+<img src="/src/img/RGAN_v1/out_faces.gif" width="650">
 </p>
 
 ### Improvements

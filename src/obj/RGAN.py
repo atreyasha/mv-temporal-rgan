@@ -11,11 +11,11 @@ matplotlib.use('Agg')
 import matplotlib.pyplot as plt
 from keras import backend
 from keras.models import Model
-from keras.constraints import max_norm
 from keras.optimizers import Adam
-from keras.layers import Dense, Activation, Reshape, Conv1D, GlobalMaxPool1D
-from keras.layers import LSTM, CuDNNLSTM, Input, UpSampling1D, Bidirectional
-from keras.layers import BatchNormalization, LeakyReLU, Dropout, RepeatVector
+from keras.constraints import max_norm
+from keras.layers import Dense, Activation, Reshape, Conv2D, GlobalMaxPool2D
+from keras.layers import LSTM, CuDNNLSTM, Input, UpSampling2D, Bidirectional
+from keras.layers import BatchNormalization, LeakyReLU, Dropout, Conv1D
 from keras.backend.tensorflow_backend import clear_session
 
 ################################
@@ -57,40 +57,33 @@ class RGAN():
 
     def getGenerator(self,latent_dim,momentum):
         in_data = Input(shape=(latent_dim,))
-        out = Dense(256 * 7)(in_data)
+        # major upsampling
+        out = Dense(128 * 49)(in_data)
         out = Activation("relu")(out)
-        out = Reshape((7,256))(out)
+        out = Reshape((7,7,128))(out)
         # block 1
-        out = UpSampling1D()(out)
-        out = Conv1D(256, kernel_size=4, padding="same")(out)
+        out = UpSampling2D()(out)
+        out = Conv2D(256, kernel_size=3, padding="same")(out)
         out = BatchNormalization(momentum=momentum)(out)
         out = Activation("relu")(out)
         # block 2
-        # out = UpSampling1D()(out)
-        out = Conv1D(128, kernel_size=4, padding="same")(out)
+        out = Conv2D(128, kernel_size=3, padding="same")(out)
         out = BatchNormalization(momentum=momentum)(out)
         out = Activation("relu")(out)
         # block 3
-        out = UpSampling1D()(out)
-        out = Conv1D(128, kernel_size=3, padding="same")(out)
+        out = UpSampling2D()(out)
+        out = Conv2D(64, kernel_size=3, padding="same")(out)
         out = BatchNormalization(momentum=momentum)(out)
         out = Activation("relu")(out)
-        # block 4
-        # out = UpSampling1D()(out)
-        out = Conv1D(28, kernel_size=3, padding="same")(out)
+        # block 3
+        out = Conv2D(28, kernel_size=3, padding="same")(out)
         out = BatchNormalization(momentum=momentum)(out)
         out = Activation("tanh")(out)
-        # use seq2seq architecture
+        out = Reshape((28,28**2))(out)
         if len(backend.tensorflow_backend._get_available_gpus()) > 0:
-            out = CuDNNLSTM(56,kernel_constraint=max_norm(3),
-                            recurrent_constraint=max_norm(3),bias_constraint=max_norm(3))(out)
-            out = RepeatVector(28)(out)
             out = CuDNNLSTM(28,return_sequences=True,kernel_constraint=max_norm(3),
-                recurrent_constraint=max_norm(3),bias_constraint=max_norm(3))(out)
+                            recurrent_constraint=max_norm(3),bias_constraint=max_norm(3))(out)
         else:
-            out = LSTM(56,kernel_constraint=max_norm(3),
-                recurrent_constraint=max_norm(3),bias_constraint=max_norm(3))(out)
-            out = RepeatVector(28)(out)
             out = LSTM(28,return_sequences=True,kernel_constraint=max_norm(3),
                 recurrent_constraint=max_norm(3),bias_constraint=max_norm(3))(out)
         return Model(inputs=in_data,outputs=out)
@@ -98,54 +91,50 @@ class RGAN():
     def getDiscriminator(self,im_dim,droprate,momentum,alpha):
         in_data = Input(shape=(im_dim,im_dim))
         if len(backend.tensorflow_backend._get_available_gpus()) > 0:
-            out = Bidirectional(CuDNNLSTM(28,return_sequences=True,
-                                     kernel_constraint=max_norm(3),
-                                     recurrent_constraint=max_norm(3),bias_constraint=max_norm(3)))(in_data)
-            out = CuDNNLSTM(18,return_sequences=True,
-                                     kernel_constraint=max_norm(3),
-                                     recurrent_constraint=max_norm(3),bias_constraint=max_norm(3))(out)
-            out = CuDNNLSTM(12,return_sequences=True,kernel_constraint=max_norm(3),
-                                     recurrent_constraint=max_norm(3),bias_constraint=max_norm(3))(out)
+            out = CuDNNLSTM(im_dim,return_sequences=True,
+                            kernel_constraint=max_norm(3),recurrent_constraint=max_norm(3),
+                            bias_constraint=max_norm(3))(in_data)
+            out = Bidirectional(CuDNNLSTM(72,
+                       kernel_constraint=max_norm(3),
+                       recurrent_constraint=max_norm(3),bias_constraint=max_norm(3)))(out)
+
         else:
-            out = Bidirectional(LSTM(28,return_sequences=True,
-                                     kernel_constraint=max_norm(3),
-                                     recurrent_constraint=max_norm(3),bias_constraint=max_norm(3)))(in_data)
-            out = LSTM(18,return_sequences=True,
-                                     kernel_constraint=max_norm(3),
-                                     recurrent_constraint=max_norm(3),bias_constraint=max_norm(3))(out)
-            out = LSTM(12,return_sequences=True,kernel_constraint=max_norm(3),
-                                     recurrent_constraint=max_norm(3),bias_constraint=max_norm(3))(out)
+            out = LSTM(im_dim,return_sequences=True,
+                       kernel_constraint=max_norm(3),
+                       recurrent_constraint=max_norm(3),bias_constraint=max_norm(3))(in_data)
+            out = Bidirectional(LSTM(72,
+                       kernel_constraint=max_norm(3),
+                       recurrent_constraint=max_norm(3),bias_constraint=max_norm(3)))(out)
+        out = Reshape((12,12,1))(out)
         # block 1
-        out = Conv1D(256, kernel_size=4, dilation_rate=2)(out)
+        out = Conv2D(128, kernel_size=3, dilation_rate=2)(out)
         out = BatchNormalization(momentum=momentum)(out)
         out = LeakyReLU(alpha=alpha)(out)
         out = Dropout(droprate)(out)
-        # # block 2
-        out = Conv1D(128, kernel_size=4)(out)
+        out = Conv2D(128, kernel_size=3, padding="same")(out)
+        out = BatchNormalization(momentum=momentum)(out)
+        out = LeakyReLU(alpha=alpha)(out)
+        out = Dropout(droprate)(out)
+        # block 2
+        out = Conv2D(64, kernel_size=2, dilation_rate=2)(out)
+        out = BatchNormalization(momentum=momentum)(out)
+        out = LeakyReLU(alpha=alpha)(out)
+        out = Dropout(droprate)(out)
+        out = Conv2D(64, kernel_size=2, padding="same")(out)
         out = BatchNormalization(momentum=momentum)(out)
         out = LeakyReLU(alpha=alpha)(out)
         out = Dropout(droprate)(out)
         # block 3
-        out = Conv1D(64, kernel_size=3)(out)
+        out = Conv2D(32, kernel_size=2, dilation_rate=2)(out)
         out = BatchNormalization(momentum=momentum)(out)
         out = LeakyReLU(alpha=alpha)(out)
         out = Dropout(droprate)(out)
-        # block 4
-        out = Conv1D(32, kernel_size=3)(out)
-        out = BatchNormalization(momentum=momentum)(out)
-        out = LeakyReLU(alpha=alpha)(out)
-        out = Dropout(droprate)(out)
-        # block 5
-        out = Conv1D(32, kernel_size=2)(out)
+        out = Conv2D(32, kernel_size=2, padding="same")(out)
         out = BatchNormalization(momentum=momentum)(out)
         out = LeakyReLU(alpha=alpha)(out)
         out = Dropout(droprate)(out)
         # dense output
-        out = GlobalMaxPool1D()(out)
-        out = Dense(12)(out)
-        out = BatchNormalization(momentum=momentum)(out)
-        out = LeakyReLU(alpha=alpha)(out)
-        out = Dropout(droprate)(out)
+        out = GlobalMaxPool2D()(out)
         out = Dense(1)(out)
         out = Activation("sigmoid")(out)
         return Model(inputs=in_data,outputs=out)
