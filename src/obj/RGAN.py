@@ -89,26 +89,26 @@ class RGAN():
     def getDiscriminator(self,im_dim,droprate,momentum,alpha):
         in_data = Input(shape=(im_dim,im_dim))
         if len(backend.tensorflow_backend._get_available_gpus()) > 0:
-            out = CuDNNLSTM(24,return_sequences=True,
+            out = CuDNNLSTM(128,return_sequences=True,
                             kernel_constraint=max_norm(3),recurrent_constraint=max_norm(3),
                             bias_constraint=max_norm(3))(in_data)
-            out = CuDNNLSTM(18,return_sequences=True,
+            out = CuDNNLSTM(64,return_sequences=True,
                             kernel_constraint=max_norm(3),recurrent_constraint=max_norm(3),
                             bias_constraint=max_norm(3))(out)
-            out = CuDNNLSTM(12,return_sequences=True,
+            out = CuDNNLSTM(32,return_sequences=True,
                             kernel_constraint=max_norm(3),recurrent_constraint=max_norm(3),
                             bias_constraint=max_norm(3))(out)
             out = Bidirectional(CuDNNLSTM(12,
                        kernel_constraint=max_norm(3),
                        recurrent_constraint=max_norm(3),bias_constraint=max_norm(3)))(out)
         else:
-            out = LSTM(24,return_sequences=True,
+            out = LSTM(128,return_sequences=True,
                             kernel_constraint=max_norm(3),recurrent_constraint=max_norm(3),
                             bias_constraint=max_norm(3))(in_data)
-            out = LSTM(18,return_sequences=True,
+            out = LSTM(64,return_sequences=True,
                             kernel_constraint=max_norm(3),recurrent_constraint=max_norm(3),
                             bias_constraint=max_norm(3))(out)
-            out = LSTM(12,return_sequences=True,
+            out = LSTM(32,return_sequences=True,
                             kernel_constraint=max_norm(3),recurrent_constraint=max_norm(3),
                             bias_constraint=max_norm(3))(out)
             out = Bidirectional(LSTM(12,
