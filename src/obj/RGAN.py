@@ -89,14 +89,14 @@ class RGAN():
     def getDiscriminator(self,im_dim,droprate,momentum,alpha):
         in_data = Input(shape=(im_dim,im_dim))
         if len(backend.tensorflow_backend._get_available_gpus()) > 0:
-            out = CuDNNLSTM(im_dim,return_sequences=True,
+            out = CuDNNLSTM(18,return_sequences=True,
                             kernel_constraint=max_norm(3),recurrent_constraint=max_norm(3),
                             bias_constraint=max_norm(3))(in_data)
             out = Bidirectional(CuDNNLSTM(14,return_sequences=True,
                        kernel_constraint=max_norm(3),
                        recurrent_constraint=max_norm(3),bias_constraint=max_norm(3)))(out)
         else:
-            out = LSTM(im_dim,return_sequences=True,
+            out = LSTM(18,return_sequences=True,
                        kernel_constraint=max_norm(3),
                        recurrent_constraint=max_norm(3),bias_constraint=max_norm(3))(in_data)
             out = Bidirectional(LSTM(14,return_sequences=True,
