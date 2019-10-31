@@ -93,26 +93,14 @@ class RGAN():
             out = CuDNNLSTM(128,return_sequences=True,
                             kernel_constraint=max_norm(3),recurrent_constraint=max_norm(3),
                             bias_constraint=max_norm(3))(out)
-            out = CuDNNLSTM(64,return_sequences=True,
-                            kernel_constraint=max_norm(3),recurrent_constraint=max_norm(3),
-                            bias_constraint=max_norm(3))(out)
-            out = CuDNNLSTM(32,return_sequences=True,
-                            kernel_constraint=max_norm(3),recurrent_constraint=max_norm(3),
-                            bias_constraint=max_norm(3))(out)
-            out = Bidirectional(CuDNNLSTM(12,return_sequences=True,
+            out = Bidirectional(CuDNNLSTM(64,return_sequences=True,
                        kernel_constraint=max_norm(3),
                        recurrent_constraint=max_norm(3),bias_constraint=max_norm(3)))(out)
         else:
             out = LSTM(128,return_sequences=True,
                             kernel_constraint=max_norm(3),recurrent_constraint=max_norm(3),
                             bias_constraint=max_norm(3))(out)
-            out = LSTM(64,return_sequences=True,
-                            kernel_constraint=max_norm(3),recurrent_constraint=max_norm(3),
-                            bias_constraint=max_norm(3))(out)
-            out = LSTM(32,return_sequences=True,
-                            kernel_constraint=max_norm(3),recurrent_constraint=max_norm(3),
-                            bias_constraint=max_norm(3))(out)
-            out = Bidirectional(LSTM(12,return_sequences=True,
+            out = Bidirectional(LSTM(64,return_sequences=True,
                        kernel_constraint=max_norm(3),
                        recurrent_constraint=max_norm(3),bias_constraint=max_norm(3)))(out)
         # block 1
