@@ -8,6 +8,7 @@
 # can attempt to stack LSTMs here if generator is limiting factor
 
 *** Model stabilization and abstraction
+***** TODO consider removing the generator LSTM altogether
 ***** TODO adapt workflow from existing successful GAN architecture and modify for our task
 ***** TODO make network deeper with more in-place convolutions; might show efficacy with faces
 ***** TODO consider adding Gaussian noise to images for stability (mixed outcomes predicted)
