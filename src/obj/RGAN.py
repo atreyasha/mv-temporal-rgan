@@ -58,29 +58,38 @@ class RGAN():
     def getGenerator(self,latent_dim,momentum):
         in_data = Input(shape=(latent_dim,))
         # major upsampling
-        out = Dense(128 * 49)(in_data)
+        out = Dense(56*16)(in_data)
         out = Activation("relu")(out)
-        out = Reshape((7,7,128))(out)
+        out = Reshape((4,4,56))(out)
         # block 1
         out = UpSampling2D()(out)
         out = Conv2D(256, kernel_size=3, padding="same")(out)
         out = BatchNormalization(momentum=momentum)(out)
         out = Activation("relu")(out)
         # block 2
-        out = Conv2D(128, kernel_size=3, padding="same")(out)
+        out = Conv2D(256, kernel_size=3, padding="same")(out)
         out = BatchNormalization(momentum=momentum)(out)
         out = Activation("relu")(out)
         # block 3
         out = UpSampling2D()(out)
-        out = Conv2D(64, kernel_size=3, padding="same")(out)
+        out = Conv2D(128, kernel_size=3, padding="same")(out)
         out = BatchNormalization(momentum=momentum)(out)
         out = Activation("relu")(out)
         # block 3
-        out = Conv2D(28, kernel_size=3, padding="same")(out)
+        out = Conv2D(128, kernel_size=3, padding="same")(out)
         out = BatchNormalization(momentum=momentum)(out)
         out = Activation("relu")(out)
         # block 4
-        out = Conv2D(1, kernel_size=3, padding="same")(out)
+        out = UpSampling2D()(out)
+        out = Conv2D(64, kernel_size=3, padding="same")(out)
+        out = BatchNormalization(momentum=momentum)(out)
+        out = Activation("relu")(out)
+        # block 5
+        out = Conv2D(64, kernel_size=3)(out)
+        out = BatchNormalization(momentum=momentum)(out)
+        out = Activation("relu")(out)
+        # block 6
+        out = Conv2D(1, kernel_size=3)(out)
         out = BatchNormalization(momentum=momentum)(out)
         out = Activation("relu")(out)
         out = Reshape((28,28))(out)
@@ -93,14 +102,20 @@ class RGAN():
             out = CuDNNLSTM(128,return_sequences=True,
                             kernel_constraint=max_norm(3),recurrent_constraint=max_norm(3),
                             bias_constraint=max_norm(3))(out)
-            out = Bidirectional(CuDNNLSTM(64,return_sequences=True,
+            out = CuDNNLSTM(64,return_sequences=True,
+                            kernel_constraint=max_norm(3),recurrent_constraint=max_norm(3),
+                            bias_constraint=max_norm(3))(out)
+            out = Bidirectional(CuDNNLSTM(32,return_sequences=True,
                        kernel_constraint=max_norm(3),
                        recurrent_constraint=max_norm(3),bias_constraint=max_norm(3)))(out)
         else:
             out = LSTM(128,return_sequences=True,
                             kernel_constraint=max_norm(3),recurrent_constraint=max_norm(3),
                             bias_constraint=max_norm(3))(out)
-            out = Bidirectional(LSTM(64,return_sequences=True,
+            out = LSTM(64,return_sequences=True,
+                            kernel_constraint=max_norm(3),recurrent_constraint=max_norm(3),
+                            bias_constraint=max_norm(3))(out)
+            out = Bidirectional(LSTM(32,return_sequences=True,
                        kernel_constraint=max_norm(3),
                        recurrent_constraint=max_norm(3),bias_constraint=max_norm(3)))(out)
         # block 1
@@ -119,6 +134,16 @@ class RGAN():
         out = Dropout(droprate)(out)
         # block 4
         out = Conv1D(32, kernel_size=4, strides=2)(out)
+        out = BatchNormalization(momentum=momentum)(out)
+        out = LeakyReLU(alpha=alpha)(out)
+        out = Dropout(droprate)(out)
+        # block 5
+        out = Conv1D(16, kernel_size=3, strides=2)(out)
+        out = BatchNormalization(momentum=momentum)(out)
+        out = LeakyReLU(alpha=alpha)(out)
+        out = Dropout(droprate)(out)
+        # block 5
+        out = Conv1D(8, kernel_size=3, strides=2)(out)
         out = BatchNormalization(momentum=momentum)(out)
         out = LeakyReLU(alpha=alpha)(out)
         out = Dropout(droprate)(out)
