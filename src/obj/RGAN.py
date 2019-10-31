@@ -97,7 +97,6 @@ class RGAN():
             out = Bidirectional(CuDNNLSTM(72,
                        kernel_constraint=max_norm(3),
                        recurrent_constraint=max_norm(3),bias_constraint=max_norm(3)))(out)
-
         else:
             out = LSTM(im_dim,return_sequences=True,
                        kernel_constraint=max_norm(3),
@@ -120,7 +119,7 @@ class RGAN():
         out = BatchNormalization(momentum=momentum)(out)
         out = LeakyReLU(alpha=alpha)(out)
         out = Dropout(droprate)(out)
-        out = Conv2D(64, kernel_size=2, dilation_rate=2)(out)
+        out = Conv2D(64, kernel_size=2)(out)
         out = BatchNormalization(momentum=momentum)(out)
         out = LeakyReLU(alpha=alpha)(out)
         out = Dropout(droprate)(out)
@@ -129,7 +128,7 @@ class RGAN():
         out = BatchNormalization(momentum=momentum)(out)
         out = LeakyReLU(alpha=alpha)(out)
         out = Dropout(droprate)(out)
-        out = Conv2D(32, kernel_size=2, dilation_rate=2)(out)
+        out = Conv2D(32, kernel_size=2)(out)
         out = BatchNormalization(momentum=momentum)(out)
         out = LeakyReLU(alpha=alpha)(out)
         out = Dropout(droprate)(out)
