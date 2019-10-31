@@ -3,7 +3,9 @@ Workflow changes
 
 ### Model stabilization and abstraction
 
-1.  **TODO** consider removing the generator LSTM altogether
+1.  **TODO** consider removing the generator LSTM altogether,
+    or alternatively revert to 1d string structure and add more layers +
+    complexity
 
 2.  **TODO** adapt workflow from existing successful GAN
     architecture and modify for our task
