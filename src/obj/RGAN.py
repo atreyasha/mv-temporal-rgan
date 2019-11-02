@@ -124,6 +124,9 @@ class RGAN():
         out = Reshape((28,28,256))(out)
         # block 2
         out = Conv2D(256, kernel_size=3, strides=2)(out)
+        out = BatchNormalization(momentum=momentum)(out)
+        out = Conv2D(256, kernel_size=3, padding="same")(out)
+        out = BatchNormalization(momentum=momentum)(out)
         out = LeakyReLU(alpha=alpha)(out)
         out = Dropout(droprate)(out)
         out = Reshape((13**2,256))(out)
@@ -139,6 +142,8 @@ class RGAN():
         # block 3
         out = Conv2D(128, kernel_size=3, strides=2)(out)
         out = BatchNormalization(momentum=momentum)(out)
+        out = Conv2D(128, kernel_size=3, padding="same")(out)
+        out = BatchNormalization(momentum=momentum)(out)
         out = LeakyReLU(alpha=alpha)(out)
         out = Dropout(droprate)(out)
         out = Reshape((6**2,128))(out)
@@ -153,6 +158,8 @@ class RGAN():
         out = Reshape((6,6,64))(out)
         # block 5
         out = Conv2D(64, kernel_size=3)(out)
+        out = BatchNormalization(momentum=momentum)(out)
+        out = Conv2D(64, kernel_size=3,padding="same")(out)
         out = BatchNormalization(momentum=momentum)(out)
         out = LeakyReLU(alpha=alpha)(out)
         out = Dropout(droprate)(out)
