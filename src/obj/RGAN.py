@@ -118,9 +118,9 @@ class RGAN():
         # block 2
         out = Conv2D(256, kernel_size=3, strides=2)(out)
         out = BatchNormalization(momentum=momentum)(out)
-        out = Conv2D(256, kernel_size=4, padding="same")(out)
+        out = Conv2D(256, kernel_size=3, padding="same")(out)
         out = BatchNormalization(momentum=momentum)(out)
-        out = Conv2D(256, kernel_size=4, padding="same")(out)
+        out = Conv2D(256, kernel_size=3, padding="same")(out)
         out = BatchNormalization(momentum=momentum)(out)
         out = LeakyReLU(alpha=alpha)(out)
         out = Dropout(droprate)(out)
