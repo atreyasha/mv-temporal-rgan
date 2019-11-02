@@ -58,9 +58,9 @@ class RGAN():
     def getGenerator(self,latent_dim,momentum):
         in_data = Input(shape=(latent_dim,))
         # major upsampling
-        out = Dense(128*7)(in_data)
+        out = Dense(56*49)(in_data)
         out = Activation("relu")(out)
-        out = Reshape((7,128))(out)
+        out = Reshape((49,56))(out)
         # block 1
         out = UpSampling1D()(out)
         out = Conv1D(256, kernel_size=3, padding="same")(out)
@@ -76,6 +76,7 @@ class RGAN():
                             kernel_constraint=max_norm(3),recurrent_constraint=max_norm(3),
                             bias_constraint=max_norm(3))(out)
         # block 3
+        out = UpSampling1D()(out)
         out = Conv1D(128, kernel_size=3, padding="same")(out)
         out = BatchNormalization(momentum=momentum)(out)
         out = Activation("relu")(out)
@@ -103,18 +104,20 @@ class RGAN():
                             kernel_constraint=max_norm(3),recurrent_constraint=max_norm(3),
                             bias_constraint=max_norm(3))(out)
         # block 7
+        out = UpSampling1D()(out)
         out = Conv1D(28, kernel_size=3, padding="same")(out)
         out = BatchNormalization(momentum=momentum)(out)
         out = Activation("relu")(out)
         # block 8
         if len(backend.tensorflow_backend._get_available_gpus()) > 0:
-            out = CuDNNLSTM(28,return_sequences=True,
+            out = CuDNNLSTM(1,return_sequences=True,
                             kernel_constraint=max_norm(3),recurrent_constraint=max_norm(3),
                             bias_constraint=max_norm(3))(out)
         else:
-            out = LSTM(28,return_sequences=True,
+            out = LSTM(1,return_sequences=True,
                             kernel_constraint=max_norm(3),recurrent_constraint=max_norm(3),
                             bias_constraint=max_norm(3))(out)
+        out = Reshape((28,28))(out)
         return Model(inputs=in_data,outputs=out)
 
     def getDiscriminator(self,im_dim,droprate,momentum,alpha):
