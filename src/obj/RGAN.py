@@ -62,12 +62,20 @@ class RGAN():
         out = Activation("relu")(out)
         out = Reshape((7,7,56))(out)
         # block 1
-        out = UpSampling2D()(out)
         out = Conv2D(256, kernel_size=3, padding="same")(out)
         out = BatchNormalization(momentum=momentum)(out)
+        out = Conv2D(256, kernel_size=3, strides = 2, padding="same")(out)
+        out = BatchNormalization(momentum=momentum)(out)
+        out = Conv2D(256, kernel_size=3, dilation_rate = 2, padding="same")(out)
+        out = BatchNormalization(momentum=momentum)(out)
         out = Activation("relu")(out)
-        # block 2
+        # block 1
+        out = UpSampling2D()(out)
         out = Conv2D(128, kernel_size=3, padding="same")(out)
+        out = BatchNormalization(momentum=momentum)(out)
+        out = Conv2D(128, kernel_size=3, strides = 2, padding="same")(out)
+        out = BatchNormalization(momentum=momentum)(out)
+        out = Conv2D(128, kernel_size=3, dilation_rate = 2, padding="same")(out)
         out = BatchNormalization(momentum=momentum)(out)
         out = Activation("relu")(out)
         # block 3
@@ -83,15 +91,15 @@ class RGAN():
         out = Reshape((14,14,128))(out)
         # block 4
         out = UpSampling2D()(out)
-        out = Conv2D(32, kernel_size=3, padding="same")(out)
+        out = Conv2D(64, kernel_size=3, padding="same")(out)
+        out = BatchNormalization(momentum=momentum)(out)
+        out = Conv2D(64, kernel_size=3, strides = 3, padding="same")(out)
+        out = BatchNormalization(momentum=momentum)(out)
+        out = Conv2D(64, kernel_size=3, dilation_rate = 3, padding="same")(out)
         out = BatchNormalization(momentum=momentum)(out)
         out = Activation("relu")(out)
         # block 5
-        out = Conv2D(32, kernel_size=3, padding="same")(out)
-        out = BatchNormalization(momentum=momentum)(out)
-        out = Activation("relu")(out)
-        # block 5
-        out = Reshape((28**2,32))(out)
+        out = Reshape((28**2,64))(out)
         if len(backend.tensorflow_backend._get_available_gpus()) > 0:
             out = CuDNNLSTM(1,return_sequences=True,
                             kernel_constraint=max_norm(3),recurrent_constraint=max_norm(3),
