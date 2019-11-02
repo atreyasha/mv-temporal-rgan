@@ -64,18 +64,18 @@ class RGAN():
         # block 1
         out = Conv2D(256, kernel_size=3, padding="same")(out)
         out = BatchNormalization(momentum=momentum)(out)
-        out = Conv2D(256, kernel_size=3, strides = 2, padding="same")(out)
+        out = Conv2D(256, kernel_size=3, padding="same")(out)
         out = BatchNormalization(momentum=momentum)(out)
-        out = Conv2D(256, kernel_size=3, dilation_rate = 2, padding="same")(out)
+        out = Conv2D(256, kernel_size=3, padding="same")(out)
         out = BatchNormalization(momentum=momentum)(out)
         out = Activation("relu")(out)
         # block 1
         out = UpSampling2D()(out)
         out = Conv2D(128, kernel_size=3, padding="same")(out)
         out = BatchNormalization(momentum=momentum)(out)
-        out = Conv2D(128, kernel_size=3, strides = 2, padding="same")(out)
+        out = Conv2D(128, kernel_size=3, padding="same")(out)
         out = BatchNormalization(momentum=momentum)(out)
-        out = Conv2D(128, kernel_size=3, dilation_rate = 2, padding="same")(out)
+        out = Conv2D(128, kernel_size=3, padding="same")(out)
         out = BatchNormalization(momentum=momentum)(out)
         out = Activation("relu")(out)
         # block 3
@@ -91,11 +91,11 @@ class RGAN():
         out = Reshape((14,14,128))(out)
         # block 4
         out = UpSampling2D()(out)
-        out = Conv2D(64, kernel_size=3, padding="same")(out)
+        out = Conv2D(64, kernel_size=4, padding="same")(out)
         out = BatchNormalization(momentum=momentum)(out)
-        out = Conv2D(64, kernel_size=3, strides = 3, padding="same")(out)
+        out = Conv2D(64, kernel_size=4, padding="same")(out)
         out = BatchNormalization(momentum=momentum)(out)
-        out = Conv2D(64, kernel_size=3, dilation_rate = 3, padding="same")(out)
+        out = Conv2D(64, kernel_size=4, padding="same")(out)
         out = BatchNormalization(momentum=momentum)(out)
         out = Activation("relu")(out)
         # block 5
