@@ -13,9 +13,9 @@ from keras import backend
 from keras.models import Model
 from keras.optimizers import Adam
 from keras.constraints import max_norm
-from keras.layers import Dense, Activation, Reshape
+from keras.layers import Dense, Activation, Reshape, GlobalMaxPool1D
 from keras.layers import LSTM, CuDNNLSTM, Input, UpSampling1D, Bidirectional
-from keras.layers import BatchNormalization, LeakyReLU, Dropout, Conv1D
+from keras.layers import BatchNormalization, LeakyReLU, Dropout, Conv1D, GlobalMaxPool1D
 from keras.backend.tensorflow_backend import clear_session
 
 ################################
@@ -55,7 +55,7 @@ class RGAN():
         self.combined.compile(loss=['binary_crossentropy'], optimizer=self.optimizer_g,
                               metrics=['accuracy'])
 
-    def getGenerator(self,latent_dim,momentum):
+    def getGenerator(latent_dim,momentum):
         in_data = Input(shape=(latent_dim,))
         # major upsampling
         out = Dense(128*7)(in_data)
@@ -65,7 +65,7 @@ class RGAN():
         out = UpSampling1D()(out)
         out = Conv1D(256, kernel_size=3, padding="same")(out)
         out = BatchNormalization(momentum=momentum)(out)
-        out = Activation("relu")(out)
+        out = Activation("tanh")(out)
         # block 2
         if len(backend.tensorflow_backend._get_available_gpus()) > 0:
             out = CuDNNLSTM(256,return_sequences=True,
@@ -78,8 +78,8 @@ class RGAN():
         # block 3
         out = Conv1D(128, kernel_size=3, padding="same")(out)
         out = BatchNormalization(momentum=momentum)(out)
-        out = Activation("relu")(out)
-        # block 4
+        out = Activation("tanh")(out)
+        # block 3
         if len(backend.tensorflow_backend._get_available_gpus()) > 0:
             out = CuDNNLSTM(128,return_sequences=True,
                             kernel_constraint=max_norm(3),recurrent_constraint=max_norm(3),
@@ -88,12 +88,12 @@ class RGAN():
             out = LSTM(128,return_sequences=True,
                             kernel_constraint=max_norm(3),recurrent_constraint=max_norm(3),
                             bias_constraint=max_norm(3))(out)
-        # block 5
+        # block 4
         out = UpSampling1D()(out)
         out = Conv1D(64, kernel_size=3, padding="same")(out)
         out = BatchNormalization(momentum=momentum)(out)
-        out = Activation("relu")(out)
-        # block 6
+        out = Activation("tanh")(out)
+        # block 5
         if len(backend.tensorflow_backend._get_available_gpus()) > 0:
             out = CuDNNLSTM(64,return_sequences=True,
                             kernel_constraint=max_norm(3),recurrent_constraint=max_norm(3),
@@ -102,11 +102,10 @@ class RGAN():
             out = LSTM(64,return_sequences=True,
                             kernel_constraint=max_norm(3),recurrent_constraint=max_norm(3),
                             bias_constraint=max_norm(3))(out)
-        # block 7
+        # block 6
         out = Conv1D(28, kernel_size=3, padding="same")(out)
         out = BatchNormalization(momentum=momentum)(out)
-        out = Activation("relu")(out)
-        # block 8
+        out = Activation("tanh")(out)
         if len(backend.tensorflow_backend._get_available_gpus()) > 0:
             out = CuDNNLSTM(28,return_sequences=True,
                             kernel_constraint=max_norm(3),recurrent_constraint=max_norm(3),
@@ -120,93 +119,51 @@ class RGAN():
     def getDiscriminator(self,im_dim,droprate,momentum,alpha):
         in_data = Input(shape=(im_dim,im_dim))
         out = Reshape((im_dim**2,1))(in_data)
-        # block 1
         if len(backend.tensorflow_backend._get_available_gpus()) > 0:
-            out = Bidirectional(CuDNNLSTM(28,return_sequences=True,
-                       kernel_constraint=max_norm(3),
-                       recurrent_constraint=max_norm(3),bias_constraint=max_norm(3)))(out)
-        else:
-            out = Bidirectional(LSTM(28,return_sequences=True,
-                       kernel_constraint=max_norm(3),
-                       recurrent_constraint=max_norm(3),bias_constraint=max_norm(3)))(out)
-        # block 2
-        out = Conv1D(256, kernel_size=6, strides=2)(out)
-        out = LeakyReLU(alpha=alpha)(out)
-        out = Dropout(droprate)(out)
-        if len(backend.tensorflow_backend._get_available_gpus()) > 0:
-            out = Bidirectional(CuDNNLSTM(128,return_sequences=True,
-                       kernel_constraint=max_norm(3),
-                       recurrent_constraint=max_norm(3),bias_constraint=max_norm(3)))(out)
-        else:
-            out = Bidirectional(LSTM(128,return_sequences=True,
-                       kernel_constraint=max_norm(3),
-                       recurrent_constraint=max_norm(3),bias_constraint=max_norm(3)))(out)
-        # block 3
-        out = Conv1D(128, kernel_size=6, strides=2)(out)
-        out = BatchNormalization(momentum=momentum)(out)
-        out = LeakyReLU(alpha=alpha)(out)
-        out = Dropout(droprate)(out)
-        if len(backend.tensorflow_backend._get_available_gpus()) > 0:
+            out = CuDNNLSTM(128,return_sequences=True,
+                            kernel_constraint=max_norm(3),recurrent_constraint=max_norm(3),
+                            bias_constraint=max_norm(3))(out)
             out = Bidirectional(CuDNNLSTM(64,return_sequences=True,
                        kernel_constraint=max_norm(3),
                        recurrent_constraint=max_norm(3),bias_constraint=max_norm(3)))(out)
         else:
+            out = LSTM(128,return_sequences=True,
+                            kernel_constraint=max_norm(3),recurrent_constraint=max_norm(3),
+                            bias_constraint=max_norm(3))(out)
             out = Bidirectional(LSTM(64,return_sequences=True,
                        kernel_constraint=max_norm(3),
                        recurrent_constraint=max_norm(3),bias_constraint=max_norm(3)))(out)
-        # block 5
+        # block 1
+        out = Conv1D(256, kernel_size=6, strides=2)(out)
+        out = LeakyReLU(alpha=alpha)(out)
+        out = Dropout(droprate)(out)
+        # block 2
+        out = Conv1D(128, kernel_size=6, strides=2)(out)
+        out = BatchNormalization(momentum=momentum)(out)
+        out = LeakyReLU(alpha=alpha)(out)
+        out = Dropout(droprate)(out)
+        # block 3
         out = Conv1D(64, kernel_size=4, strides=2)(out)
         out = BatchNormalization(momentum=momentum)(out)
         out = LeakyReLU(alpha=alpha)(out)
         out = Dropout(droprate)(out)
-        if len(backend.tensorflow_backend._get_available_gpus()) > 0:
-            out = Bidirectional(CuDNNLSTM(32,return_sequences=True,
-                       kernel_constraint=max_norm(3),
-                       recurrent_constraint=max_norm(3),bias_constraint=max_norm(3)))(out)
-        else:
-            out = Bidirectional(LSTM(32,return_sequences=True,
-                       kernel_constraint=max_norm(3),
-                       recurrent_constraint=max_norm(3),bias_constraint=max_norm(3)))(out)
-        # block 6
+        # block 4
         out = Conv1D(32, kernel_size=4, strides=2)(out)
         out = BatchNormalization(momentum=momentum)(out)
         out = LeakyReLU(alpha=alpha)(out)
         out = Dropout(droprate)(out)
-        if len(backend.tensorflow_backend._get_available_gpus()) > 0:
-            out = Bidirectional(CuDNNLSTM(16,return_sequences=True,
-                       kernel_constraint=max_norm(3),
-                       recurrent_constraint=max_norm(3),bias_constraint=max_norm(3)))(out)
-        else:
-            out = Bidirectional(LSTM(16,return_sequences=True,
-                       kernel_constraint=max_norm(3),
-                       recurrent_constraint=max_norm(3),bias_constraint=max_norm(3)))(out)
-        # block 7
+        # block 5
         out = Conv1D(16, kernel_size=3, strides=2)(out)
         out = BatchNormalization(momentum=momentum)(out)
         out = LeakyReLU(alpha=alpha)(out)
         out = Dropout(droprate)(out)
-        if len(backend.tensorflow_backend._get_available_gpus()) > 0:
-            out = Bidirectional(CuDNNLSTM(8,return_sequences=True,
-                       kernel_constraint=max_norm(3),
-                       recurrent_constraint=max_norm(3),bias_constraint=max_norm(3)))(out)
-        else:
-            out = Bidirectional(LSTM(8,return_sequences=True,
-                       kernel_constraint=max_norm(3),
-                       recurrent_constraint=max_norm(3),bias_constraint=max_norm(3)))(out)
-        # block 8
+        # block 5
         out = Conv1D(8, kernel_size=3, strides=2)(out)
         out = BatchNormalization(momentum=momentum)(out)
         out = LeakyReLU(alpha=alpha)(out)
         out = Dropout(droprate)(out)
-        if len(backend.tensorflow_backend._get_available_gpus()) > 0:
-            out = Bidirectional(CuDNNLSTM(4,
-                       kernel_constraint=max_norm(3),
-                       recurrent_constraint=max_norm(3),bias_constraint=max_norm(3)))(out)
-        else:
-            out = Bidirectional(LSTM(4,
-                       kernel_constraint=max_norm(3),
-                       recurrent_constraint=max_norm(3),bias_constraint=max_norm(3)))(out)
         # dense output
+        out = GlobalMaxPool1D()(out)
         out = Dense(1)(out)
         out = Activation("sigmoid")(out)
         return Model(inputs=in_data,outputs=out)
@@ -251,13 +208,10 @@ class RGAN():
         constant_noise = np.random.normal(size=(plot_samples,self.latent_dim,))
         np.random.seed(None)
         # label smoothing by using less-than-one value
-        # real_labels = np.full((self.batch_size,1),0.9)
+        real_labels = np.full((self.batch_size,1),0.9)
         fake_labels = np.zeros((self.batch_size,1))
         runs = int(np.ceil(data.shape[0]/self.batch_size))
         for epoch in range(self.epochs):
-            # make noisy labels
-            real_labels = np.clip(np.random.normal(loc=0.90,
-                                                   scale=0.005,size=(self.batch_size,1)),None,1)
             for batch in range(runs):
                 # randomize data and generate noise
                 idx = np.random.randint(0,data.shape[0],self.batch_size)

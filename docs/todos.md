@@ -3,58 +3,53 @@ Workflow changes
 
 ### Model stabilization and abstraction
 
-1.  **TODO** consider removing the generator LSTM altogether,
-    or alternatively revert to 1d string structure and add more layers +
-    complexity
+1.  **TODO** try 1d string variant in generator
 
 2.  **TODO** adapt workflow from existing successful GAN
     architecture and modify for our task
 
-3.  **TODO** make network deeper with more in-place
-    convolutions; might show efficacy with faces
-
-4.  **TODO** consider adding Gaussian noise to images for
+3.  **TODO** consider adding Gaussian noise to images for
     stability (mixed outcomes predicted)
 
-5.  **TODO** spectral normalization for convolutional layers
+4.  **TODO** spectral normalization for convolutional layers
     without batch normalization (check if works), add citation for it in
     due time
 
-6.  consider using attention layer for encoder-decoder archtecture
+5.  consider using attention layer for encoder-decoder archtecture
 
-7.  consider using stacked LSTMs which only look at some timesteps at a
+6.  consider using stacked LSTMs which only look at some timesteps at a
     time, since complete evaluation leads to seeming independence in
     time
 
-8.  consider having online similarity checks, MMD and TRTS to check
+7.  consider having online similarity checks, MMD and TRTS to check
     quality of samples
 
-9.  use Wasserstein loss with standard or improved training
+8.  use Wasserstein loss with standard or improved training
 
-10. consider resnet architecture for certain skip-connections, could be
+9.  consider resnet architecture for certain skip-connections, could be
     linked to multi-scale gradient structure
 
-11. use feature matching and minibatch discrimination to prevent mode
+10. use feature matching and minibatch discrimination to prevent mode
     collapse
 
-12. look into ConvSN1D rate rank 1 error, thoroughly review eth rgan
+11. look into ConvSN1D rate rank 1 error, thoroughly review eth rgan
     model for comparison
 
-13. consider averaging with various dilations for discriminator phase,
+12. consider averaging with various dilations for discriminator phase,
     could be linked to resnet
 
-14. work on more efficient (automated) hard model memory handling
+13. work on more efficient (automated) hard model memory handling
     (saving only one instance of weights in comb.h5 and abstracting via
     layer numbers) -\> necessary for github push
 
-15. export optimizer weights as h5 instead of pickle for data
+14. export optimizer weights as h5 instead of pickle for data
     consistency and compactness
 
-16. make pipeline variable/adaptable/scalable to higher (possibly
+15. make pipeline variable/adaptable/scalable to higher (possibly
     non-square) dimensional data in case of 64 dimensional lfw faces
     (user more variables in models instead of hard-coding)
 
-17. extend models to RCGANs once results are satisfactory
+16. extend models to RCGANs once results are satisfactory
 
 ### Model visualization and presentation
 
