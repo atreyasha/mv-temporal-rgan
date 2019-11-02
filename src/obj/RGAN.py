@@ -164,11 +164,11 @@ class RGAN():
         out = Dropout(droprate)(out)
         out = Reshape((4**2,64))(out)
         if len(backend.tensorflow_backend._get_available_gpus()) > 0:
-            out = Bidirectional(CuDNNLSTM(4,
+            out = Bidirectional(CuDNNLSTM(8,
                        kernel_constraint=max_norm(3),
                        recurrent_constraint=max_norm(3),bias_constraint=max_norm(3)))(out)
         else:
-            out = Bidirectional(LSTM(4,
+            out = Bidirectional(LSTM(8,
                        kernel_constraint=max_norm(3),
                        recurrent_constraint=max_norm(3),bias_constraint=max_norm(3)))(out)
         # dense output
