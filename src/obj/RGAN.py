@@ -14,8 +14,8 @@ from keras.models import Model
 from keras.optimizers import Adam
 from keras.constraints import max_norm
 from keras.layers import Dense, Activation, Reshape
-from keras.layers import LSTM, CuDNNLSTM, Input, UpSampling1D, Bidirectional
-from keras.layers import BatchNormalization, LeakyReLU, Dropout, Conv1D
+from keras.layers import LSTM, CuDNNLSTM, Input, UpSampling1D, Bidirectional, Conv2D
+from keras.layers import BatchNormalization, LeakyReLU, Dropout, Conv1D, UpSampling2D
 from keras.backend.tensorflow_backend import clear_session
 
 ################################
@@ -60,28 +60,38 @@ class RGAN():
         # major upsampling
         out = Dense(56*49)(in_data)
         out = Activation("relu")(out)
-        out = Reshape((49,56))(out)
+        out = Reshape((7,7,56))(out)
         # block 1
-        out = UpSampling1D()(out)
-        out = Conv1D(256, kernel_size=3, padding="same")(out)
+        out = UpSampling2D()(out)
+        out = Conv2D(256, kernel_size=3, padding="same")(out)
         out = BatchNormalization(momentum=momentum)(out)
         out = Activation("relu")(out)
         # block 2
-        out = UpSampling1D()(out)
-        out = Conv1D(128, kernel_size=3, padding="same")(out)
+        out = Conv2D(128, kernel_size=3, padding="same")(out)
         out = BatchNormalization(momentum=momentum)(out)
         out = Activation("relu")(out)
         # block 3
-        out = UpSampling1D()(out)
-        out = Conv1D(64, kernel_size=3, padding="same")(out)
-        out = BatchNormalization(momentum=momentum)(out)
-        out = Activation("relu")(out)
+        out = Reshape((14**2,128))(out)
+        if len(backend.tensorflow_backend._get_available_gpus()) > 0:
+            out = CuDNNLSTM(128,return_sequences=True,
+                            kernel_constraint=max_norm(3),recurrent_constraint=max_norm(3),
+                            bias_constraint=max_norm(3))(out)
+        else:
+            out = LSTM(128,return_sequences=True,
+                            kernel_constraint=max_norm(3),recurrent_constraint=max_norm(3),
+                            bias_constraint=max_norm(3))(out)
+        out = Reshape((14,14,128))(out)
         # block 4
-        out = UpSampling1D()(out)
-        out = Conv1D(28, kernel_size=3, padding="same")(out)
+        out = UpSampling2D()(out)
+        out = Conv2D(32, kernel_size=3, padding="same")(out)
         out = BatchNormalization(momentum=momentum)(out)
         out = Activation("relu")(out)
         # block 5
+        out = Conv2D(32, kernel_size=3, padding="same")(out)
+        out = BatchNormalization(momentum=momentum)(out)
+        out = Activation("relu")(out)
+        # block 5
+        out = Reshape((28**2,32))(out)
         if len(backend.tensorflow_backend._get_available_gpus()) > 0:
             out = CuDNNLSTM(1,return_sequences=True,
                             kernel_constraint=max_norm(3),recurrent_constraint=max_norm(3),
