@@ -3,6 +3,7 @@
 # change data structures to strings again
 # or possibly conv2Ds with reshape/LSTM and reshape
 # or possibly multiple pipelines for 1d and 2d convs and final concatenation and attention
+# consider trying conv2Ds in discriminator with 1d lstms in between
 
 *** Model stabilization and abstraction
 ***** TODO try 1d string variant in generator

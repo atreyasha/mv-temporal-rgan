@@ -106,88 +106,55 @@ class RGAN():
         in_data = Input(shape=(im_dim**2,1))
         # block 1
         if len(backend.tensorflow_backend._get_available_gpus()) > 0:
-            out = Bidirectional(CuDNNLSTM(28,return_sequences=True,
+            out = CuDNNLSTM(256,return_sequences=True,
                        kernel_constraint=max_norm(3),
-                       recurrent_constraint=max_norm(3),bias_constraint=max_norm(3)))(in_data)
+                       recurrent_constraint=max_norm(3),bias_constraint=max_norm(3))(in_data)
         else:
-            out = Bidirectional(LSTM(28,return_sequences=True,
+            out = LSTM(256,return_sequences=True,
                        kernel_constraint=max_norm(3),
-                       recurrent_constraint=max_norm(3),bias_constraint=max_norm(3)))(in_data)
+                       recurrent_constraint=max_norm(3),bias_constraint=max_norm(3))(in_data)
+        out = Reshape((28,28,256))(out)
         # block 2
-        out = Conv1D(256, kernel_size=6, strides=2)(out)
+        out = Conv2D(256, kernel_size=3, strides=2)(out)
         out = LeakyReLU(alpha=alpha)(out)
         out = Dropout(droprate)(out)
+        out = Reshape((13**2,256))(out)
         if len(backend.tensorflow_backend._get_available_gpus()) > 0:
-            out = Bidirectional(CuDNNLSTM(128,return_sequences=True,
+            out = CuDNNLSTM(128,return_sequences=True,
                        kernel_constraint=max_norm(3),
-                       recurrent_constraint=max_norm(3),bias_constraint=max_norm(3)))(out)
+                       recurrent_constraint=max_norm(3),bias_constraint=max_norm(3))(out)
         else:
-            out = Bidirectional(LSTM(128,return_sequences=True,
+            out = LSTM(128,return_sequences=True,
                        kernel_constraint=max_norm(3),
-                       recurrent_constraint=max_norm(3),bias_constraint=max_norm(3)))(out)
+                       recurrent_constraint=max_norm(3),bias_constraint=max_norm(3))(out)
+        out = Reshape((13,13,128))(out)
         # block 3
-        out = Conv1D(128, kernel_size=6, strides=2)(out)
+        out = Conv2D(128, kernel_size=3, strides=2)(out)
         out = BatchNormalization(momentum=momentum)(out)
         out = LeakyReLU(alpha=alpha)(out)
         out = Dropout(droprate)(out)
+        out = Reshape((6**2,128))(out)
         if len(backend.tensorflow_backend._get_available_gpus()) > 0:
-            out = Bidirectional(CuDNNLSTM(64,return_sequences=True,
+            out = CuDNNLSTM(64,return_sequences=True,
                        kernel_constraint=max_norm(3),
-                       recurrent_constraint=max_norm(3),bias_constraint=max_norm(3)))(out)
+                       recurrent_constraint=max_norm(3),bias_constraint=max_norm(3))(out)
         else:
-            out = Bidirectional(LSTM(64,return_sequences=True,
+            out = LSTM(64,return_sequences=True,
                        kernel_constraint=max_norm(3),
-                       recurrent_constraint=max_norm(3),bias_constraint=max_norm(3)))(out)
+                       recurrent_constraint=max_norm(3),bias_constraint=max_norm(3))(out)
+        out = Reshape((6,6,64))(out)
         # block 5
-        out = Conv1D(64, kernel_size=4, strides=2)(out)
+        out = Conv2D(64, kernel_size=3)(out)
         out = BatchNormalization(momentum=momentum)(out)
         out = LeakyReLU(alpha=alpha)(out)
         out = Dropout(droprate)(out)
+        out = Reshape((4**2,64))(out)
         if len(backend.tensorflow_backend._get_available_gpus()) > 0:
-            out = Bidirectional(CuDNNLSTM(32,return_sequences=True,
+            out = Bidirectional(CuDNNLSTM(8,
                        kernel_constraint=max_norm(3),
                        recurrent_constraint=max_norm(3),bias_constraint=max_norm(3)))(out)
         else:
-            out = Bidirectional(LSTM(32,return_sequences=True,
-                       kernel_constraint=max_norm(3),
-                       recurrent_constraint=max_norm(3),bias_constraint=max_norm(3)))(out)
-        # block 6
-        out = Conv1D(32, kernel_size=4, strides=2)(out)
-        out = BatchNormalization(momentum=momentum)(out)
-        out = LeakyReLU(alpha=alpha)(out)
-        out = Dropout(droprate)(out)
-        if len(backend.tensorflow_backend._get_available_gpus()) > 0:
-            out = Bidirectional(CuDNNLSTM(16,return_sequences=True,
-                       kernel_constraint=max_norm(3),
-                       recurrent_constraint=max_norm(3),bias_constraint=max_norm(3)))(out)
-        else:
-            out = Bidirectional(LSTM(16,return_sequences=True,
-                       kernel_constraint=max_norm(3),
-                       recurrent_constraint=max_norm(3),bias_constraint=max_norm(3)))(out)
-        # block 7
-        out = Conv1D(16, kernel_size=3, strides=2)(out)
-        out = BatchNormalization(momentum=momentum)(out)
-        out = LeakyReLU(alpha=alpha)(out)
-        out = Dropout(droprate)(out)
-        if len(backend.tensorflow_backend._get_available_gpus()) > 0:
-            out = Bidirectional(CuDNNLSTM(8,return_sequences=True,
-                       kernel_constraint=max_norm(3),
-                       recurrent_constraint=max_norm(3),bias_constraint=max_norm(3)))(out)
-        else:
-            out = Bidirectional(LSTM(8,return_sequences=True,
-                       kernel_constraint=max_norm(3),
-                       recurrent_constraint=max_norm(3),bias_constraint=max_norm(3)))(out)
-        # block 8
-        out = Conv1D(8, kernel_size=3, strides=2)(out)
-        out = BatchNormalization(momentum=momentum)(out)
-        out = LeakyReLU(alpha=alpha)(out)
-        out = Dropout(droprate)(out)
-        if len(backend.tensorflow_backend._get_available_gpus()) > 0:
-            out = Bidirectional(CuDNNLSTM(4,
-                       kernel_constraint=max_norm(3),
-                       recurrent_constraint=max_norm(3),bias_constraint=max_norm(3)))(out)
-        else:
-            out = Bidirectional(LSTM(4,
+            out = Bidirectional(LSTM(8,
                        kernel_constraint=max_norm(3),
                        recurrent_constraint=max_norm(3),bias_constraint=max_norm(3)))(out)
         # dense output
