@@ -37,7 +37,7 @@ def loadData(data):
 def singularTrain(data,latent_dim,epochs,batch_size,learning_rate,
                   g_factor,droprate,momentum,alpha,saving_rate,model="RGAN"):
     train_images = loadData(data)
-    im_dim = int(np.sqrt(train_images.shape[1]))
+    im_dim = train_images.shape[1]
     log_dir = getCurrentTime()+"_"+model+"_"+data
     os.makedirs("./pickles/"+log_dir)
     os.makedirs("./pickles/"+log_dir+"/img")

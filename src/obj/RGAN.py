@@ -113,14 +113,13 @@ class RGAN():
 
     def getDiscriminator(self,im_dim,droprate,momentum,alpha):
         in_data = Input(shape=(im_dim,im_dim))
-        # block 1
         out = Reshape((im_dim,im_dim,1))(in_data)
-        # block 2
+        # block 1
         out = Conv2D(256, kernel_size=3, strides=2)(out)
         out = BatchNormalization(momentum=momentum)(out)
-        out = Conv2D(256, kernel_size=3, padding="same")(out)
+        out = Conv2D(256, kernel_size=4, padding="same")(out)
         out = BatchNormalization(momentum=momentum)(out)
-        out = Conv2D(256, kernel_size=3, padding="same")(out)
+        out = Conv2D(256, kernel_size=4, padding="same")(out)
         out = BatchNormalization(momentum=momentum)(out)
         out = LeakyReLU(alpha=alpha)(out)
         out = Dropout(droprate)(out)
@@ -134,7 +133,7 @@ class RGAN():
                        kernel_constraint=max_norm(3),
                        recurrent_constraint=max_norm(3),bias_constraint=max_norm(3))(out)
         out = Reshape((13,13,128))(out)
-        # block 3
+        # block 2
         out = Conv2D(128, kernel_size=3, strides=2)(out)
         out = BatchNormalization(momentum=momentum)(out)
         out = Conv2D(128, kernel_size=3, padding="same")(out)
@@ -153,7 +152,7 @@ class RGAN():
                        kernel_constraint=max_norm(3),
                        recurrent_constraint=max_norm(3),bias_constraint=max_norm(3))(out)
         out = Reshape((6,6,64))(out)
-        # block 5
+        # block 3
         out = Conv2D(64, kernel_size=3)(out)
         out = BatchNormalization(momentum=momentum)(out)
         out = Conv2D(64, kernel_size=2,padding="same")(out)
