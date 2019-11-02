@@ -256,7 +256,7 @@ class RGAN():
                         writer.writerow({"epoch":str(epoch+1), "batch":str(batch+1), "d_loss":str(d_loss[0]),
                              "d_acc":str(d_loss[1]), "g_loss":str(g_loss[0]), "g_acc":str(g_loss[1])})
             # at every epoch, generate images for reference
-            test_img = np.resize(self.generator.predict(constant_noise),(self.batch_size,self.im_dim,self.im_dim))
+            test_img = np.resize(self.generator.predict(constant_noise),(plot_samples,self.im_dim,self.im_dim))
             test_img = {str(i+1):test_img[i] for i in range(test_img.shape[0])}
             self._plot_figures(test_img,direct,epoch,sq_dim)
             if (epoch+1) % self.saving_rate == 0 or (epoch+1) == self.epochs:
