@@ -1,5 +1,7 @@
 ** Workflow changes
 
+# change data structures to strings again
+
 *** Model stabilization and abstraction
 ***** TODO try 1d string variant in generator
 ***** TODO adapt workflow from existing successful GAN architecture and modify for our task
