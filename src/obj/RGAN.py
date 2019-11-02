@@ -108,24 +108,19 @@ class RGAN():
             out = LSTM(1,return_sequences=True,
                             kernel_constraint=max_norm(3),recurrent_constraint=max_norm(3),
                             bias_constraint=max_norm(3))(out)
+        out = Reshape((28,28))(out)
         return Model(inputs=in_data,outputs=out)
 
     def getDiscriminator(self,im_dim,droprate,momentum,alpha):
-        in_data = Input(shape=(im_dim**2,1))
+        in_data = Input(shape=(im_dim,im_dim))
         # block 1
-        if len(backend.tensorflow_backend._get_available_gpus()) > 0:
-            out = CuDNNLSTM(256,return_sequences=True,
-                       kernel_constraint=max_norm(3),
-                       recurrent_constraint=max_norm(3),bias_constraint=max_norm(3))(in_data)
-        else:
-            out = LSTM(256,return_sequences=True,
-                       kernel_constraint=max_norm(3),
-                       recurrent_constraint=max_norm(3),bias_constraint=max_norm(3))(in_data)
-        out = Reshape((28,28,256))(out)
+        out = Reshape((im_dim,im_dim,1))(in_data)
         # block 2
         out = Conv2D(256, kernel_size=3, strides=2)(out)
         out = BatchNormalization(momentum=momentum)(out)
-        out = Conv2D(256, kernel_size=3, padding="same")(out)
+        out = Conv2D(256, kernel_size=4, padding="same")(out)
+        out = BatchNormalization(momentum=momentum)(out)
+        out = Conv2D(256, kernel_size=4, padding="same")(out)
         out = BatchNormalization(momentum=momentum)(out)
         out = LeakyReLU(alpha=alpha)(out)
         out = Dropout(droprate)(out)
@@ -144,6 +139,8 @@ class RGAN():
         out = BatchNormalization(momentum=momentum)(out)
         out = Conv2D(128, kernel_size=3, padding="same")(out)
         out = BatchNormalization(momentum=momentum)(out)
+        out = Conv2D(128, kernel_size=3, padding="same")(out)
+        out = BatchNormalization(momentum=momentum)(out)
         out = LeakyReLU(alpha=alpha)(out)
         out = Dropout(droprate)(out)
         out = Reshape((6**2,128))(out)
@@ -159,17 +156,19 @@ class RGAN():
         # block 5
         out = Conv2D(64, kernel_size=3)(out)
         out = BatchNormalization(momentum=momentum)(out)
-        out = Conv2D(64, kernel_size=3,padding="same")(out)
+        out = Conv2D(64, kernel_size=2,padding="same")(out)
+        out = BatchNormalization(momentum=momentum)(out)
+        out = Conv2D(64, kernel_size=2,padding="same")(out)
         out = BatchNormalization(momentum=momentum)(out)
         out = LeakyReLU(alpha=alpha)(out)
         out = Dropout(droprate)(out)
         out = Reshape((4**2,64))(out)
         if len(backend.tensorflow_backend._get_available_gpus()) > 0:
-            out = Bidirectional(CuDNNLSTM(8,
+            out = Bidirectional(CuDNNLSTM(4,
                        kernel_constraint=max_norm(3),
                        recurrent_constraint=max_norm(3),bias_constraint=max_norm(3)))(out)
         else:
-            out = Bidirectional(LSTM(8,
+            out = Bidirectional(LSTM(4,
                        kernel_constraint=max_norm(3),
                        recurrent_constraint=max_norm(3),bias_constraint=max_norm(3)))(out)
         # dense output
@@ -248,7 +247,7 @@ class RGAN():
                         writer.writerow({"epoch":str(epoch+1), "batch":str(batch+1), "d_loss":str(d_loss[0]),
                              "d_acc":str(d_loss[1]), "g_loss":str(g_loss[0]), "g_acc":str(g_loss[1])})
             # at every epoch, generate images for reference
-            test_img = np.resize(self.generator.predict(constant_noise),(plot_samples,self.im_dim,self.im_dim))
+            test_img = self.generator.predict(constant_noise)
             test_img = {str(i+1):test_img[i] for i in range(test_img.shape[0])}
             self._plot_figures(test_img,direct,epoch,sq_dim)
             if (epoch+1) % self.saving_rate == 0 or (epoch+1) == self.epochs:
