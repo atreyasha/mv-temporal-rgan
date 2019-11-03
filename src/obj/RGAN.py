@@ -58,7 +58,7 @@ class RGAN():
     def getGenerator(self,latent_dim,momentum):
         in_data = Input(shape=(latent_dim,))
         # major upsampling and convolutions
-        out = Dense(129*49)(in_data)
+        out = Dense(128*49)(in_data)
         out = Activation("relu")(out)
         out = Reshape((7,7,128))(out)
         out = Conv2D(256, kernel_size=3, padding="same")(out)
