@@ -75,11 +75,11 @@ class RGAN():
         out = BatchNormalization(momentum=momentum)(out)
         out = Activation("relu")(out)
         # block 3
-        out = Conv2D(32, kernel_size=3, padding="same")(out)
+        out = Conv2D(1, kernel_size=3, padding="same")(out)
         out = BatchNormalization(momentum=momentum)(out)
         out = Activation("relu")(out)
         # reshape
-        out = Reshape((28**2,32))(out)
+        out = Reshape((28,28))(out)
         if len(backend.tensorflow_backend._get_available_gpus()) > 0:
             out = CuDNNLSTM(1,return_sequences=True,
                        kernel_constraint=max_norm(3),
@@ -88,56 +88,31 @@ class RGAN():
             out = LSTM(1,return_sequences=True,
                        kernel_constraint=max_norm(3),
                        recurrent_constraint=max_norm(3),bias_constraint=max_norm(3))(out)
-        out = Reshape((28,28))(out)
         return Model(inputs=in_data,outputs=out)
 
     def getDiscriminator(self,im_dim,droprate,momentum,alpha):
         in_data = Input(shape=(im_dim,im_dim))
+         if len(backend.tensorflow_backend._get_available_gpus()) > 0:
+            out = CuDNNLSTM(28,return_sequences=True,
+                       kernel_constraint=max_norm(3),
+                       recurrent_constraint=max_norm(3),bias_constraint=max_norm(3))(out)
+        else:
+            out = LSTM(28,return_sequences=True,
+                       kernel_constraint=max_norm(3),
+                       recurrent_constraint=max_norm(3),bias_constraint=max_norm(3))(out)
         out = Reshape((im_dim,im_dim,1))(in_data)
         # block 1
         out = Conv2D(256, kernel_size=3, strides=2)(out)
         out = BatchNormalization(momentum=momentum)(out)
-        out = Conv2D(256, kernel_size=4, padding="same")(out)
-        out = BatchNormalization(momentum=momentum)(out)
-        out = Conv2D(256, kernel_size=4, padding="same")(out)
-        out = BatchNormalization(momentum=momentum)(out)
         out = LeakyReLU(alpha=alpha)(out)
         out = Dropout(droprate)(out)
-        out = Reshape((13**2,256))(out)
-        if len(backend.tensorflow_backend._get_available_gpus()) > 0:
-            out = CuDNNLSTM(128,return_sequences=True,
-                       kernel_constraint=max_norm(3),
-                       recurrent_constraint=max_norm(3),bias_constraint=max_norm(3))(out)
-        else:
-            out = LSTM(128,return_sequences=True,
-                       kernel_constraint=max_norm(3),
-                       recurrent_constraint=max_norm(3),bias_constraint=max_norm(3))(out)
-        out = Reshape((13,13,128))(out)
         # block 2
         out = Conv2D(128, kernel_size=3, strides=2)(out)
         out = BatchNormalization(momentum=momentum)(out)
-        out = Conv2D(128, kernel_size=3, padding="same")(out)
-        out = BatchNormalization(momentum=momentum)(out)
-        out = Conv2D(128, kernel_size=3, padding="same")(out)
-        out = BatchNormalization(momentum=momentum)(out)
         out = LeakyReLU(alpha=alpha)(out)
         out = Dropout(droprate)(out)
-        out = Reshape((6**2,128))(out)
-        if len(backend.tensorflow_backend._get_available_gpus()) > 0:
-            out = CuDNNLSTM(64,return_sequences=True,
-                       kernel_constraint=max_norm(3),
-                       recurrent_constraint=max_norm(3),bias_constraint=max_norm(3))(out)
-        else:
-            out = LSTM(64,return_sequences=True,
-                       kernel_constraint=max_norm(3),
-                       recurrent_constraint=max_norm(3),bias_constraint=max_norm(3))(out)
-        out = Reshape((6,6,64))(out)
         # block 3
         out = Conv2D(64, kernel_size=3)(out)
-        out = BatchNormalization(momentum=momentum)(out)
-        out = Conv2D(64, kernel_size=2,padding="same")(out)
-        out = BatchNormalization(momentum=momentum)(out)
-        out = Conv2D(64, kernel_size=2,padding="same")(out)
         out = BatchNormalization(momentum=momentum)(out)
         out = LeakyReLU(alpha=alpha)(out)
         out = Dropout(droprate)(out)
