@@ -81,11 +81,11 @@ class RGAN():
         # reshape
         out = Reshape((28,28))(out)
         if len(backend.tensorflow_backend._get_available_gpus()) > 0:
-            out = CuDNNLSTM(1,return_sequences=True,
+            out = CuDNNLSTM(28,return_sequences=True,
                        kernel_constraint=max_norm(3),
                        recurrent_constraint=max_norm(3),bias_constraint=max_norm(3))(out)
         else:
-            out = LSTM(1,return_sequences=True,
+            out = LSTM(28,return_sequences=True,
                        kernel_constraint=max_norm(3),
                        recurrent_constraint=max_norm(3),bias_constraint=max_norm(3))(out)
         return Model(inputs=in_data,outputs=out)
