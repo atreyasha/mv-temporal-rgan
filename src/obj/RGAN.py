@@ -75,11 +75,15 @@ class RGAN():
         out = BatchNormalization(momentum=momentum)(out)
         out = Activation("relu")(out)
         # block 3
-        out = Conv2D(1, kernel_size=3, padding="same")(out)
+        out = Conv2D(32, kernel_size=3, padding="same")(out)
+        out = BatchNormalization(momentum=momentum)(out)
+        out = Conv2D(32, kernel_size=3, padding="same")(out)
+        out = BatchNormalization(momentum=momentum)(out)
+        out = Conv2D(32, kernel_size=3, padding="same")(out)
         out = BatchNormalization(momentum=momentum)(out)
         out = Activation("relu")(out)
         # reshape
-        out = Reshape((28,28))(out)
+        out = Reshape((28,28*32))(out)
         if len(backend.tensorflow_backend._get_available_gpus()) > 0:
             out = CuDNNLSTM(28,return_sequences=True,
                        kernel_constraint=max_norm(3),
@@ -116,7 +120,7 @@ class RGAN():
         out = BatchNormalization(momentum=momentum)(out)
         out = LeakyReLU(alpha=alpha)(out)
         out = Dropout(droprate)(out)
-        out = Reshape((4**2,64))(out)
+        out = Reshape((4*4,64))(out)
         if len(backend.tensorflow_backend._get_available_gpus()) > 0:
             out = Bidirectional(CuDNNLSTM(8,
                        kernel_constraint=max_norm(3),
