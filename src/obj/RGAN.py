@@ -100,7 +100,7 @@ class RGAN():
             out = LSTM(28,return_sequences=True,
                        kernel_constraint=max_norm(3),
                        recurrent_constraint=max_norm(3),bias_constraint=max_norm(3))(in_data)
-        out = Reshape((im_dim,im_dim,1))(in_data)
+        out = Reshape((im_dim,im_dim,1))(out)
         # block 1
         out = Conv2D(256, kernel_size=3, strides=2)(out)
         out = BatchNormalization(momentum=momentum)(out)
