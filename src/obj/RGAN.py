@@ -98,7 +98,7 @@ class RGAN():
 
     def getDiscriminator(self,im_dim,droprate,momentum,alpha):
         in_data = Input(shape=(im_dim,im_dim))
-        out = Reshape((im_dim**2,1))
+        out = Reshape((im_dim**2,1))(out)
         if len(backend.tensorflow_backend._get_available_gpus()) > 0:
             out = CuDNNLSTM(1,return_sequences=True,
                        kernel_constraint=max_norm(3),
