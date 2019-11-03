@@ -74,6 +74,7 @@ class RGAN():
         out = Conv2D(64, kernel_size=4, padding="same")(out)
         out = BatchNormalization(momentum=momentum)(out)
         out = Activation("relu")(out)
+        # reshape
         out = Reshape((28,28*64))(out)
         if len(backend.tensorflow_backend._get_available_gpus()) > 0:
             out = CuDNNLSTM(28,return_sequences=True,
@@ -89,10 +90,10 @@ class RGAN():
         out = BatchNormalization(momentum=momentum)(out)
         out = Conv2D(32, kernel_size=3, padding="same")(out)
         out = BatchNormalization(momentum=momentum)(out)
-        out = Conv2D(32, kernel_size=3, padding="same")(out)
+        out = Conv2D(1, kernel_size=3, padding="same")(out)
         out = BatchNormalization(momentum=momentum)(out)
         out = Activation("relu")(out)
-        # reshape
+        out = Reshape((28,28))(out)
         return Model(inputs=in_data,outputs=out)
 
     def getDiscriminator(self,im_dim,droprate,momentum,alpha):
