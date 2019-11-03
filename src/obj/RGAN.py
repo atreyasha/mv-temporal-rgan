@@ -73,16 +73,21 @@ class RGAN():
         out = UpSampling2D()(out)
         out = Conv2D(64, kernel_size=4, padding="same")(out)
         out = BatchNormalization(momentum=momentum)(out)
-        out = Conv2D(64, kernel_size=4, padding="same")(out)
-        out = BatchNormalization(momentum=momentum)(out)
         out = Activation("relu")(out)
         # block 3
-        out = Conv2D(1, kernel_size=3, padding="same")(out)
-        out = BatchNormalization(momentum=momentum)(out)
-        out = Conv2D(1, kernel_size=3, padding="same")(out)
+        out = Conv2D(32, kernel_size=3, padding="same")(out)
         out = BatchNormalization(momentum=momentum)(out)
         out = Activation("relu")(out)
         # reshape
+        out = Reshape((28**2,32))(out)
+        if len(backend.tensorflow_backend._get_available_gpus()) > 0:
+            out = CuDNNLSTM(1,return_sequences=True,
+                       kernel_constraint=max_norm(3),
+                       recurrent_constraint=max_norm(3),bias_constraint=max_norm(3))(out)
+        else:
+            out = LSTM(1,return_sequences=True,
+                       kernel_constraint=max_norm(3),
+                       recurrent_constraint=max_norm(3),bias_constraint=max_norm(3))(out)
         out = Reshape((28,28))(out)
         return Model(inputs=in_data,outputs=out)
 
