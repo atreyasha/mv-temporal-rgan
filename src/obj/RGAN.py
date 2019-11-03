@@ -102,11 +102,11 @@ class RGAN():
         if len(backend.tensorflow_backend._get_available_gpus()) > 0:
             out = CuDNNLSTM(1,return_sequences=True,
                        kernel_constraint=max_norm(3),
-                       recurrent_constraint=max_norm(3),bias_constraint=max_norm(3))(in_data)
+                       recurrent_constraint=max_norm(3),bias_constraint=max_norm(3))(out)
         else:
             out = LSTM(1,return_sequences=True,
                        kernel_constraint=max_norm(3),
-                       recurrent_constraint=max_norm(3),bias_constraint=max_norm(3))(in_data)
+                       recurrent_constraint=max_norm(3),bias_constraint=max_norm(3))(out)
         out = Reshape((im_dim,im_dim,1))(out)
         # block 1
         out = Conv2D(256, kernel_size=3, strides=2)(out)
