@@ -342,7 +342,8 @@ $ tree ./pickles/2019_10_24_13_45_01_RGAN_faces -L 1
 
 As our repository and models are still under development, we document various stages and performances of our models here.
 
-* [RGAN Model Performance Summary I](/src/docs/RGAN_performance_1.md)
+* [RGAN Model Performance Summary I](/src/docs/RGAN_v1.md)
+* [RGAN Model Performance Summary II](/src/docs/RGAN_v2.md)
 
 ## Caveats
 
@@ -359,16 +360,3 @@ Developments to this repository and its workflow are documented in our developme
 ## Acknowledgments
 
 @eriklindernoren Keras-GAN GitHub [repository](https://github.com/eriklindernoren/Keras-GAN) (inspired source code for this repository)
-
-<!-- ### Comments -->
-<!-- * improve look and feel of todos.org and place hook to put caveats into readmde -->
-
-<!-- * add caveat section at end with link to some areas with all exceptions due to current development (link to this in descriptions) -->
-<!-- * add hook to migrate caveats from todos.org directly into relevant files -->
-<!-- * mention RCGAN is still under development -->
-<!-- * add section for showing model results and add caveat for plotting gradients -->
-<!-- * different flattening techniques, ie. as 1d time series or with more dimensions -->
-
-<!-- * provide links to model developments and stabilization techniques -->
-
-<!-- * run spell-check on readme -->

@@ -19,7 +19,6 @@ def makeBin(out,size_factor):
                     for file in tqdm(glob.glob("./data/lfwcrop_grey/faces/*"))]
     train_images = np.asarray(train_images,dtype="float32")
     train_images /= 255
-    train_images = np.resize(train_images,(train_images.shape[0],train_images.shape[1]**2,1))
     np.save("./data/"+out,train_images)
 
 ###############################

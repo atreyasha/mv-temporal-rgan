@@ -3,62 +3,68 @@ Workflow changes
 
 ### Model stabilization and abstraction
 
-1.  **TODO** use Gaussian noise addition to images (to
-    prevent mode collapse and add robustness) and Gaussian-noise label
-    smoothing (non-model)
+1.  **TODO** adapt workflow from existing successful GAN
+    architecture and modify for our task
 
-2.  **TODO** use multi-scale gradient and spectral
-    normalization (model), first non-model then model-based changes
+2.  **TODO** spectral normalization for convolutional layers
+    without batch normalization (check if works), add citation for it in
+    due time
 
-3.  **TODO** make network deeper and review eth rgan model
-    for comparison
+3.  consider having online similarity checks, MMD and TRTS to check
+    quality of samples
 
-4.  **TODO** use Wasserstein loss and dilations for larger
-    scale temporal relations
+4.  use Wasserstein loss with standard or improved training
 
-5.  **TODO** consider removing LSTM in generator and adding
-    additional LSTM in discriminator
+5.  use feature matching and minibatch discrimination to prevent mode
+    collapse
 
-6.  **TODO** use rows as channels/time-steps, separate rows
-    from temporal pipeline for better convergence
+6.  consider adding Gaussian noise to images for stability (mixed
+    outcomes predicted)
 
-7.  **TODO** work on more efficient (automated) hard model
-    memory handling (saving only one instance of weights in comb.h5 and
-    abstracting via layer numbers) -\> necessary for github push
+7.  consider averaging with various dilations for discriminator phase,
+    could be linked to resnet
 
-8.  **TODO** export optimizer weights as h5 instead of pickle
-    for data consistency and compactness
+8.  consider resnet architecture for certain skip-connections, could be
+    linked to multi-scale gradient structure
 
-9.  after making above mode-based changes, run all 3 data-based models
-    to see results
+9.  work on more efficient (automated) hard model memory handling
+    (saving only one instance of weights in comb.h5 and abstracting via
+    layer numbers) -\> necessary for github push
 
-10. extend models to RCGANs once results are satisfactory
+10. export optimizer weights as h5 instead of pickle for data
+    consistency and compactness
 
-11. make pipeline variable/adaptable/scalable to higher dimensional data
-    in case of 64 dimensional lfw faces
+11. make pipeline variable/adaptable/scalable to higher (possibly
+    non-square) dimensional data in case of 64 dimensional lfw faces
+    (user more variables in models instead of hard-coding)
+
+12. extend models to RCGANs once results are satisfactory
 
 ### Model visualization and presentation
 
-1.  work on better connection between readme and development-log by
+1.  **TODO** update RGAN version 2 with performance summary
+    and manage branches, add extra option to download logs when cloning
+
+2.  work on better connection between readme and development-log by
     piping certain points on pre-commit hooks; or otherwise manage
     caveats in readme actively
 
-2.  make todos.org look better on github with proper dates and
+3.  make todos.org look better on github with proper dates and
     formatting
 
-3.  make waveform type of visualization of datasets and generated
+4.  make waveform type of visualization of datasets and generated
     products for preliminary datasets and MIMIC-III
 
-4.  add function to generate best samples from trained model aside from
+5.  add function to generate best samples from trained model aside from
     already generated image
 
-5.  change matplotlib backend default back to instant working version
+6.  change matplotlib backend default back to instant working version
     when necessary
 
-6.  add MIMIC-III 2d projection depiction and learning as gif on initial
+7.  add MIMIC-III 2d projection depiction and learning as gif on initial
     readme
 
-7.  remove caveats in readme once relevant developments are complete
+8.  remove caveats in readme once relevant developments are complete
 
 ### Model application to biomedical time series
 

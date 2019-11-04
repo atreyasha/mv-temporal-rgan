@@ -29,17 +29,15 @@ def loadData(data):
         return np.load("./data/lfw.npy")
     elif data == "mnist":
         (train_images,_), (_,_) = mnist.load_data()
-        return np.resize(train_images, (train_images.shape[0],
-                                        train_images.shape[1]**2,1))/255
+        return train_images/255
     elif data == "fashion":
         (train_images,_), (_,_) = fashion_mnist.load_data()
-        return np.resize(train_images, (train_images.shape[0],
-                                        train_images.shape[1]**2,1))/255
+        return train_images/255
 
 def singularTrain(data,latent_dim,epochs,batch_size,learning_rate,
                   g_factor,droprate,momentum,alpha,saving_rate,model="RGAN"):
     train_images = loadData(data)
-    im_dim = int(np.sqrt(train_images.shape[1]))
+    im_dim = train_images.shape[1]
     log_dir = getCurrentTime()+"_"+model+"_"+data
     os.makedirs("./pickles/"+log_dir)
     os.makedirs("./pickles/"+log_dir+"/img")
