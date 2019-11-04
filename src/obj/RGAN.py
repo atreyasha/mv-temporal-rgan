@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 
-# get all dependencies
+# import all dependencies
 import re
 import pickle
 import csv
@@ -14,8 +14,8 @@ from keras.models import Model
 from keras.optimizers import Adam
 from keras.constraints import max_norm
 from keras.layers import Dense, Activation, Reshape
-from keras.layers import LSTM, CuDNNLSTM, Input, UpSampling1D, Bidirectional, Conv2D
-from keras.layers import BatchNormalization, LeakyReLU, Dropout, Conv1D, UpSampling2D
+from keras.layers import LSTM, CuDNNLSTM, Input, Bidirectional, Conv2D
+from keras.layers import BatchNormalization, LeakyReLU, Dropout, UpSampling2D
 from keras.backend.tensorflow_backend import clear_session
 
 ################################
@@ -57,24 +57,25 @@ class RGAN():
 
     def getGenerator(self,latent_dim,momentum):
         in_data = Input(shape=(latent_dim,))
-        # major upsampling and convolutions
+        # block 1: upsampling using dense layers
         out = Dense(128*49)(in_data)
         out = Activation("relu")(out)
         out = Reshape((7,7,128))(out)
+        # block 2: convolution
         out = Conv2D(256, kernel_size=3, padding="same")(out)
         out = BatchNormalization(momentum=momentum)(out)
         out = Activation("relu")(out)
-        # block 1
+        # block 3: upsampling and convolution
         out = UpSampling2D()(out)
         out = Conv2D(128, kernel_size=3, padding="same")(out)
         out = BatchNormalization(momentum=momentum)(out)
         out = Activation("relu")(out)
-        # block 2
+        # block 4: upsampling and convolution
         out = UpSampling2D()(out)
         out = Conv2D(64, kernel_size=4, padding="same")(out)
         out = BatchNormalization(momentum=momentum)(out)
         out = Activation("relu")(out)
-        # reshape
+        # block 5: flatten and enrich string features using LSTM
         out = Reshape((28*28,64))(out)
         if len(backend.tensorflow_backend._get_available_gpus()) > 0:
             out = CuDNNLSTM(32,return_sequences=True,
@@ -85,7 +86,7 @@ class RGAN():
                        kernel_constraint=max_norm(3),
                        recurrent_constraint=max_norm(3),bias_constraint=max_norm(3))(out)
         out = Reshape((28,28,32))(out)
-        # block 3
+        # block 6: continuous convolutions for smoother features
         out = Conv2D(32, kernel_size=3, padding="same")(out)
         out = BatchNormalization(momentum=momentum)(out)
         out = Conv2D(32, kernel_size=3, padding="same")(out)
@@ -98,6 +99,7 @@ class RGAN():
 
     def getDiscriminator(self,im_dim,droprate,momentum,alpha):
         in_data = Input(shape=(im_dim,im_dim))
+        # block 1: flatten and check sequence using LSTM
         out = Reshape((im_dim**2,1))(in_data)
         if len(backend.tensorflow_backend._get_available_gpus()) > 0:
             out = CuDNNLSTM(1,return_sequences=True,
@@ -108,21 +110,22 @@ class RGAN():
                        kernel_constraint=max_norm(3),
                        recurrent_constraint=max_norm(3),bias_constraint=max_norm(3))(out)
         out = Reshape((im_dim,im_dim,1))(out)
-        # block 1
+        # block 2: convolution with dropout
         out = Conv2D(256, kernel_size=3, strides=2)(out)
         out = BatchNormalization(momentum=momentum)(out)
         out = LeakyReLU(alpha=alpha)(out)
         out = Dropout(droprate)(out)
-        # block 2
+        # block 3: convolution with dropout
         out = Conv2D(128, kernel_size=3, strides=2)(out)
         out = BatchNormalization(momentum=momentum)(out)
         out = LeakyReLU(alpha=alpha)(out)
         out = Dropout(droprate)(out)
-        # block 3
+        # block 4: convolution with dropout
         out = Conv2D(64, kernel_size=3)(out)
         out = BatchNormalization(momentum=momentum)(out)
         out = LeakyReLU(alpha=alpha)(out)
         out = Dropout(droprate)(out)
+        # block 5: flatten and detect final features using bi-LSTM
         out = Reshape((4*4,64))(out)
         if len(backend.tensorflow_backend._get_available_gpus()) > 0:
             out = Bidirectional(CuDNNLSTM(8,
@@ -132,7 +135,7 @@ class RGAN():
             out = Bidirectional(LSTM(8,
                        kernel_constraint=max_norm(3),
                        recurrent_constraint=max_norm(3),bias_constraint=max_norm(3)))(out)
-        # dense output
+        # block 6: map final features to dense output
         out = Dense(1)(out)
         out = Activation("sigmoid")(out)
         return Model(inputs=in_data,outputs=out)
@@ -177,11 +180,10 @@ class RGAN():
         constant_noise = np.random.normal(size=(plot_samples,self.latent_dim,))
         np.random.seed(None)
         # label smoothing by using less-than-one value
-        # real_labels = np.full((self.batch_size,1),0.9)
         fake_labels = np.zeros((self.batch_size,1))
         runs = int(np.ceil(data.shape[0]/self.batch_size))
         for epoch in range(self.epochs):
-            # make noisy labels
+            # make noisy labels per epoch
             real_labels = np.clip(np.random.normal(loc=0.90,
                                                    scale=0.005,size=(self.batch_size,1)),None,1)
             for batch in range(runs):
