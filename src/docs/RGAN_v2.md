@@ -60,11 +60,11 @@
 <img src="/src/img/RGAN_v2/out_faces.gif" width="650">
 </p>
 
-### Feedback
-
-We implemented Spectral Normalization but it showed minimal improvements. We will try again to implement it with the next testing model.
-
 ### Improvements
 1. We implemented 2d convolutions in this model run instead of 1d convolutions compared to the previous runs. This led to some improvements, especially with MNIST. However, we can see that passing multivariate data into LSTM's leads to jagged lines and a lack of general details. We could possibly combine 2d convolutions with LSTM's that read data as 1d-strings.
 
 2. We could implement more stabilization techniques such as noise addition, spectral normalization and multi-scale gradients.
+
+### Feedback
+
+We implemented Spectral Normalization but it showed minimal improvements. We will try again to implement it with the next testing model.
