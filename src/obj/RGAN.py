@@ -58,9 +58,9 @@ class RGAN():
     def getGenerator(self,latent_dim,momentum):
         in_data = Input(shape=(latent_dim,))
         # block 1: upsampling using dense layers
-        out = Dense(128*16)(in_data)
+        out = Dense(128*49)(in_data)
         out = Activation("relu")(out)
-        out = Reshape((4,4,128))(out)
+        out = Reshape((7,7,128))(out)
         # block 2: convolution
         out = Conv2D(32, kernel_size=3, padding="same")(out)
         out = BatchNormalization(momentum=momentum)(out)
@@ -76,11 +76,7 @@ class RGAN():
         out = BatchNormalization(momentum=momentum)(out)
         out = Activation("relu")(out)
         # block 5: flatten and enrich string features using LSTM
-        out = UpSampling2D()(out)
-        out = Conv2D(128, kernel_size=4, padding="same")(out)
-        out = BatchNormalization(momentum=momentum)(out)
-        out = Activation("relu")(out)
-        out = Reshape((32*32,128))(out)
+        out = Reshape((28*28,128))(out)
         if len(backend.tensorflow_backend._get_available_gpus()) > 0:
             out = CuDNNLSTM(128,return_sequences=True,
                        kernel_constraint=max_norm(3),
@@ -89,11 +85,13 @@ class RGAN():
             out = LSTM(128,return_sequences=True,
                        kernel_constraint=max_norm(3),
                        recurrent_constraint=max_norm(3),bias_constraint=max_norm(3))(out)
-        out = Reshape((32,32,128))(out)
+        out = Reshape((28,28,128))(out)
         # block 6: continuous convolutions for smoother features
-        out = Conv2D(256, kernel_size=3)(out)
+        out = Conv2D(256, kernel_size=3, padding="same")(out)
         out = BatchNormalization(momentum=momentum)(out)
-        out = Conv2D(1, kernel_size=3)(out)
+        out = Conv2D(256, kernel_size=3, padding="same")(out)
+        out = BatchNormalization(momentum=momentum)(out)
+        out = Conv2D(1, kernel_size=3, padding = "same")(out)
         out = BatchNormalization(momentum=momentum)(out)
         out = Activation("relu")(out)
         out = Reshape((28,28))(out)
@@ -130,18 +128,14 @@ class RGAN():
         # block 5: flatten and detect final features using bi-LSTM
         out = Reshape((4*4,64))(out)
         if len(backend.tensorflow_backend._get_available_gpus()) > 0:
-            out = Bidirectional(CuDNNLSTM(8,
+            out = CuDNNLSTM(8,
                        kernel_constraint=max_norm(3),
-                       recurrent_constraint=max_norm(3),bias_constraint=max_norm(3)))(out)
+                       recurrent_constraint=max_norm(3),bias_constraint=max_norm(3))(out)
         else:
-            out = Bidirectional(LSTM(8,
+            out = LSTM(8,
                        kernel_constraint=max_norm(3),
-                       recurrent_constraint=max_norm(3),bias_constraint=max_norm(3)))(out)
+                       recurrent_constraint=max_norm(3),bias_constraint=max_norm(3))(out)
         # block 6: map final features to dense output
-        out = Dense(8)(out)
-        out = BatchNormalization(momentum=momentum)(out)
-        out = Activation("relu")(out)
-        out = Dropout(droprate)(out)
         out = Dense(1)(out)
         out = Activation("sigmoid")(out)
         return Model(inputs=in_data,outputs=out)
