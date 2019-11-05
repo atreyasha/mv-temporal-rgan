@@ -1,6 +1,7 @@
 ** Workflow changes
 
 *** Model stabilization and abstraction
+***** TODO find error leading to mnist low intensity and final row high intensity, perhaps upsample in generator above dimensionality and then downsample (or more precise discriminator)
 ***** TODO adapt workflow from existing successful GAN architecture and modify for our task
 ***** TODO spectral normalization for convolutional layers without batch normalization (check if works), add citation for it in due time
 ***** consider having online similarity checks, MMD and TRTS to check quality of samples
@@ -15,7 +16,7 @@
 ***** extend models to RCGANs once results are satisfactory
 
 *** Model visualization and presentation
-***** TODO update RGAN version 2 with performance summary and manage branches, add extra option to download logs when cloning
+***** TODO update RGAN version 3 with performance summary and manage branches, add extra option to ignore pics/gifs when cloning unless prompted
 ***** work on better connection between readme and development-log by piping certain points on pre-commit hooks; or otherwise manage caveats in readme actively
 ***** make todos.org look better on github with proper dates and formatting
 ***** make waveform type of visualization of datasets and generated products for preliminary datasets and MIMIC-III

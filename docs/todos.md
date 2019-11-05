@@ -3,47 +3,52 @@ Workflow changes
 
 ### Model stabilization and abstraction
 
-1.  **TODO** adapt workflow from existing successful GAN
+1.  **TODO** find error leading to mnist low intensity and
+    final row high intensity, perhaps upsample in generator above
+    dimensionality and then downsample (or more precise discriminator)
+
+2.  **TODO** adapt workflow from existing successful GAN
     architecture and modify for our task
 
-2.  **TODO** spectral normalization for convolutional layers
+3.  **TODO** spectral normalization for convolutional layers
     without batch normalization (check if works), add citation for it in
     due time
 
-3.  consider having online similarity checks, MMD and TRTS to check
+4.  consider having online similarity checks, MMD and TRTS to check
     quality of samples
 
-4.  use Wasserstein loss with standard or improved training
+5.  use Wasserstein loss with standard or improved training
 
-5.  use feature matching and minibatch discrimination to prevent mode
+6.  use feature matching and minibatch discrimination to prevent mode
     collapse
 
-6.  consider adding Gaussian noise to images for stability (mixed
+7.  consider adding Gaussian noise to images for stability (mixed
     outcomes predicted)
 
-7.  consider averaging with various dilations for discriminator phase,
+8.  consider averaging with various dilations for discriminator phase,
     could be linked to resnet
 
-8.  consider resnet architecture for certain skip-connections, could be
+9.  consider resnet architecture for certain skip-connections, could be
     linked to multi-scale gradient structure
 
-9.  work on more efficient (automated) hard model memory handling
+10. work on more efficient (automated) hard model memory handling
     (saving only one instance of weights in comb.h5 and abstracting via
     layer numbers) -\> necessary for github push
 
-10. export optimizer weights as h5 instead of pickle for data
+11. export optimizer weights as h5 instead of pickle for data
     consistency and compactness
 
-11. make pipeline variable/adaptable/scalable to higher (possibly
+12. make pipeline variable/adaptable/scalable to higher (possibly
     non-square) dimensional data in case of 64 dimensional lfw faces
     (user more variables in models instead of hard-coding)
 
-12. extend models to RCGANs once results are satisfactory
+13. extend models to RCGANs once results are satisfactory
 
 ### Model visualization and presentation
 
-1.  **TODO** update RGAN version 2 with performance summary
-    and manage branches, add extra option to download logs when cloning
+1.  **TODO** update RGAN version 3 with performance summary
+    and manage branches, add extra option to ignore pics/gifs when
+    cloning unless prompted
 
 2.  work on better connection between readme and development-log by
     piping certain points on pre-commit hooks; or otherwise manage
