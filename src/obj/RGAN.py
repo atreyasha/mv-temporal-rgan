@@ -72,7 +72,7 @@ class RGAN():
         out = Activation("relu")(out)
         # block 4: upsampling and convolution
         out = UpSampling2D()(out)
-        out = Conv2D(64, kernel_size=4, padding="same")(out)
+        out = Conv2D(128, kernel_size=4, padding="same")(out)
         out = BatchNormalization(momentum=momentum)(out)
         out = Activation("relu")(out)
         # block 5: flatten and enrich string features using LSTM
