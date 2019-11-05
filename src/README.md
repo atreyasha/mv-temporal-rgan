@@ -338,7 +338,7 @@ $ tree ./pickles/2019_10_24_13_45_01_RGAN_faces -L 1
 2 directories, 7 files
 ```
 
-### Model development performance
+## Model development performance
 
 As our repository and models are still under development, we document various stages and performances of our models here.
 
