@@ -125,7 +125,7 @@ class RGAN():
         out = LeakyReLU(alpha=alpha)(out)
         out = Dropout(droprate)(out)
         # block 4: convolution with dropout
-        out = Conv2D(64, kernel_size=3, strides=2)(out)
+        out = Conv2D(64, kernel_size=3)(out)
         out = BatchNormalization(momentum=momentum)(out)
         out = LeakyReLU(alpha=alpha)(out)
         out = Dropout(droprate)(out)
