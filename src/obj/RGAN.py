@@ -72,7 +72,7 @@ class RGAN():
         out = Activation("relu")(out)
         # block 4: upsampling and convolution
         out = UpSampling2D()(out)
-        out = Conv2D(128, kernel_size=4, padding="same")(out)
+        out = Conv2D(64, kernel_size=4, padding="same")(out)
         out = BatchNormalization(momentum=momentum)(out)
         out = Activation("relu")(out)
         # block 5: flatten and enrich string features using LSTM
@@ -93,9 +93,7 @@ class RGAN():
         # block 6: continuous convolutions for smoother features
         out = Conv2D(256, kernel_size=3)(out)
         out = BatchNormalization(momentum=momentum)(out)
-        out = Conv2D(256, kernel_size=3)(out)
-        out = BatchNormalization(momentum=momentum)(out)
-        out = Conv2D(1, kernel_size=3, padding="same")(out)
+        out = Conv2D(1, kernel_size=3)(out)
         out = BatchNormalization(momentum=momentum)(out)
         out = Activation("relu")(out)
         out = Reshape((28,28))(out)
