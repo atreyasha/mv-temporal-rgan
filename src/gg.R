@@ -27,8 +27,8 @@ plot_evolution <- function(direct,ideal_ticks = 10){
   log_df = aggregate(.~epoch+Model,log_df,mean,na.action=na.pass)
   max_tick_x = round(max(log_df["epoch"],na.rm = TRUE),-2)
   max_tick_y = round(max(log_df["loss"],na.rm = TRUE),1)
-  tick_interval_x <- round_any(max_tick_x/ideal_ticks,50)
-  tick_interval_y <- round_any(max_tick_y/ideal_ticks,0.5)
+  tick_interval_x <- round_any(max_tick_x/ideal_ticks,50,ceiling)
+  tick_interval_y <- round_any(max_tick_y/ideal_ticks,0.5,ceiling)
   # make basic plot
   pdf(paste0(direct,"/vis/evolution.pdf"), width=14, height=7)
   g <- ggplot() +
