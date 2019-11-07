@@ -180,12 +180,10 @@ class RGAN():
         constant_noise = np.random.normal(size=(plot_samples,self.latent_dim,))
         np.random.seed(None)
         # label smoothing by using less-than-one value
+        real_labels = np.full((self.batch_size,1),0.9)
         fake_labels = np.zeros((self.batch_size,1))
         runs = int(np.ceil(data.shape[0]/self.batch_size))
         for epoch in range(self.epochs):
-            # make noisy labels per epoch
-            real_labels = np.clip(np.random.normal(loc=0.90,
-                                                   scale=0.005,size=(self.batch_size,1)),None,1)
             for batch in range(runs):
                 # randomize data and generate noise
                 idx = np.random.randint(0,data.shape[0],self.batch_size)
