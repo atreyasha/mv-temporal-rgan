@@ -107,14 +107,14 @@ class RGAN():
         # block 1: flatten and check sequence using LSTM
         out = Reshape((im_dim**2,256))(out)
         if len(backend.tensorflow_backend._get_available_gpus()) > 0:
-            out = CuDNNLSTM(64,return_sequences=True,
+            out = CuDNNLSTM(128,return_sequences=True,
                        kernel_constraint=max_norm(3),
                        recurrent_constraint=max_norm(3),bias_constraint=max_norm(3))(out)
         else:
-            out = LSTM(64,return_sequences=True,
+            out = LSTM(128,return_sequences=True,
                        kernel_constraint=max_norm(3),
                        recurrent_constraint=max_norm(3),bias_constraint=max_norm(3))(out)
-        out = Reshape((im_dim,im_dim,64))(out)
+        out = Reshape((im_dim,im_dim,128))(out)
         # block 2: convolution with dropout
         out = Conv2D(128, kernel_size=3, strides=2)(out)
         out = BatchNormalization(momentum=momentum)(out)
