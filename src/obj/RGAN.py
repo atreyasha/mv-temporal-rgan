@@ -111,14 +111,12 @@ class RGAN():
                        recurrent_constraint=max_norm(3),bias_constraint=max_norm(3))(out)
         out = Reshape((im_dim,im_dim,1))(out)
         # block 2: convolution with dropout
-        out = Conv2D(256, kernel_size=3)(out)
-        out = MaxPooling2D(padding="same")(out)
+        out = Conv2D(256, kernel_size=3, strides=2)(out)
         out = BatchNormalization(momentum=momentum)(out)
         out = LeakyReLU(alpha=alpha)(out)
         out = Dropout(droprate)(out)
         # block 3: convolution with dropout
-        out = Conv2D(128, kernel_size=3)(out)
-        out = MaxPooling2D(padding="same")(out)
+        out = Conv2D(128, kernel_size=3, strides=2)(out)
         out = BatchNormalization(momentum=momentum)(out)
         out = LeakyReLU(alpha=alpha)(out)
         out = Dropout(droprate)(out)
