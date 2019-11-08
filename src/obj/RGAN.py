@@ -13,7 +13,7 @@ from keras import backend
 from keras.models import Model
 from keras.optimizers import Adam
 from keras.constraints import max_norm
-from keras.layers import Dense, Activation, Reshape, MaxPooling2D
+from keras.layers import Dense, Activation, Reshape, MaxPooling2D, Flatten
 from keras.layers import LSTM, CuDNNLSTM, Input, Bidirectional, Conv2D
 from keras.layers import BatchNormalization, LeakyReLU, Dropout, UpSampling2D
 from keras.backend.tensorflow_backend import clear_session
@@ -96,17 +96,13 @@ class RGAN():
     def getDiscriminator(self,im_dim,droprate,momentum,alpha):
         in_data = Input(shape=(im_dim,im_dim))
         out = Reshape((im_dim,im_dim,1))(in_data)
-        out = Conv2D(256, kernel_size=3, padding="same")(out)
-        out = BatchNormalization(momentum=momentum)(out)
-        out = LeakyReLU(alpha=alpha)(out)
-        out = Dropout(droprate)(out)
         # block 1: flatten and check sequence using LSTM
-        out = Reshape((im_dim**2,256))(out)
+        out = Reshape((im_dim**2,1))(out)
         if len(backend.tensorflow_backend._get_available_gpus()) > 0:
-            out = CuDNNLSTM(128,return_sequences=True)(out)
+            out = Bidirectional(CuDNNLSTM(1,return_sequences=True))(out)
         else:
-            out = LSTM(128,return_sequences=True)(out)
-        out = Reshape((im_dim,im_dim,128))(out)
+            out = Bidirectional(LSTM(1,return_sequences=True))(out)
+        out = Reshape((im_dim,im_dim,2))(out)
         # block 2: convolution with dropout
         out = Conv2D(128, kernel_size=3, strides=2)(out)
         out = BatchNormalization(momentum=momentum)(out)
@@ -118,16 +114,20 @@ class RGAN():
         out = LeakyReLU(alpha=alpha)(out)
         out = Dropout(droprate)(out)
         # block 4: convolution with dropout
-        out = Conv2D(32, kernel_size=3)(out)
+        out = Conv2D(32, kernel_size=3, strides=2)(out)
         out = BatchNormalization(momentum=momentum)(out)
         out = LeakyReLU(alpha=alpha)(out)
         out = Dropout(droprate)(out)
         # block 5: flatten and detect final features using bi-LSTM
-        out = Reshape((4*4,32))(out)
-        if len(backend.tensorflow_backend._get_available_gpus()) > 0:
-            out = CuDNNLSTM(8)(out)
-        else:
-            out = LSTM(8)(out)
+        out = Flatten()(out)
+        out = Dense(48)(out)
+        out = BatchNormalization(momentum=momentum)(out)
+        out = LeakyReLU(alpha=alpha)(out)
+        out = Dropout(droprate)(out)
+        out = Dense(8)(out)
+        out = BatchNormalization(momentum=momentum)(out)
+        out = LeakyReLU(alpha=alpha)(out)
+        out = Dropout(droprate)(out)
         # block 6: map final features to dense output
         out = Dense(1)(out)
         out = Activation("sigmoid")(out)
