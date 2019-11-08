@@ -13,7 +13,7 @@ from keras import backend
 from keras.models import Model
 from keras.optimizers import Adam
 from keras.constraints import max_norm
-from keras.layers import Dense, Activation, Reshape
+from keras.layers import Dense, Activation, Reshape, MaxPooling2D
 from keras.layers import LSTM, CuDNNLSTM, Input, Bidirectional, Conv2D
 from keras.layers import BatchNormalization, LeakyReLU, Dropout, UpSampling2D
 from keras.backend.tensorflow_backend import clear_session
@@ -78,16 +78,16 @@ class RGAN():
         # block 5: flatten and enrich string features using LSTM
         out = Reshape((28*28,64))(out)
         if len(backend.tensorflow_backend._get_available_gpus()) > 0:
-            out = CuDNNLSTM(32,return_sequences=True,
+            out = CuDNNLSTM(64,return_sequences=True,
                        kernel_constraint=max_norm(3),
                        recurrent_constraint=max_norm(3),bias_constraint=max_norm(3))(out)
         else:
-            out = LSTM(32,return_sequences=True,
+            out = LSTM(64,return_sequences=True,
                        kernel_constraint=max_norm(3),
                        recurrent_constraint=max_norm(3),bias_constraint=max_norm(3))(out)
-        out = Reshape((28,28,32))(out)
+        out = Reshape((28,28,64))(out)
         # block 6: continuous convolutions for smoother features
-        out = Conv2D(32, kernel_size=3, padding="same")(out)
+        out = Conv2D(64, kernel_size=3, padding="same")(out)
         out = BatchNormalization(momentum=momentum)(out)
         out = Conv2D(32, kernel_size=3, padding="same")(out)
         out = BatchNormalization(momentum=momentum)(out)
@@ -102,21 +102,23 @@ class RGAN():
         # block 1: flatten and check sequence using LSTM
         out = Reshape((im_dim**2,1))(in_data)
         if len(backend.tensorflow_backend._get_available_gpus()) > 0:
-            out = Bidirectional(CuDNNLSTM(1,return_sequences=True,
+            out = CuDNNLSTM(1,return_sequences=True,
                        kernel_constraint=max_norm(3),
-                       recurrent_constraint=max_norm(3),bias_constraint=max_norm(3)))(out)
+                       recurrent_constraint=max_norm(3),bias_constraint=max_norm(3))(out)
         else:
-            out = Bidirectional(LSTM(1,return_sequences=True,
+            out = LSTM(1,return_sequences=True,
                        kernel_constraint=max_norm(3),
-                       recurrent_constraint=max_norm(3),bias_constraint=max_norm(3)))(out)
-        out = Reshape((im_dim,im_dim,2))(out)
+                       recurrent_constraint=max_norm(3),bias_constraint=max_norm(3))(out)
+        out = Reshape((im_dim,im_dim,1))(out)
         # block 2: convolution with dropout
-        out = Conv2D(256, kernel_size=3, strides=2)(out)
+        out = Conv2D(256, kernel_size=3)(out)
+        out = MaxPooling2D(padding="same")(out)
         out = BatchNormalization(momentum=momentum)(out)
         out = LeakyReLU(alpha=alpha)(out)
         out = Dropout(droprate)(out)
         # block 3: convolution with dropout
-        out = Conv2D(128, kernel_size=3, strides=2)(out)
+        out = Conv2D(128, kernel_size=3)(out)
+        out = MaxPooling2D(padding="same")(out)
         out = BatchNormalization(momentum=momentum)(out)
         out = LeakyReLU(alpha=alpha)(out)
         out = Dropout(droprate)(out)
