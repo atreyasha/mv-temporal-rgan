@@ -78,13 +78,9 @@ class RGAN():
         # block 5: flatten and enrich string features using LSTM
         out = Reshape((28*28,64))(out)
         if len(backend.tensorflow_backend._get_available_gpus()) > 0:
-            out = CuDNNLSTM(64,return_sequences=True,
-                       kernel_constraint=max_norm(3),
-                       recurrent_constraint=max_norm(3),bias_constraint=max_norm(3))(out)
+            out = CuDNNLSTM(64,return_sequences=True)(out)
         else:
-            out = LSTM(64,return_sequences=True,
-                       kernel_constraint=max_norm(3),
-                       recurrent_constraint=max_norm(3),bias_constraint=max_norm(3))(out)
+            out = LSTM(64,return_sequences=True)(out)
         out = Reshape((28,28,64))(out)
         # block 6: continuous convolutions for smoother features
         out = Conv2D(64, kernel_size=3, padding="same")(out)
@@ -107,13 +103,9 @@ class RGAN():
         # block 1: flatten and check sequence using LSTM
         out = Reshape((im_dim**2,256))(out)
         if len(backend.tensorflow_backend._get_available_gpus()) > 0:
-            out = CuDNNLSTM(128,return_sequences=True,
-                       kernel_constraint=max_norm(3),
-                       recurrent_constraint=max_norm(3),bias_constraint=max_norm(3))(out)
+            out = CuDNNLSTM(128,return_sequences=True)(out)
         else:
-            out = LSTM(128,return_sequences=True,
-                       kernel_constraint=max_norm(3),
-                       recurrent_constraint=max_norm(3),bias_constraint=max_norm(3))(out)
+            out = LSTM(128,return_sequences=True)(out)
         out = Reshape((im_dim,im_dim,128))(out)
         # block 2: convolution with dropout
         out = Conv2D(128, kernel_size=3, strides=2)(out)
@@ -133,13 +125,9 @@ class RGAN():
         # block 5: flatten and detect final features using bi-LSTM
         out = Reshape((4*4,32))(out)
         if len(backend.tensorflow_backend._get_available_gpus()) > 0:
-            out = CuDNNLSTM(8,
-                       kernel_constraint=max_norm(3),
-                       recurrent_constraint=max_norm(3),bias_constraint=max_norm(3))(out)
+            out = CuDNNLSTM(8)(out)
         else:
-            out = LSTM(8,
-                       kernel_constraint=max_norm(3),
-                       recurrent_constraint=max_norm(3),bias_constraint=max_norm(3))(out)
+            out = LSTM(8)(out)
         # block 6: map final features to dense output
         out = Dense(1)(out)
         out = Activation("sigmoid")(out)
