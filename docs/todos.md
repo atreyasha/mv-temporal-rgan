@@ -3,69 +3,80 @@ Workflow changes
 
 ### Model stabilization and abstraction
 
-1.  **TODO** extend models to RCGANs once results are
+1.  **TODO** models appear more stable when discriminator is
+    significantly less powerful than generator; models are better when
+    noisy labels are used for both generator and discriminator
+
+2.  **TODO** perhaps could attempt adding a slightly higher
+    loss expectation for generator compared to discriminator
+
+3.  **TODO** extend models to RCGANs once results are
     satisfactory
 
-2.  **TODO** work on more efficient (automated) hard model
+4.  **TODO** work on more efficient (automated) hard model
     memory handling (saving only one instance of weights in comb.h5 and
     abstracting via layer numbers) -\> necessary for github push
 
-3.  **TODO** export optimizer weights as h5 instead of pickle
+5.  **TODO** export optimizer weights as h5 instead of pickle
     for data consistency and compactness
 
-4.  adapt workflow from existing successful GAN architecture and modify
+6.  adapt workflow from existing successful GAN architecture and modify
     for our task
 
-5.  spectral normalization for convolutional layers without batch
+7.  spectral normalization for convolutional layers without batch
     normalization (check if works), add citation for it in due time
 
-6.  consider having online similarity checks, MMD and TRTS to check
+8.  consider having online similarity checks, MMD and TRTS to check
     quality of samples
 
-7.  use Wasserstein loss with standard or improved training
+9.  use Wasserstein loss with standard or improved training
 
-8.  use feature matching and minibatch discrimination to prevent mode
+10. use feature matching and minibatch discrimination to prevent mode
     collapse
 
-9.  consider adding Gaussian noise to images for stability (mixed
+11. consider adding Gaussian noise to images for stability (mixed
     outcomes predicted)
 
-10. consider averaging with various dilations for discriminator phase,
+12. consider averaging with various dilations for discriminator phase,
     could be linked to resnet
 
-11. consider resnet architecture for certain skip-connections, could be
+13. consider resnet architecture for certain skip-connections, could be
     linked to multi-scale gradient structure
 
-12. make pipeline variable/adaptable/scalable to higher (possibly
+14. make pipeline variable/adaptable/scalable to higher (possibly
     non-square) dimensional data in case of 64 dimensional lfw faces
     (user more variables in models instead of hard-coding)
 
 ### Model visualization and presentation
 
-1.  **TODO** update RGAN version 4 with performance summary
+1.  **TODO** add functionality to show correct generator
+    accuracy when using noisy labels for both discriminator and
+    generator, current bug always shows zero accuracy
+
+2.  **TODO** update RGAN version 4 with performance summary
     and manage branches, add extra option to ignore pics/gifs when
     cloning unless prompted
 
-2.  work on better connection between readme and development-log by
+3.  work on better connection between readme and development-log by
     piping certain points on pre-commit hooks; or otherwise manage
     caveats in readme actively
 
-3.  make todos.org look better on github with proper dates and
+4.  make todos.org look better on github with proper dates and
     formatting
 
-4.  make waveform type of visualization of datasets and generated
+5.  make waveform type of visualization of datasets and generated
     products for preliminary datasets and MIMIC-III
 
-5.  add function to generate best samples from trained model aside from
+6.  add function to generate best samples from trained model aside from
     already generated image
 
-6.  change matplotlib backend default back to instant working version
+7.  change matplotlib backend default back to instant working version
     when necessary
 
-7.  add MIMIC-III 2d projection depiction and learning as gif on initial
+8.  add MIMIC-III 2d projection depiction and learning as gif on initial
     readme
 
-8.  remove caveats in readme once relevant developments are complete
+9.  remove caveats in readme once relevant developments are complete
 
 ### Model application to biomedical time series
 

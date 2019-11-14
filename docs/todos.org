@@ -1,6 +1,8 @@
 ** Workflow changes
    
 *** Model stabilization and abstraction
+***** TODO models appear more stable when discriminator is significantly less powerful than generator; models are better when noisy labels are used for both generator and discriminator
+***** TODO perhaps could attempt adding a slightly higher loss expectation for generator compared to discriminator
 ***** TODO extend models to RCGANs once results are satisfactory
 ***** TODO work on more efficient (automated) hard model memory handling (saving only one instance of weights in comb.h5 and abstracting via layer numbers) -> necessary for github push
 ***** TODO export optimizer weights as h5 instead of pickle for data consistency and compactness
@@ -15,6 +17,7 @@
 ***** make pipeline variable/adaptable/scalable to higher (possibly non-square) dimensional data in case of 64 dimensional lfw faces (user more variables in models instead of hard-coding)
 
 *** Model visualization and presentation
+***** TODO add functionality to show correct generator accuracy when using noisy labels for both discriminator and generator, current bug always shows zero accuracy
 ***** TODO update RGAN version 4 with performance summary and manage branches, add extra option to ignore pics/gifs when cloning unless prompted
 ***** work on better connection between readme and development-log by piping certain points on pre-commit hooks; or otherwise manage caveats in readme actively
 ***** make todos.org look better on github with proper dates and formatting
