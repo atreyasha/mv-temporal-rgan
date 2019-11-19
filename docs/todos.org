@@ -6,6 +6,7 @@
 ***** TODO extend models to RCGANs once results are satisfactory
 ***** TODO work on more efficient (automated) hard model memory handling (saving only one instance of weights in comb.h5 and abstracting via layer numbers) -> necessary for github push
 ***** TODO export optimizer weights as h5 instead of pickle for data consistency and compactness
+***** attempt changing generator target labels to one
 ***** adapt workflow from existing successful GAN architecture and modify for our task
 ***** spectral normalization for convolutional layers without batch normalization (check if works), add citation for it in due time
 ***** consider having online similarity checks, MMD and TRTS to check quality of samples

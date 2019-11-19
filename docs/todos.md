@@ -20,30 +20,32 @@ Workflow changes
 5.  **TODO** export optimizer weights as h5 instead of pickle
     for data consistency and compactness
 
-6.  adapt workflow from existing successful GAN architecture and modify
+6.  attempt changing generator target labels to one
+
+7.  adapt workflow from existing successful GAN architecture and modify
     for our task
 
-7.  spectral normalization for convolutional layers without batch
+8.  spectral normalization for convolutional layers without batch
     normalization (check if works), add citation for it in due time
 
-8.  consider having online similarity checks, MMD and TRTS to check
+9.  consider having online similarity checks, MMD and TRTS to check
     quality of samples
 
-9.  use Wasserstein loss with standard or improved training
+10. use Wasserstein loss with standard or improved training
 
-10. use feature matching and minibatch discrimination to prevent mode
+11. use feature matching and minibatch discrimination to prevent mode
     collapse
 
-11. consider adding Gaussian noise to images for stability (mixed
+12. consider adding Gaussian noise to images for stability (mixed
     outcomes predicted)
 
-12. consider averaging with various dilations for discriminator phase,
+13. consider averaging with various dilations for discriminator phase,
     could be linked to resnet
 
-13. consider resnet architecture for certain skip-connections, could be
+14. consider resnet architecture for certain skip-connections, could be
     linked to multi-scale gradient structure
 
-14. make pipeline variable/adaptable/scalable to higher (possibly
+15. make pipeline variable/adaptable/scalable to higher (possibly
     non-square) dimensional data in case of 64 dimensional lfw faces
     (user more variables in models instead of hard-coding)
 
