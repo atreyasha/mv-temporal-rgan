@@ -185,12 +185,13 @@ class RGAN():
         np.random.seed(42)
         constant_noise = np.random.normal(size=(plot_samples,self.latent_dim,))
         np.random.seed(None)
+        # generate fixed labels
+        fake_labels = np.zeros((self.batch_size,1))
+        real_labels = np.ones((self.batch_size,1))
         runs = int(np.ceil(data.shape[0]/self.batch_size))
         for epoch in range(self.epochs):
             # make noisy labels per epoch
-            fake_labels = np.clip(np.random.normal(loc=0.05,
-                                                   scale=0.005,size=(self.batch_size,1)),0,None)
-            real_labels = np.clip(np.random.normal(loc=0.90,
+            real_labels_noisy = np.clip(np.random.normal(loc=0.95,
                                                    scale=0.005,size=(self.batch_size,1)),None,1)
             for batch in range(runs):
                 # randomize data and generate noise
@@ -200,7 +201,7 @@ class RGAN():
                 # generate fake data
                 fake = self.generator.predict(noise)
                 # train the discriminator
-                d_loss_real = self.discriminator.train_on_batch(real, real_labels)
+                d_loss_real = self.discriminator.train_on_batch(real, real_labels_noisy)
                 d_loss_fake = self.discriminator.train_on_batch(fake, fake_labels)
                 d_loss = 0.5 * np.add(d_loss_real, d_loss_fake)
                 # generate new set of noise
