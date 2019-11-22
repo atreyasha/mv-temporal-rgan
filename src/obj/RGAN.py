@@ -14,9 +14,9 @@ from keras.models import Model
 from keras.optimizers import Adam
 from keras.constraints import max_norm
 from keras.layers import Dense, Activation, Reshape
-from keras.layers import LSTM, CuDNNLSTM, Input, Bidirectional, Conv2D
+from keras.layers import LSTM, CuDNNLSTM, Input, Bidirectional
 from keras.layers import BatchNormalization, LeakyReLU, Dropout, UpSampling2D
-from .spec_norm.SpectralNormalizationKeras import ConvSN2D, DenseSN
+from spec_norm.SpectralNormalizationKeras import ConvSN2D, DenseSN
 from keras.backend.tensorflow_backend import clear_session
 
 ################################
@@ -186,13 +186,13 @@ class RGAN():
         constant_noise = np.random.normal(size=(plot_samples,self.latent_dim,))
         np.random.seed(None)
         # generate fixed labels
-        fake_labels = np.zeros((self.batch_size,1))
-        real_labels = np.ones((self.batch_size,1))
         runs = int(np.ceil(data.shape[0]/self.batch_size))
         for epoch in range(self.epochs):
             # make noisy labels per epoch
-            real_labels_noisy = np.clip(np.random.normal(loc=0.95,
+            real_labels = np.clip(np.random.normal(loc=0.90,
                                                    scale=0.005,size=(self.batch_size,1)),None,1)
+            fake_labels = np.clip(np.random.normal(loc=0.05,
+                                                   scale=0.005,size=(self.batch_size,1)),0,None)
             for batch in range(runs):
                 # randomize data and generate noise
                 idx = np.random.randint(0,data.shape[0],self.batch_size)
@@ -201,7 +201,7 @@ class RGAN():
                 # generate fake data
                 fake = self.generator.predict(noise)
                 # train the discriminator
-                d_loss_real = self.discriminator.train_on_batch(real, real_labels_noisy)
+                d_loss_real = self.discriminator.train_on_batch(real, real_labels)
                 d_loss_fake = self.discriminator.train_on_batch(fake, fake_labels)
                 d_loss = 0.5 * np.add(d_loss_real, d_loss_fake)
                 # generate new set of noise
