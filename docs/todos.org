@@ -1,71 +1,50 @@
 ** Workflow changes
-   
+
 *** Model stabilization and abstraction
-***** TODO models appear more stable when discriminator is significantly less powerful than generator; models are better when noisy labels are used for both generator and discriminator
-***** TODO perhaps could attempt adding a slightly higher loss expectation for generator compared to discriminator
-***** TODO extend models to RCGANs once results are satisfactory
-***** TODO work on more efficient (automated) hard model memory handling (saving only one instance of weights in comb.h5 and abstracting via layer numbers) -> necessary for github push
+***** TODO add citation for spectral normalization code
+***** TODO work on more efficient (automated) hard model memory handling (saving only one instance of weights in comb.h5 and abstracting via layer numbers) -> necessary for github clones to be light
 ***** TODO export optimizer weights as h5 instead of pickle for data consistency and compactness
-***** attempt changing generator target labels to one
-***** adapt workflow from existing successful GAN architecture and modify for our task
-***** spectral normalization for convolutional layers without batch normalization (check if works), add citation for it in due time
-***** consider having online similarity checks, MMD and TRTS to check quality of samples
-***** use Wasserstein loss with standard or improved training
-***** use feature matching and minibatch discrimination to prevent mode collapse
-***** consider adding Gaussian noise to images for stability (mixed outcomes predicted)
-***** consider averaging with various dilations for discriminator phase, could be linked to resnet
-***** consider resnet architecture for certain skip-connections, could be linked to multi-scale gradient structure
+***** TODO make modular function for model restoration
+***** TODO port code to tensorflow2 for better integration -> might solve problem with accuracy printing based on non-binary target labels
+***** TODO choose best model and extend to RCGAN, look up ganhacks for further possible improvements such as adding leaky-relu everywhere; leave best model training much longer on faces to check for better convergence
+***** TODO consider borrowing model architecture from other successful models and employ within local biomedical task
+***** consider that performance on images is not paramount, abstraction to medical data and construction of local evaluation techniques is more important
+***** consider developing online per-epoch similarity checks, MMD and TRTS to check quality of samples
+***** read papers for strategies/uses of synthetic data
 ***** make pipeline variable/adaptable/scalable to higher (possibly non-square) dimensional data in case of 64 dimensional lfw faces (user more variables in models instead of hard-coding)
 
 *** Model visualization and presentation
-***** TODO add functionality to show correct generator accuracy when using noisy labels for both discriminator and generator, current bug always shows zero accuracy
 ***** TODO update RGAN version 4 with performance summary and manage branches, add extra option to ignore pics/gifs when cloning unless prompted
-***** work on better connection between readme and development-log by piping certain points on pre-commit hooks; or otherwise manage caveats in readme actively
-***** make todos.org look better on github with proper dates and formatting
-***** make waveform type of visualization of datasets and generated products for preliminary datasets and MIMIC-III
-***** add function to generate best samples from trained model aside from already generated image
+***** TODO add functionality to show correct generator accuracy when using noisy labels for both discriminator and generator, current bug always shows zero accuracy -> might not be relevant with tensorflow2 port
+***** add function to generate best samples from trained model aside from already generated images
 ***** change matplotlib backend default back to instant working version when necessary
+
+*** Model extension to biomedical time series
+***** visualize data from MIMIC-III github repository in 2-dimensions to see smoothness or roughness
+***** use ETH model on MIMIC-III and compare evaluations with own model
+***** apply RCGAN technique towards this process and verify results with existing models through TSTR/TRTS and MMD checks
+
+*** Heuristics
+***** TODO add convergent pathway polynomial fit to check whether training is diverging or converging in given time frame
+***** add gradient checks for logging and change vis.py to include colour on loss line for gradients
+***** use tensorboard to analyze learning process
+***** develop similarity/quality metrics which could be used alongside training
+
+*** Possible architecture improvements
+***** use Wasserstein loss with standard or improved training
+***** use feature matching and minibatch discrimination to prevent mode collapse
+***** consider adding Gaussian noise to images for stability (mixed outcomes predicted)
+***** consider resnet architecture for certain skip-connections, could be linked to multi-scale gradient structure
+
+*** Overall progress
+***** models appear more stable when discriminator is significantly less powerful than generator
+***** models are better when same noisy labels are used for both generator and discriminator
+***** track how many epochs or batch runs needed to converge and try to optimize this (~500/2000 for mnist/lfw respectively)
+***** add conditions to "train.py" to add separate pipeline in RCGAN training
 ***** add MIMIC-III 2d projection depiction and learning as gif on initial readme
 ***** remove caveats in readme once relevant developments are complete
 
-*** Model application to biomedical time series
-***** visualize data from MIMIC-III github repository in 2-dimensions to see smoothness or roughness
-***** apply RCGAN technique towards this process and verify results with existing models through TSTR/TRTS and MMD checks
-
-*** Feedback from discussions
-***** pooling/attention LSTMs for higher look-back capability
-***** extra time distribution between rows/sequences
-***** layer vs. batch normalization
-***** attempt SELU layer if easily available
-***** more stable implementations of generative models such as R-autoencoders
-***** architectures which do not suffer from mode collapse, eg. autoencoder/non-variational/transformer
-
-*** GPU management
-***** try to share memory and tasks between gpus (multi-gpu-model)
-***** try to use memory limiting in code in case GPUs are already being used
-
-*** Heuristics
-***** add gradient checks for logging and change vis.py to include colour on loss line for gradients
-***** set up crowd-sourced grid-search via emails to check results
-***** optionally use tensorboard to analyze learning process
-***** look for similarity measure metrics which could be used alongside training
-
-*** Backup Google Colab
-***** work on google drive cli access for streamlined model runs
-***** link google colab to local jupyter runtime
-***** run multiple notebooks directly from computer without browser
-***** sync google drive to localhost for easy access
-
-*** Clean-code/documentation
-***** track how many epochs or batch runs needed to converge and try to optimize this (~1000 for good results)
-***** add conditions to "train.py" to add separate pipeline in RCGAN training
-
-*** Additional improvements
-***** look into unsupervised feature extraction in ML
-***** isolate personal identification features in discriminator from generated time series
-***** use adversarial samples to generate bad data that network falsely predicts
-
-*** Brainstorming points
+*** High-level ideas
 **** GAN stabilisation:
 ***** Gaussian label smoothing
 ***** differing learning rates for optimizers
@@ -84,4 +63,4 @@
 ***** compare input and output images as time series with signals
 **** Documentation and code-health:
 ***** fix unused imports and sort with python tools
-***** make proper documentation and model visualizations
+***** make detailed documentation and model visualizations

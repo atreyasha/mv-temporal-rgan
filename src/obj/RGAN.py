@@ -16,7 +16,7 @@ from keras.constraints import max_norm
 from keras.layers import Dense, Activation, Reshape
 from keras.layers import LSTM, CuDNNLSTM, Input, Bidirectional
 from keras.layers import BatchNormalization, LeakyReLU, Dropout, UpSampling2D
-from spec_norm.SpectralNormalizationKeras import ConvSN2D, DenseSN
+from .spec_norm.SpectralNormalizationKeras import ConvSN2D, DenseSN
 from keras.backend.tensorflow_backend import clear_session
 
 ################################
@@ -46,7 +46,7 @@ class RGAN():
         self.discriminator.compile(loss=['binary_crossentropy'], optimizer=self.optimizer_d,
             metrics=['accuracy'])
         # define generator
-        self.generator = self.getGenerator(self.latent_dim,self.momentum)
+        self.generator = self.getGenerator(self.latent_dim,self.momentum,self.alpha)
         self.discriminator.trainable = False
         # define combined network with partial gradient application
         z = Input(shape=(self.latent_dim,))
@@ -56,26 +56,26 @@ class RGAN():
         self.combined.compile(loss=['binary_crossentropy'], optimizer=self.optimizer_g,
                               metrics=['accuracy'])
 
-    def getGenerator(self,latent_dim,momentum):
+    def getGenerator(self,latent_dim,momentum,alpha):
         in_data = Input(shape=(latent_dim,))
         # block 1: upsampling using dense layers
         out = DenseSN(128*49)(in_data)
-        out = Activation("relu")(out)
+        out = LeakyReLU(alpha=alpha)(out)
         out = Reshape((7,7,128))(out)
         # block 2: convolution
         out = ConvSN2D(256, kernel_size=3, padding="same")(out)
         out = BatchNormalization(momentum=momentum)(out)
-        out = Activation("relu")(out)
+        out = LeakyReLU(alpha=alpha)(out)
         # block 3: upsampling and convolution
         out = UpSampling2D()(out)
         out = ConvSN2D(128, kernel_size=3, padding="same")(out)
         out = BatchNormalization(momentum=momentum)(out)
-        out = Activation("relu")(out)
+        out = LeakyReLU(alpha=alpha)(out)
         # block 4: upsampling and convolution
         out = UpSampling2D()(out)
         out = ConvSN2D(64, kernel_size=4, padding="same")(out)
         out = BatchNormalization(momentum=momentum)(out)
-        out = Activation("relu")(out)
+        out = LeakyReLU(alpha=alpha)(out)
         # block 5: flatten and enrich string features using LSTM
         out = Reshape((28*28,64))(out)
         if len(backend.tensorflow_backend._get_available_gpus()) > 0:
@@ -94,7 +94,7 @@ class RGAN():
         out = BatchNormalization(momentum=momentum)(out)
         out = ConvSN2D(1, kernel_size=3, padding="same")(out)
         out = BatchNormalization(momentum=momentum)(out)
-        out = Activation("relu")(out)
+        out = LeakyReLU(alpha=alpha)(out)
         out = Reshape((28,28))(out)
         return Model(inputs=in_data,outputs=out)
 
@@ -185,14 +185,12 @@ class RGAN():
         np.random.seed(42)
         constant_noise = np.random.normal(size=(plot_samples,self.latent_dim,))
         np.random.seed(None)
-        # generate fixed labels
+        # define target labels
+        real_labels = np.ones((self.batch_size,1))
+        fake_labels = np.zeros((self.batch_size,1))
+        # define number of iteration updates based on data size and batch size
         runs = int(np.ceil(data.shape[0]/self.batch_size))
         for epoch in range(self.epochs):
-            # make noisy labels per epoch
-            real_labels = np.clip(np.random.normal(loc=0.90,
-                                                   scale=0.005,size=(self.batch_size,1)),None,1)
-            fake_labels = np.clip(np.random.normal(loc=0.05,
-                                                   scale=0.005,size=(self.batch_size,1)),0,None)
             for batch in range(runs):
                 # randomize data and generate noise
                 idx = np.random.randint(0,data.shape[0],self.batch_size)

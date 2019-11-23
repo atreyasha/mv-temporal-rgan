@@ -16,28 +16,40 @@ Workflow changes
 4.  **TODO** make modular function for model restoration
 
 5.  **TODO** port code to tensorflow2 for better integration
+    -\> might solve problem with accuracy printing based on non-binary
+    target labels
 
 6.  **TODO** choose best model and extend to RCGAN, look up
-    ganhacks for further possible improvements
+    ganhacks for further possible improvements such as adding leaky-relu
+    everywhere; leave best model training much longer on faces to check
+    for better convergence
 
-7.  consider developing online per-epoch similarity checks, MMD and TRTS
+7.  **TODO** consider borrowing model architecture from other
+    successful models and employ within local biomedical task
+
+8.  consider that performance on images is not paramount, abstraction to
+    medical data and construction of local evaluation techniques is more
+    important
+
+9.  consider developing online per-epoch similarity checks, MMD and TRTS
     to check quality of samples
 
-8.  read papers for strategies/uses of synthetic data
+10. read papers for strategies/uses of synthetic data
 
-9.  make pipeline variable/adaptable/scalable to higher (possibly
+11. make pipeline variable/adaptable/scalable to higher (possibly
     non-square) dimensional data in case of 64 dimensional lfw faces
     (user more variables in models instead of hard-coding)
 
 ### Model visualization and presentation
 
-1.  **TODO** add functionality to show correct generator
-    accuracy when using noisy labels for both discriminator and
-    generator, current bug always shows zero accuracy
-
-2.  **TODO** update RGAN version 4 with performance summary
+1.  **TODO** update RGAN version 4 with performance summary
     and manage branches, add extra option to ignore pics/gifs when
     cloning unless prompted
+
+2.  **TODO** add functionality to show correct generator
+    accuracy when using noisy labels for both discriminator and
+    generator, current bug always shows zero accuracy -\> might not be
+    relevant with tensorflow2 port
 
 3.  add function to generate best samples from trained model aside from
     already generated images
