@@ -14,6 +14,7 @@ import argparse
 import datetime
 import numpy as np
 from obj.RGAN import RGAN
+from obj.RCGAN import RCGAN
 from keras.utils import plot_model
 from keras.datasets import mnist, fashion_mnist
 
@@ -24,27 +25,37 @@ from keras.datasets import mnist, fashion_mnist
 def getCurrentTime():
     return datetime.datetime.now().strftime("%Y_%m_%d_%H_%M_%S")
 
-def loadData(data):
+def loadData(data,model):
     if data == "faces":
         return np.load("./data/lfw.npy")
     elif data == "mnist":
-        (train_images,_), (_,_) = mnist.load_data()
-        return train_images/255
+        train_set, _ = mnist.load_data()
     elif data == "fashion":
-        (train_images,_), (_,_) = fashion_mnist.load_data()
-        return train_images/255
+        train_set, _ = fashion_mnist.load_data()
+    # return data type based on model
+    if model == "rgan":
+        return train_set[0]/255
+    elif model == "rcgan":
+        return (train_set[0]/255,train_set[1])
 
-def singularTrain(data,latent_dim,epochs,batch_size,learning_rate,
-                  g_factor,droprate,momentum,alpha,saving_rate,model="RGAN"):
-    train_images = loadData(data)
+def singularTrain(model,data,latent_dim,epochs,batch_size,learning_rate,
+                  g_factor,droprate,momentum,alpha,saving_rate):
+    train_images = loadData(data,model)
     im_dim = train_images.shape[1]
     log_dir = getCurrentTime()+"_"+model+"_"+data
     os.makedirs("./pickles/"+log_dir)
     os.makedirs("./pickles/"+log_dir+"/img")
-    if model == "RGAN":
+    if model == "rgan":
         model = RGAN(latent_dim,im_dim,epochs,batch_size,learning_rate,
                      g_factor,droprate,momentum,alpha,saving_rate)
+    elif model == "rcgan":
+        num_classes = np.unique(train_images[1]).shape[0]
+        model = RCGAN(num_classes,latent_dim,im_dim,epochs,batch_size,learning_rate,
+                     g_factor,droprate,momentum,alpha,saving_rate)
     model.train(train_images,log_dir)
+
+# TODO: modify continue train for rcgan
+# TODO: modify lfw based on rcgan
 
 def continueTrain(direct,arguments):
     direct = re.sub(r"(\/)?$","",direct)
@@ -112,6 +123,8 @@ def plot_M(model="RGAN"):
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(formatter_class=argparse.ArgumentDefaultsHelpFormatter)
+    parser.add_argument("--model", type=str, default="rgan",
+                        help="which model to use; either rgan or rcgan")
     parser.add_argument("--data", type=str, default="mnist",
                         help="which training data to use; either mnist, fashion or faces")
     parser.add_argument("--latent-dim", type=int, default=100,
@@ -167,6 +180,6 @@ if __name__ == "__main__":
                 arguments[key] = float(arguments[key])
         continueTrain(args.log_dir,arguments)
     else:
-        singularTrain(args.data,args.latent_dim,args.epochs,args.batch_size,
+        singularTrain(args.model,args.data,args.latent_dim,args.epochs,args.batch_size,
                       args.learning_rate,args.g_factor,args.droprate,args.momentum,
                       args.alpha,args.saving_rate)

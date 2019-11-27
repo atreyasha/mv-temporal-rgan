@@ -24,12 +24,12 @@ from keras.backend.tensorflow_backend import clear_session
 ################################
 
 # TODO: add conditional workflow
-# TODO: remove accuracy from RGAN
-# figure out how to deal with num_classes variable
+# TODO: figure out how to deal with num_classes variable
+# TODO: modify plotting pipeline to include all indices to plot
+# TODO: modify train and other logging functions to enable labels
 # make test runs to ensure correct logging procedures
-# modify plotting pipeline to include all indices to plot
-# modify train and other logging functions to enable labels
 # create labels for faces if possible, perhaps for basic facial indicators (can also re-publish)
+# update readme with relevant changes
 
 class RCGAN():
     def __init__(self,num_classes,latent_dim=100,im_dim=28,epochs=100,batch_size=256,
@@ -206,26 +206,27 @@ class RCGAN():
         np.random.seed(None)
         # label smoothing by using less-than-one value
         fake_labels = np.zeros((self.batch_size,1))
-        runs = int(np.ceil(data.shape[0]/self.batch_size))
+        runs = int(np.ceil(data[0].shape[0]/self.batch_size))
         for epoch in range(self.epochs):
             # make noisy labels per epoch
             real_labels = np.clip(np.random.normal(loc=0.90,
                                                    scale=0.005,size=(self.batch_size,1)),None,1)
             for batch in range(runs):
                 # randomize data and generate noise
-                idx = np.random.randint(0,data.shape[0],self.batch_size)
-                real = data[idx]
+                idx = np.random.randint(0,data[0].shape[0],self.batch_size)
+                real_imgs, img_labels = data[0][idx], data[1][idx]
                 noise = np.random.normal(size=(self.batch_size,self.latent_dim,))
                 # generate fake data
-                fake = self.generator.predict(noise)
+                fake_imgs = self.generator.predict([noise,labels])
                 # train the discriminator
-                d_loss_real = self.discriminator.train_on_batch(real, real_labels)
-                d_loss_fake = self.discriminator.train_on_batch(fake, fake_labels)
+                d_loss_real = self.discriminator.train_on_batch([real_imgs,img_labels], real_labels)
+                d_loss_fake = self.discriminator.train_on_batch([fake_imgs,img_labels], fake_labels)
                 d_loss = 0.5 * np.add(d_loss_real, d_loss_fake)
-                # generate new set of noise
+                # generate new set of noise and sampled labels and sampled labels
                 noise = np.random.normal(size=(self.batch_size,self.latent_dim,))
+                sampled_img_labels = np.random.randint(0, self.num_classes+1, batch_size)
                 # train generator while freezing discriminator
-                g_loss = self.combined.train_on_batch(noise, real_labels)
+                g_loss = self.combined.train_on_batch([noise,sampled_img_labels], real_labels)
                 # plot the progress
                 if (batch+1) % 20 == 0:
                     print("epoch: %d [batch: %d] [D loss: %f] [G loss: %f]" %
