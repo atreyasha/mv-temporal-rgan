@@ -23,11 +23,12 @@ from keras.backend.tensorflow_backend import clear_session
 # define class and functions
 ################################
 
-# TODO: add conditional workflow
-# TODO: modify train and other logging functions to enable labels
 # TODO: modify continue train for rcgan
 # TODO: make plotting procedure more efficient
+# TODO: check if additional transformation or np.reshape for labels is required
+# TODO: look up for normalizing feature in terms of input data
 # TODO: add rcgan to plot model functionality
+# TODO: modify train and other logging functions to note labels
 # TODO: modify lfw based on rcgan make test runs to ensure correct logging procedures
 # remove custom clippings and replace with single clipnorm in optimizer
 # create labels for faces if possible, perhaps for basic facial indicators (can also re-publish)
@@ -175,7 +176,7 @@ class RCGAN():
             for i in range(plot_samples):
                 axs[i,j].imshow(gen_imgs[cnt], cmap='gray')
                 if i == 0:
-                    axs[i,j].set_title("%d" % constant_labels[cnt])
+                    axs[i,j].set_title("%d" % constant_labels[cnt][0])
                 axs[i,j].axis('off')
                 cnt += 1
         plt.tight_layout()
@@ -202,7 +203,7 @@ class RCGAN():
         np.random.seed(42)
         constant_noise = np.random.normal(size=(plot_samples,self.latent_dim))
         constant_noise = np.concatenate(np.repeat(constant_noise[None, :], self.num_classes, axis=0), axis=0)
-        constant_labels = np.repeat(np.arange(0,self.num_classes),plot_samples)
+        constant_labels = np.repeat(np.arange(0,self.num_classes),plot_samples).reshape(-1,1)
         np.random.seed(None)
         # label smoothing by using less-than-one value
         fake_labels = np.zeros((self.batch_size,1))
@@ -224,7 +225,7 @@ class RCGAN():
                 d_loss = 0.5 * np.add(d_loss_real, d_loss_fake)
                 # generate new set of noise and sampled labels and sampled labels
                 noise = np.random.normal(size=(self.batch_size,self.latent_dim,))
-                sampled_img_labels = np.random.randint(0, self.num_classes, self.batch_size)
+                sampled_img_labels = np.random.randint(0, self.num_classes, self.batch_size).reshape(-1,1)
                 # train generator while freezing discriminator
                 g_loss = self.combined.train_on_batch([noise,sampled_img_labels], real_labels)
                 # plot the progress

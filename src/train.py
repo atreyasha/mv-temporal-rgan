@@ -36,7 +36,8 @@ def loadData(data,model):
     if model == "RGAN":
         return train_set[0]/255
     elif model == "RCGAN":
-        return (train_set[0]/255,train_set[1])
+        X_train = (X_train.astype(np.float32) - 127.5) / 127.5
+        return (X_train,train_set[1].reshape(-1,1))
 
 def singularTrain(model,data,latent_dim,epochs,batch_size,learning_rate,
                   g_factor,droprate,momentum,alpha,saving_rate):
