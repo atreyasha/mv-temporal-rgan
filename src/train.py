@@ -33,9 +33,9 @@ def loadData(data,model):
     elif data == "fashion":
         train_set, _ = fashion_mnist.load_data()
     # return data type based on model
-    if model == "rgan":
+    if model == "RGAN":
         return train_set[0]/255
-    elif model == "rcgan":
+    elif model == "RCGAN":
         return (train_set[0]/255,train_set[1])
 
 def singularTrain(model,data,latent_dim,epochs,batch_size,learning_rate,
@@ -44,11 +44,11 @@ def singularTrain(model,data,latent_dim,epochs,batch_size,learning_rate,
     log_dir = getCurrentTime()+"_"+model+"_"+data
     os.makedirs("./pickles/"+log_dir)
     os.makedirs("./pickles/"+log_dir+"/img")
-    if model == "rgan":
+    if model == "RGAN":
         im_dim = train_images.shape[1]
         model = RGAN(latent_dim,im_dim,epochs,batch_size,learning_rate,
                      g_factor,droprate,momentum,alpha,saving_rate)
-    elif model == "rcgan":
+    elif model == "RCGAN":
         im_dim = train_images[0].shape[1]
         num_classes = np.unique(train_images[1]).shape[0]
         model = RCGAN(num_classes,latent_dim,im_dim,epochs,batch_size,learning_rate,
@@ -124,8 +124,8 @@ def plot_M(model="RGAN"):
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(formatter_class=argparse.ArgumentDefaultsHelpFormatter)
-    parser.add_argument("--model", type=str, default="rgan",
-                        help="which model to use; either rgan or rcgan")
+    parser.add_argument("--model", type=str, default="RGAN",
+                        help="which model to use; either RGAN or RCGAN")
     parser.add_argument("--data", type=str, default="mnist",
                         help="which training data to use; either mnist, fashion or faces")
     parser.add_argument("--latent-dim", type=int, default=100,
