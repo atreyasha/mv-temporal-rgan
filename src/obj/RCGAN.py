@@ -111,7 +111,7 @@ class RCGAN():
         out = Reshape((28,28))(out)
         return Model(inputs=[noise,label],outputs=out)
 
-    def getDiscriminator(im_dim,droprate,momentum,alpha,num_classes):
+    def getDiscriminator(self,im_dim,droprate,momentum,alpha,num_classes):
         # reprocess image with provided label
         img = Input(shape=(im_dim,im_dim))
         label = Input(shape=(1,), dtype='int32')
