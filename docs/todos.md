@@ -3,36 +3,34 @@ Workflow changes
 
 ### Model stabilization and abstraction
 
-1.  **TODO** choose best model and extend to RCGAN, look up
-    ganhacks for further possible improvements such as adding leaky-relu
-    everywhere; leave best model training much longer on faces to check
-    for better convergence
+1.  **TODO** choose best model and extend to RCGAN
 
-2.  **TODO** read up on how embeddings to lower dimensions
-    actually work and how if affects doing local processes
-
-3.  **TODO** work on more efficient (automated) hard model
+2.  **TODO** work on more efficient (automated) hard model
     memory handling (saving only one instance of weights in comb.h5 and
     abstracting via layer numbers) -\> necessary for github clones to be
     light
 
-4.  **TODO** export optimizer weights as h5 instead of pickle
+3.  **TODO** export optimizer weights as h5 instead of pickle
     for data consistency and compactness
 
-5.  **TODO** make modular function for model restoration
+4.  **TODO** make modular function for model restoration,
+    edit readme with new continue training details afterwards
 
-6.  **TODO** consider borrowing model architecture from other
+5.  **TODO** consider borrowing model architecture from other
     successful models and employ within local biomedical task
 
-7.  port code to tensorflow2 for better integration -\> might solve
+6.  port code to tensorflow2 for better integration -\> might solve
     problem with accuracy printing based on non-binary target labels
 
-8.  consider that performance on images is not paramount, abstraction to
+7.  consider that performance on images is not paramount, abstraction to
     medical data and construction of local evaluation techniques is more
     important
 
-9.  consider developing online per-epoch similarity checks, MMD and TRTS
+8.  consider developing online per-epoch similarity checks, MMD and TRTS
     to check quality of samples
+
+9.  look up ganhacks for further possible improvements such as adding
+    leaky-relu everywhere
 
 10. make pipeline variable/adaptable/scalable to higher (possibly
     non-square) dimensional data in case of 64 dimensional lfw faces
@@ -42,8 +40,7 @@ Workflow changes
 
 ### Model visualization and presentation
 
-1.  **TODO** update RGAN version 4 with performance summary
-    and manage branches, add extra option to ignore pics/gifs when
+1.  **TODO** add extra option to ignore pics/gifs when
     cloning unless prompted
 
 2.  **TODO** add functionality to show correct generator
