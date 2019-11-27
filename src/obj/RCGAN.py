@@ -24,9 +24,9 @@ from keras.backend.tensorflow_backend import clear_session
 ################################
 
 # TODO: add conditional workflow
-# TODO: modify plotting pipeline to include all indices to plot
 # TODO: modify train and other logging functions to enable labels
 # TODO: modify continue train for rcgan
+# TODO: make plotting procedure more efficient
 # TODO: add rcgan to plot model functionality
 # TODO: modify lfw based on rcgan make test runs to ensure correct logging procedures
 # remove custom clippings and replace with single clipnorm in optimizer
@@ -167,7 +167,7 @@ class RCGAN():
         out = Activation("sigmoid")(out)
         return Model(inputs=[img,label],outputs=out)
 
-    def _plot_figures(self,gen_imgs,direct,epoch,plot_samples,num_classes):
+    def _plot_figures(self,gen_imgs,direct,epoch,plot_samples,num_classes,constant_labels):
         # plotting function
         fig, axs = plt.subplots(ncols=num_classes,nrows=plot_samples)
         cnt = 0
@@ -237,7 +237,7 @@ class RCGAN():
                                          "d_loss":str(d_loss), "g_loss":str(g_loss)})
             # at every epoch, generate images for reference
             test_img = self.generator.predict([constant_noise,constant_labels])
-            self._plot_figures(test_img,direct,epoch,plot_samples,self.num_classes)
+            self._plot_figures(test_img,direct,epoch,plot_samples,self.num_classes,constant_labels)
             if (epoch+1) % self.saving_rate == 0 or (epoch+1) == self.epochs:
                 # save models with defined periodicity
                 self.generator.save_weights("./pickles/"+direct+"/gen_weights.h5")
