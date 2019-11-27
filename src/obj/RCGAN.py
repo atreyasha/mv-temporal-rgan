@@ -224,7 +224,7 @@ class RCGAN():
                 d_loss = 0.5 * np.add(d_loss_real, d_loss_fake)
                 # generate new set of noise and sampled labels and sampled labels
                 noise = np.random.normal(size=(self.batch_size,self.latent_dim,))
-                sampled_img_labels = np.random.randint(0, self.num_classes+1, batch_size)
+                sampled_img_labels = np.random.randint(0, self.num_classes+1, self.batch_size)
                 # train generator while freezing discriminator
                 g_loss = self.combined.train_on_batch([noise,sampled_img_labels], real_labels)
                 # plot the progress
