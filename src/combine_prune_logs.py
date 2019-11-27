@@ -119,7 +119,7 @@ def make_fake_df(epochs):
     fieldnames = {"epoch":np.arange(1,epochs+1),
                   "batch":np.full(epochs,np.nan),
                   "d_loss":np.full(epochs,np.nan),
-                  "g_loss":np.full(epochs,np.nan),
+                  "g_loss":np.full(epochs,np.nan)}
     return pd.DataFrame(fieldnames)
 
 def combine_prune_logs(direct):
