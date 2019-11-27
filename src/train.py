@@ -55,9 +55,6 @@ def singularTrain(model,data,latent_dim,epochs,batch_size,learning_rate,
                      g_factor,droprate,momentum,alpha,saving_rate)
     model.train(train_images,log_dir)
 
-# TODO: modify continue train for rcgan
-# TODO: modify lfw based on rcgan
-
 def continueTrain(direct,arguments):
     direct = re.sub(r"(\/)?$","",direct)
     direct = re.sub(r"(\.\/)?pickles\/","",direct)
