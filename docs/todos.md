@@ -3,29 +3,29 @@ Workflow changes
 
 ### Model stabilization and abstraction
 
-1.  **TODO** add citation for spectral normalization code
-
-2.  **TODO** work on more efficient (automated) hard model
-    memory handling (saving only one instance of weights in comb.h5 and
-    abstracting via layer numbers) -\> necessary for github clones to be
-    light
-
-3.  **TODO** export optimizer weights as h5 instead of pickle
-    for data consistency and compactness
-
-4.  **TODO** make modular function for model restoration
-
-5.  **TODO** port code to tensorflow2 for better integration
-    -\> might solve problem with accuracy printing based on non-binary
-    target labels
-
-6.  **TODO** choose best model and extend to RCGAN, look up
+1.  **TODO** choose best model and extend to RCGAN, look up
     ganhacks for further possible improvements such as adding leaky-relu
     everywhere; leave best model training much longer on faces to check
     for better convergence
 
-7.  **TODO** consider borrowing model architecture from other
+2.  **TODO** read up on how embeddings to lower dimensions
+    actually work and how if affects doing local processes
+
+3.  **TODO** work on more efficient (automated) hard model
+    memory handling (saving only one instance of weights in comb.h5 and
+    abstracting via layer numbers) -\> necessary for github clones to be
+    light
+
+4.  **TODO** export optimizer weights as h5 instead of pickle
+    for data consistency and compactness
+
+5.  **TODO** make modular function for model restoration
+
+6.  **TODO** consider borrowing model architecture from other
     successful models and employ within local biomedical task
+
+7.  port code to tensorflow2 for better integration -\> might solve
+    problem with accuracy printing based on non-binary target labels
 
 8.  consider that performance on images is not paramount, abstraction to
     medical data and construction of local evaluation techniques is more
@@ -34,11 +34,11 @@ Workflow changes
 9.  consider developing online per-epoch similarity checks, MMD and TRTS
     to check quality of samples
 
-10. read papers for strategies/uses of synthetic data
-
-11. make pipeline variable/adaptable/scalable to higher (possibly
+10. make pipeline variable/adaptable/scalable to higher (possibly
     non-square) dimensional data in case of 64 dimensional lfw faces
     (user more variables in models instead of hard-coding)
+
+11. read papers for strategies/uses of synthetic data
 
 ### Model visualization and presentation
 
@@ -93,7 +93,7 @@ Workflow changes
 4.  consider resnet architecture for certain skip-connections, could be
     linked to multi-scale gradient structure
 
-### Overall progress
+### Miscellaneous
 
 1.  models appear more stable when discriminator is significantly less
     powerful than generator
