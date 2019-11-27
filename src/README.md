@@ -347,7 +347,7 @@ As our repository and models are still under development, we document various st
 * [RGAN Model Performance Summary I](/src/docs/RGAN_v1.md)
 * [RGAN Model Performance Summary II](/src/docs/RGAN_v2.md)
 * [RGAN Model Performance Summary III](/src/docs/RGAN_v3.md)
-* [RGAN Model Performance Summary Iv](/src/docs/RGAN_v4.md)
+* [RGAN Model Performance Summary IV](/src/docs/RGAN_v4.md)
 
 ## Caveats
 
