@@ -342,9 +342,12 @@ $ tree ./pickles/2019_10_24_13_45_01_RGAN_faces -L 1
 
 As our repository and models are still under development, we document various stages and performances of our models here.
 
+#### RGAN
+
 * [RGAN Model Performance Summary I](/src/docs/RGAN_v1.md)
 * [RGAN Model Performance Summary II](/src/docs/RGAN_v2.md)
 * [RGAN Model Performance Summary III](/src/docs/RGAN_v3.md)
+* [RGAN Model Performance Summary Iv](/src/docs/RGAN_v4.md)
 
 ## Caveats
 
