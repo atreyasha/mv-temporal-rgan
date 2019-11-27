@@ -41,14 +41,15 @@ def loadData(data,model):
 def singularTrain(model,data,latent_dim,epochs,batch_size,learning_rate,
                   g_factor,droprate,momentum,alpha,saving_rate):
     train_images = loadData(data,model)
-    im_dim = train_images.shape[1]
     log_dir = getCurrentTime()+"_"+model+"_"+data
     os.makedirs("./pickles/"+log_dir)
     os.makedirs("./pickles/"+log_dir+"/img")
     if model == "rgan":
+        im_dim = train_images.shape[1]
         model = RGAN(latent_dim,im_dim,epochs,batch_size,learning_rate,
                      g_factor,droprate,momentum,alpha,saving_rate)
     elif model == "rcgan":
+        im_dim = train_images[0].shape[1]
         num_classes = np.unique(train_images[1]).shape[0]
         model = RCGAN(num_classes,latent_dim,im_dim,epochs,batch_size,learning_rate,
                      g_factor,droprate,momentum,alpha,saving_rate)
