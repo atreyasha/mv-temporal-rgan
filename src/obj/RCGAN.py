@@ -45,8 +45,8 @@ class RCGAN():
         self.batch_size = batch_size
         self.learning_rate = learning_rate
         self.g_factor = g_factor
-        self.optimizer_d = Adam(self.learning_rate,clipnorm=3.)
-        self.optimizer_g = Adam(self.learning_rate*self.g_factor,clipnorm=3.)
+        self.optimizer_d = Adam(self.learning_rate)
+        self.optimizer_g = Adam(self.learning_rate*self.g_factor)
         self.droprate = droprate
         self.momentum = momentum
         self.alpha = alpha
