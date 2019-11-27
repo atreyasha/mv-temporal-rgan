@@ -24,12 +24,11 @@ from keras.backend.tensorflow_backend import clear_session
 ################################
 
 # TODO: add conditional workflow
-# TODO: figure out how to deal with num_classes variable
 # TODO: modify plotting pipeline to include all indices to plot
 # TODO: modify train and other logging functions to enable labels
 # TODO: modify continue train for rcgan
 # TODO: add rcgan to plot model functionality
-# TODO: modify lfw based on rcgan# make test runs to ensure correct logging procedures
+# TODO: modify lfw based on rcgan make test runs to ensure correct logging procedures
 # remove custom clippings and replace with single clipnorm in optimizer
 # create labels for faces if possible, perhaps for basic facial indicators (can also re-publish)
 # update readme with relevant changes
@@ -168,27 +167,23 @@ class RCGAN():
         out = Activation("sigmoid")(out)
         return Model(inputs=[img,label],outputs=out)
 
-    def _plot_figures(self,figures,direct,epoch,dim=1):
-        """Plot a dictionary of figures.
-        adapted from https://stackoverflow.com/questions/11159436/multiple-figures-in-a-single-window
-        Parameters
-        ----------
-        figures : <title, figure> dictionary
-        ncols : number of columns of subplots wanted in the display
-        nrows : number of rows of subplots wanted in the figure
-        """
-        fig, axeslist = plt.subplots(ncols=dim, nrows=dim)
-        for ind,title in enumerate(figures):
-            axeslist.ravel()[ind].imshow(figures[title], cmap=plt.gray())
-            axeslist.ravel()[ind].set_title(title)
-            axeslist.ravel()[ind].set_axis_off()
+    def _plot_figures(self,gen_imgs,direct,epoch,plot_samples,num_classes):
+        # plotting function
+        fig, axs = plt.subplots(ncols=num_classes,nrows=plot_samples)
+        cnt = 0
+        for j in range(num_classes):
+            for i in range(plot_samples):
+                axs[i,j].imshow(gen_imgs[cnt], cmap='gray')
+                if i == 0:
+                    axs[i,j].set_title("%d" % constant_labels[cnt])
+                axs[i,j].axis('off')
+                cnt += 1
         plt.tight_layout()
         fig.savefig("./pickles/"+direct+"/img/epoch"+str(epoch+1)+".png", format='png', dpi=500)
         fig.clear()
         plt.close("all")
 
-    def train(self,data,direct,sq_dim=2):
-        plot_samples=sq_dim**2
+    def train(self,data,direct,plot_samples=5):
         data_type = re.sub(r".*_","",direct)
         dict_field = {"data":data_type}
         dict_field.update({el[0]:el[1] for el in self.__dict__.items()
@@ -205,8 +200,9 @@ class RCGAN():
             writer.writeheader()
         # generate constant noise vector for model comparisons
         np.random.seed(42)
-        constant_noise = np.random.normal(size=(plot_samples,self.latent_dim,))
-        constant_labels = np.arange(0,self.num_classes)
+        constant_noise = np.random.normal(size=(plot_samples,self.latent_dim))
+        constant_noise = np.concatenate(np.repeat(constant_noise[None, :], self.num_classes, axis=0), axis=0)
+        constant_labels = np.repeat(np.arange(0,self.num_classes),plot_samples)
         np.random.seed(None)
         # label smoothing by using less-than-one value
         fake_labels = np.zeros((self.batch_size,1))
@@ -228,7 +224,7 @@ class RCGAN():
                 d_loss = 0.5 * np.add(d_loss_real, d_loss_fake)
                 # generate new set of noise and sampled labels and sampled labels
                 noise = np.random.normal(size=(self.batch_size,self.latent_dim,))
-                sampled_img_labels = np.random.randint(0, self.num_classes+1, self.batch_size).reshape(-1,1)
+                sampled_img_labels = np.random.randint(0, self.num_classes, self.batch_size)
                 # train generator while freezing discriminator
                 g_loss = self.combined.train_on_batch([noise,sampled_img_labels], real_labels)
                 # plot the progress
@@ -241,8 +237,7 @@ class RCGAN():
                                          "d_loss":str(d_loss), "g_loss":str(g_loss)})
             # at every epoch, generate images for reference
             test_img = self.generator.predict([constant_noise,constant_labels])
-            test_img = {str(i+1):test_img[i] for i in range(test_img.shape[0])}
-            self._plot_figures(test_img,direct,epoch,sq_dim)
+            self._plot_figures(test_img,direct,epoch,plot_samples,self.num_classes)
             if (epoch+1) % self.saving_rate == 0 or (epoch+1) == self.epochs:
                 # save models with defined periodicity
                 self.generator.save_weights("./pickles/"+direct+"/gen_weights.h5")
