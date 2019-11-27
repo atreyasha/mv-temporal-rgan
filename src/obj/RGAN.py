@@ -43,39 +43,37 @@ class RGAN():
         # define and compile discriminator
         self.discriminator = self.getDiscriminator(self.im_dim,self.droprate,self.momentum,
                                                    self.alpha)
-        self.discriminator.compile(loss=['binary_crossentropy'], optimizer=self.optimizer_d,
-            metrics=['accuracy'])
+        self.discriminator.compile(loss=['binary_crossentropy'], optimizer=self.optimizer_d)
         # define generator
-        self.generator = self.getGenerator(self.latent_dim,self.momentum)
+        self.generator = self.getGenerator(self.latent_dim,self.momentum,self.alpha)
         self.discriminator.trainable = False
         # define combined network with partial gradient application
         z = Input(shape=(self.latent_dim,))
         img = self.generator(z)
         validity = self.discriminator(img)
         self.combined = Model(z, validity)
-        self.combined.compile(loss=['binary_crossentropy'], optimizer=self.optimizer_g,
-                              metrics=['accuracy'])
+        self.combined.compile(loss=['binary_crossentropy'], optimizer=self.optimizer_g)
 
-    def getGenerator(self,latent_dim,momentum):
+    def getGenerator(self,latent_dim,momentum,alpha):
         in_data = Input(shape=(latent_dim,))
         # block 1: upsampling using dense layers
         out = DenseSN(128*49)(in_data)
-        out = Activation("relu")(out)
+        out = LeakyReLU(alpha=alpha)(out)
         out = Reshape((7,7,128))(out)
         # block 2: convolution
         out = ConvSN2D(256, kernel_size=3, padding="same")(out)
         out = BatchNormalization(momentum=momentum)(out)
-        out = Activation("relu")(out)
+        out = LeakyReLU(alpha=alpha)(out)
         # block 3: upsampling and convolution
         out = UpSampling2D()(out)
         out = ConvSN2D(128, kernel_size=3, padding="same")(out)
         out = BatchNormalization(momentum=momentum)(out)
-        out = Activation("relu")(out)
+        out = LeakyReLU(alpha=alpha)(out)
         # block 4: upsampling and convolution
         out = UpSampling2D()(out)
         out = ConvSN2D(64, kernel_size=4, padding="same")(out)
         out = BatchNormalization(momentum=momentum)(out)
-        out = Activation("relu")(out)
+        out = LeakyReLU(alpha=alpha)(out)
         # block 5: flatten and enrich string features using LSTM
         out = Reshape((28*28,64))(out)
         if len(backend.tensorflow_backend._get_available_gpus()) > 0:
@@ -94,7 +92,7 @@ class RGAN():
         out = BatchNormalization(momentum=momentum)(out)
         out = ConvSN2D(1, kernel_size=3, padding="same")(out)
         out = BatchNormalization(momentum=momentum)(out)
-        out = Activation("relu")(out)
+        out = LeakyReLU(alpha=alpha)(out)
         out = Reshape((28,28))(out)
         return Model(inputs=in_data,outputs=out)
 
@@ -177,7 +175,7 @@ class RGAN():
             writer = csv.DictWriter(csvfile, fieldnames=fieldnames)
             writer.writeheader()
             writer.writerow(dict_field)
-        fieldnames = ["epoch", "batch", "d_loss", "d_acc", "g_loss", "g_acc"]
+        fieldnames = ["epoch", "batch", "d_loss", "g_loss"]
         with open("./pickles/"+direct+"/log.csv", "w") as csvfile:
             writer = csv.DictWriter(csvfile, fieldnames=fieldnames)
             writer.writeheader()
@@ -209,12 +207,12 @@ class RGAN():
                 g_loss = self.combined.train_on_batch(noise, real_labels)
                 # plot the progress
                 if (batch+1) % 20 == 0:
-                    print("epoch: %d [batch: %d] [D loss: %f, acc.: %.2f%%] [G loss: %f, acc.: %.2f%%]" %
-                          (epoch+1,batch+1,d_loss[0],100*d_loss[1],g_loss[0],100*g_loss[1]))
+                    print("epoch: %d [batch: %d] [D loss: %f] [G loss: %f]" %
+                          (epoch+1,batch+1,d_loss,g_loss))
                     with open("./pickles/"+direct+"/log.csv", "a") as csvfile:
                         writer = csv.DictWriter(csvfile, fieldnames=fieldnames)
-                        writer.writerow({"epoch":str(epoch+1), "batch":str(batch+1), "d_loss":str(d_loss[0]),
-                             "d_acc":str(d_loss[1]), "g_loss":str(g_loss[0]), "g_acc":str(g_loss[1])})
+                        writer.writerow({"epoch":str(epoch+1), "batch":str(batch+1),
+                                         "d_loss":str(d_loss), "g_loss":str(g_loss)})
             # at every epoch, generate images for reference
             test_img = self.generator.predict(constant_noise)
             test_img = {str(i+1):test_img[i] for i in range(test_img.shape[0])}

@@ -9,7 +9,7 @@
 # To enable this hook, rename this file to "pre-commit".
 
 # update requirements.txt
-pipreqs --force .
+pipreqs --force ./src
 
 # convert todos.org to todos.md
 pandoc -f org -t markdown -o ./docs/todos.md ./docs/todos.org

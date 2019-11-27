@@ -61,7 +61,8 @@
 <img src="/src/img/RGAN_v4/out_faces.gif" width="650">
 </p>
 
-### Next steps
+### Improvements
 
-These results can be deemed as satisfactory. The next step would be to extend these models to conditional ones.
+1. Replace sparse activations ie. "relu" with LeakyReLU.
 
+2. These results can be deemed as satisfactory. The next step would be to extend these models to conditional ones.
