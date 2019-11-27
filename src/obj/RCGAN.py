@@ -217,7 +217,7 @@ class RCGAN():
                 real_imgs, img_labels = data[0][idx], data[1][idx]
                 noise = np.random.normal(size=(self.batch_size,self.latent_dim,))
                 # generate fake data
-                fake_imgs = self.generator.predict([noise,labels])
+                fake_imgs = self.generator.predict([noise,img_labels])
                 # train the discriminator
                 d_loss_real = self.discriminator.train_on_batch([real_imgs,img_labels], real_labels)
                 d_loss_fake = self.discriminator.train_on_batch([fake_imgs,img_labels], fake_labels)
