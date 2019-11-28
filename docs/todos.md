@@ -1,42 +1,63 @@
 Workflow changes
 ----------------
 
+### Model extension to RCGAN
+
+1.  **TODO** modify continue-train for rcgan
+
+2.  **TODO** make plotting procedure more efficient within
+    rcgan
+
+3.  **TODO** check if additional transformation or np.reshape
+    for labels is required
+
+4.  **TODO** look up for normalizing feature in terms of
+    input data, perhaps this might help (or revert back)
+
+5.  **TODO** if normalizing feature helps, perhaps re-run
+    newly normalized models with basic RGAN
+
+6.  **TODO** add rcgan to plot model functionality
+
+7.  **TODO** modify lfw for rcgan with artificially generated
+    labels from other classifiers
+
+8.  update readme with relevant changes
+
 ### Model stabilization and abstraction
 
-1.  **TODO** choose best model and extend to RCGAN
-
-2.  **TODO** work on more efficient (automated) hard model
+1.  **TODO** work on more efficient (automated) hard model
     memory handling (saving only one instance of weights in comb.h5 and
     abstracting via layer numbers) -\> necessary for github clones to be
     light
 
-3.  **TODO** export optimizer weights as h5 instead of pickle
+2.  **TODO** export optimizer weights as h5 instead of pickle
     for data consistency and compactness
 
-4.  **TODO** make modular function for model restoration,
+3.  **TODO** make modular function for model restoration,
     edit readme with new continue training details afterwards
 
-5.  **TODO** consider borrowing model architecture from other
+4.  **TODO** consider borrowing model architecture from other
     successful models and employ within local biomedical task
 
-6.  port code to tensorflow2 for better integration -\> might solve
+5.  port code to tensorflow2 for better integration -\> might solve
     problem with accuracy printing based on non-binary target labels
 
-7.  consider that performance on images is not paramount, abstraction to
+6.  consider that performance on images is not paramount, abstraction to
     medical data and construction of local evaluation techniques is more
     important
 
-8.  consider developing online per-epoch similarity checks, MMD and TRTS
+7.  consider developing online per-epoch similarity checks, MMD and TRTS
     to check quality of samples
 
-9.  look up ganhacks for further possible improvements such as adding
+8.  look up ganhacks for further possible improvements such as adding
     leaky-relu everywhere
 
-10. make pipeline variable/adaptable/scalable to higher (possibly
+9.  make pipeline variable/adaptable/scalable to higher (possibly
     non-square) dimensional data in case of 64 dimensional lfw faces
     (user more variables in models instead of hard-coding)
 
-11. read papers for strategies/uses of synthetic data
+10. read papers for strategies/uses of synthetic data
 
 ### Model visualization and presentation
 

@@ -23,17 +23,6 @@ from keras.backend.tensorflow_backend import clear_session
 # define class and functions
 ################################
 
-# TODO: modify continue train for rcgan
-# TODO: make plotting procedure more efficient
-# TODO: check if additional transformation or np.reshape for labels is required
-# TODO: look up for normalizing feature in terms of input data
-# TODO: add rcgan to plot model functionality
-# TODO: modify train and other logging functions to note labels
-# TODO: modify lfw based on rcgan make test runs to ensure correct logging procedures
-# remove custom clippings and replace with single clipnorm in optimizer
-# create labels for faces if possible, perhaps for basic facial indicators (can also re-publish)
-# update readme with relevant changes
-
 class RCGAN():
     def __init__(self,num_classes,latent_dim=100,im_dim=28,epochs=100,batch_size=256,
                  learning_rate=0.0004,g_factor=0.25,droprate=0.25,momentum=0.8,alpha=0.2,saving_rate=10):
@@ -170,6 +159,7 @@ class RCGAN():
 
     def _plot_figures(self,gen_imgs,direct,epoch,plot_samples,num_classes,constant_labels):
         # plotting function
+        gen_imgs = 0.5 * gen_imgs + 0.5
         fig, axs = plt.subplots(ncols=num_classes,nrows=plot_samples)
         cnt = 0
         for j in range(num_classes):

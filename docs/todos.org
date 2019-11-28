@@ -1,7 +1,16 @@
 ** Workflow changes
 
+*** Model extension to RCGAN
+***** TODO modify continue-train for rcgan
+***** TODO make plotting procedure more efficient within rcgan
+***** TODO check if additional transformation or np.reshape for labels is required
+***** TODO look up for normalizing feature in terms of input data, perhaps this might help (or revert back)
+***** TODO if normalizing feature helps, perhaps re-run newly normalized models with basic RGAN
+***** TODO add rcgan to plot model functionality
+***** TODO modify lfw for rcgan with artificially generated labels from other classifiers
+***** update readme with relevant changes
+
 *** Model stabilization and abstraction
-***** TODO choose best model and extend to RCGAN
 ***** TODO work on more efficient (automated) hard model memory handling (saving only one instance of weights in comb.h5 and abstracting via layer numbers) -> necessary for github clones to be light
 ***** TODO export optimizer weights as h5 instead of pickle for data consistency and compactness
 ***** TODO make modular function for model restoration, edit readme with new continue training details afterwards
