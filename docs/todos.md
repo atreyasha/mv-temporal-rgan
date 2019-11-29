@@ -3,26 +3,35 @@ Workflow changes
 
 ### Model extension to RCGAN
 
-1.  **TODO** modify continue-train for rcgan
+1.  **TODO** extend to auxiliary architecture, where we can
+    also use the discriminator for other tasks (would be interesting for
+    supervised workflow)
 
-2.  **TODO** make plotting procedure more efficient within
+2.  **TODO** change adam beta1 coefficient to 0.5 and check
+    differences in results, it reduces weight decay over time
+
+3.  **TODO** modify continue-train for rcgan, add custom
+    image shapes and prepare code to shift away from square images
+
+4.  **TODO** make plotting procedure more efficient within
     rcgan
 
-3.  **TODO** check if additional transformation or np.reshape
-    for labels is required
+5.  **TODO** check if additional transformation or np.reshape
+    for labels is required, read on more innovative gan architectures
+    that we could also use
 
-4.  **TODO** look up for normalizing feature in terms of
+6.  **TODO** look up for normalizing feature in terms of
     input data, perhaps this might help (or revert back)
 
-5.  **TODO** if normalizing feature helps, perhaps re-run
+7.  **TODO** if normalizing feature helps, perhaps re-run
     newly normalized models with basic RGAN
 
-6.  **TODO** add rcgan to plot model functionality
+8.  **TODO** add rcgan to plot model functionality
 
-7.  **TODO** modify lfw for rcgan with artificially generated
+9.  **TODO** modify lfw for rcgan with artificially generated
     labels from other classifiers
 
-8.  update readme with relevant changes
+10. update readme with relevant changes
 
 ### Model stabilization and abstraction
 
@@ -40,24 +49,29 @@ Workflow changes
 4.  **TODO** consider borrowing model architecture from other
     successful models and employ within local biomedical task
 
-5.  port code to tensorflow2 for better integration -\> might solve
+5.  work on introspection tasks, where data is passed through layers
+    step-wise and results are manually/automatically checked for
+    explainability
+
+6.  port code to tensorflow2 for better integration -\> might solve
     problem with accuracy printing based on non-binary target labels
 
-6.  consider that performance on images is not paramount, abstraction to
+7.  consider that performance on images is not paramount, abstraction to
     medical data and construction of local evaluation techniques is more
     important
 
-7.  consider developing online per-epoch similarity checks, MMD and TRTS
+8.  consider developing online per-epoch similarity checks, MMD and TRTS
     to check quality of samples
 
-8.  look up ganhacks for further possible improvements such as adding
-    leaky-relu everywhere
+9.  look up ganhacks for further possible improvements such as adding
+    leaky-relu everywhere, and read on successful/innovative gan
+    architectures
 
-9.  make pipeline variable/adaptable/scalable to higher (possibly
+10. make pipeline variable/adaptable/scalable to higher (possibly
     non-square) dimensional data in case of 64 dimensional lfw faces
     (user more variables in models instead of hard-coding)
 
-10. read papers for strategies/uses of synthetic data
+11. read papers for strategies/uses of synthetic data
 
 ### Model visualization and presentation
 

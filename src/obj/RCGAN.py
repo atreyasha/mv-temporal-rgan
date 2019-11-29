@@ -16,7 +16,7 @@ from keras.constraints import max_norm
 from keras.layers import Dense, Activation, Reshape, Flatten, Embedding
 from keras.layers import LSTM, CuDNNLSTM, Input, Bidirectional, Conv2D, Multiply
 from keras.layers import BatchNormalization, LeakyReLU, Dropout, UpSampling2D
-from .spec_norm.SpectralNormalizationKeras import ConvSN2D, DenseSN
+from spec_norm.SpectralNormalizationKeras import ConvSN2D, DenseSN
 from keras.backend.tensorflow_backend import clear_session
 
 ################################
@@ -35,16 +35,17 @@ class RCGAN():
         self.batch_size = batch_size
         self.learning_rate = learning_rate
         self.g_factor = g_factor
-        self.optimizer_d = Adam(self.learning_rate)
-        self.optimizer_g = Adam(self.learning_rate*self.g_factor)
+        self.optimizer_d = Adam(self.learning_rate,0.5)
+        self.optimizer_g = Adam(self.learning_rate*self.g_factor,0.5)
         self.droprate = droprate
         self.momentum = momentum
         self.alpha = alpha
         self.saving_rate = saving_rate
+        losses = ["binary_crossentropy","sparse_categorical_crossentropy"]
         # define and compile discriminator
         self.discriminator = self.getDiscriminator(self.im_dim,self.droprate,self.momentum,
                                                    self.alpha,self.num_classes)
-        self.discriminator.compile(loss=['binary_crossentropy'], optimizer=self.optimizer_d)
+        self.discriminator.compile(loss=losses, optimizer=self.optimizer_d)
         # define generator
         self.generator = self.getGenerator(self.latent_dim,self.momentum,
                                            self.alpha,self.num_classes)
@@ -53,9 +54,9 @@ class RCGAN():
         noise = Input(shape=(self.latent_dim,))
         label = Input(shape=(1,),dtype="int32")
         img = self.generator([noise, label])
-        validity = self.discriminator([img,label])
-        self.combined = Model([noise,label], validity)
-        self.combined.compile(loss=['binary_crossentropy'], optimizer=self.optimizer_g)
+        validity,target_label = self.discriminator(img)
+        self.combined = Model([noise,label],[validity,target_label])
+        self.combined.compile(loss=losses, optimizer=self.optimizer_g)
 
     def getGenerator(self,latent_dim,momentum,alpha,num_classes):
         # generate conditional noise vectors
@@ -105,11 +106,7 @@ class RCGAN():
 
     def getDiscriminator(self,im_dim,droprate,momentum,alpha,num_classes):
         # reprocess image with provided label
-        img = Input(shape=(im_dim,im_dim))
-        label = Input(shape=(1,), dtype='int32')
-        label_embedding = Flatten()(Embedding(num_classes, im_dim**2)(label))
-        flat_img = Flatten()(img)
-        in_data = Multiply()([flat_img, label_embedding])
+        in_data = Input(shape=(im_dim,im_dim))
         # initial convolution to prevent artifacts
         out = Reshape((im_dim,im_dim,1))(in_data)
         out = ConvSN2D(1, kernel_size=3, padding="same")(out)
@@ -153,9 +150,12 @@ class RCGAN():
                        kernel_constraint=max_norm(3),
                        recurrent_constraint=max_norm(3),bias_constraint=max_norm(3)))(out)
         # block 6: map final features to dense output
-        out = Dense(1)(out)
-        out = Activation("sigmoid")(out)
-        return Model(inputs=[img,label],outputs=out)
+        validity = Dense(1)(out)
+        validity = Activation("sigmoid")(validity)
+        # classify to actual class
+        label = Dense(num_classes)(out)
+        label = Activation("softmax")(label)
+        return Model(inputs=in_data,outputs=[validity,label])
 
     def _plot_figures(self,gen_imgs,direct,epoch,plot_samples,num_classes,constant_labels):
         # plotting function
@@ -166,7 +166,7 @@ class RCGAN():
             for i in range(plot_samples):
                 axs[i,j].imshow(gen_imgs[cnt], cmap='gray')
                 if i == 0:
-                    axs[i,j].set_title("%d" % constant_labels[cnt][0])
+                    axs[i,j].set_title("%d" % constant_labels[cnt])
                 axs[i,j].axis('off')
                 cnt += 1
         plt.tight_layout()
@@ -193,7 +193,7 @@ class RCGAN():
         np.random.seed(42)
         constant_noise = np.random.normal(size=(plot_samples,self.latent_dim))
         constant_noise = np.concatenate(np.repeat(constant_noise[None, :], self.num_classes, axis=0), axis=0)
-        constant_labels = np.repeat(np.arange(0,self.num_classes),plot_samples).reshape(-1,1)
+        constant_labels = np.repeat(np.arange(0,self.num_classes),plot_samples)
         np.random.seed(None)
         # label smoothing by using less-than-one value
         fake_labels = np.zeros((self.batch_size,1))
@@ -207,17 +207,16 @@ class RCGAN():
                 idx = np.random.randint(0,data[0].shape[0],self.batch_size)
                 real_imgs, img_labels = data[0][idx], data[1][idx]
                 noise = np.random.normal(size=(self.batch_size,self.latent_dim,))
+                sampled_img_labels = np.random.randint(0, self.num_classes, self.batch_size)
                 # generate fake data
-                fake_imgs = self.generator.predict([noise,img_labels])
+                fake_imgs = self.generator.predict([noise,sampled_img_labels])
                 # train the discriminator
-                d_loss_real = self.discriminator.train_on_batch([real_imgs,img_labels], real_labels)
-                d_loss_fake = self.discriminator.train_on_batch([fake_imgs,img_labels], fake_labels)
+                d_loss_real = self.discriminator.train_on_batch(real_imgs, [real_labels,img_labels])
+                d_loss_fake = self.discriminator.train_on_batch(fake_imgs, [fake_labels,sampled_img_labels])
                 d_loss = 0.5 * np.add(d_loss_real, d_loss_fake)
-                # generate new set of noise and sampled labels and sampled labels
-                noise = np.random.normal(size=(self.batch_size,self.latent_dim,))
-                sampled_img_labels = np.random.randint(0, self.num_classes, self.batch_size).reshape(-1,1)
                 # train generator while freezing discriminator
-                g_loss = self.combined.train_on_batch([noise,sampled_img_labels], real_labels)
+                g_loss = self.combined.train_on_batch([noise,sampled_img_labels],
+                                                      [real_labels,sampled_img_labels])
                 # plot the progress
                 if (batch+1) % 20 == 0:
                     print("epoch: %d [batch: %d] [D loss: %f] [G loss: %f]" %

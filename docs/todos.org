@@ -1,9 +1,11 @@
 ** Workflow changes
-
+   
 *** Model extension to RCGAN
-***** TODO modify continue-train for rcgan
+***** TODO extend to auxiliary architecture, where we can also use the discriminator for other tasks (would be interesting for supervised workflow)
+***** TODO change adam beta1 coefficient to 0.5 and check differences in results, it reduces weight decay over time
+***** TODO modify continue-train for rcgan, add custom image shapes and prepare code to shift away from square images
 ***** TODO make plotting procedure more efficient within rcgan
-***** TODO check if additional transformation or np.reshape for labels is required
+***** TODO check if additional transformation or np.reshape for labels is required, read on more innovative gan architectures that we could also use
 ***** TODO look up for normalizing feature in terms of input data, perhaps this might help (or revert back)
 ***** TODO if normalizing feature helps, perhaps re-run newly normalized models with basic RGAN
 ***** TODO add rcgan to plot model functionality
@@ -15,10 +17,11 @@
 ***** TODO export optimizer weights as h5 instead of pickle for data consistency and compactness
 ***** TODO make modular function for model restoration, edit readme with new continue training details afterwards
 ***** TODO consider borrowing model architecture from other successful models and employ within local biomedical task
+***** work on introspection tasks, where data is passed through layers step-wise and results are manually/automatically checked for explainability
 ***** port code to tensorflow2 for better integration -> might solve problem with accuracy printing based on non-binary target labels
 ***** consider that performance on images is not paramount, abstraction to medical data and construction of local evaluation techniques is more important
 ***** consider developing online per-epoch similarity checks, MMD and TRTS to check quality of samples
-***** look up ganhacks for further possible improvements such as adding leaky-relu everywhere
+***** look up ganhacks for further possible improvements such as adding leaky-relu everywhere, and read on successful/innovative gan architectures
 ***** make pipeline variable/adaptable/scalable to higher (possibly non-square) dimensional data in case of 64 dimensional lfw faces (user more variables in models instead of hard-coding)
 ***** read papers for strategies/uses of synthetic data
 
