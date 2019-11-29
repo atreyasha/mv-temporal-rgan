@@ -220,11 +220,11 @@ class RCGAN():
                 # plot the progress
                 if (batch+1) % 20 == 0:
                     print("epoch: %d [batch: %d] [D loss: %f] [G loss: %f]" %
-                          (epoch+1,batch+1,d_loss,g_loss))
+                          (epoch+1,batch+1,d_loss[0],g_loss[0]))
                     with open("./pickles/"+direct+"/log.csv", "a") as csvfile:
                         writer = csv.DictWriter(csvfile, fieldnames=fieldnames)
                         writer.writerow({"epoch":str(epoch+1), "batch":str(batch+1),
-                                         "d_loss":str(d_loss), "g_loss":str(g_loss)})
+                                         "d_loss":str(d_loss[0]), "g_loss":str(g_loss[0])})
             # at every epoch, generate images for reference
             test_img = self.generator.predict([constant_noise,constant_labels])
             self._plot_figures(test_img,direct,epoch,plot_samples,self.num_classes,constant_labels)
