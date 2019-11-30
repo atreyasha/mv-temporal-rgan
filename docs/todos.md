@@ -3,35 +3,31 @@ Workflow changes
 
 ### Model extension to RCGAN
 
-1.  **TODO** extend to auxiliary architecture, where we can
-    also use the discriminator for other tasks (would be interesting for
-    supervised workflow)
-
-2.  **TODO** change adam beta1 coefficient to 0.5 and check
-    differences in results, it reduces weight decay over time
-
-3.  **TODO** modify continue-train for rcgan, add custom
+1.  **TODO** modify continue-train for rcgan, add custom
     image shapes and prepare code to shift away from square images
 
-4.  **TODO** make plotting procedure more efficient within
+2.  **TODO** make plotting procedure more efficient within
     rcgan
 
-5.  **TODO** check if additional transformation or np.reshape
+3.  **TODO** check if additional transformation or np.reshape
     for labels is required, read on more innovative gan architectures
     that we could also use
 
-6.  **TODO** look up for normalizing feature in terms of
+4.  **TODO** look up for normalizing feature in terms of
     input data, perhaps this might help (or revert back)
 
-7.  **TODO** if normalizing feature helps, perhaps re-run
+5.  **TODO** if normalizing feature helps, perhaps re-run
     newly normalized models with basic RGAN
 
-8.  **TODO** add rcgan to plot model functionality
+6.  **TODO** add rcgan to plot model functionality
 
-9.  **TODO** modify lfw for rcgan with artificially generated
+7.  **TODO** modify lfw for rcgan with artificially generated
     labels from other classifiers
 
-10. update readme with relevant changes
+8.  bottom horizontal artifact keeps showing, investigate origin and how
+    to circumvent
+
+9.  update readme with relevant changes
 
 ### Model stabilization and abstraction
 
