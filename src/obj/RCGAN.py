@@ -107,15 +107,8 @@ class RCGAN():
     def getDiscriminator(self,im_dim,droprate,momentum,alpha,num_classes):
         # reprocess image with provided label
         in_data = Input(shape=(im_dim,im_dim))
-        # initial convolution to prevent artifacts
-        out = Reshape((im_dim,im_dim,1))(in_data)
-        out = ConvSN2D(32, kernel_size=3, padding="same")(out)
-        out = ConvSN2D(1, kernel_size=3, padding="same")(out)
-        out = BatchNormalization(momentum=momentum)(out)
-        out = LeakyReLU(alpha=alpha)(out)
-        out = Dropout(droprate)(out)
         # block 1: flatten and check sequence using LSTM
-        out = Reshape((im_dim**2,1))(out)
+        out = Reshape((im_dim**2,1))(in_data)
         if len(backend.tensorflow_backend._get_available_gpus()) > 0:
             out = CuDNNLSTM(1,return_sequences=True,
                        kernel_constraint=max_norm(3),
@@ -140,8 +133,13 @@ class RCGAN():
         out = BatchNormalization(momentum=momentum)(out)
         out = LeakyReLU(alpha=alpha)(out)
         out = Dropout(droprate)(out)
+        # block 5: convolution with dropout
+        out = ConvSN2D(32, kernel_size=3, padding="same")(out)
+        out = BatchNormalization(momentum=momentum)(out)
+        out = LeakyReLU(alpha=alpha)(out)
+        out = Dropout(droprate)(out)
         # block 5: flatten and detect final features using bi-LSTM
-        out = Reshape((4*4,64))(out)
+        out = Reshape((4*4,32))(out)
         if len(backend.tensorflow_backend._get_available_gpus()) > 0:
             out = Bidirectional(CuDNNLSTM(32,
                        kernel_constraint=max_norm(3),
@@ -159,9 +157,7 @@ class RCGAN():
         validity = Activation("sigmoid")(validity)
         # classify to actual class
         label = DenseSN(num_classes)(out)
-        label = BatchNormalization(momentum=momentum)(label)
         label = Activation("softmax")(label)
-        label = Dropout(droprate)(label)
         return Model(inputs=in_data,outputs=[validity,label])
 
     def _plot_figures(self,gen_imgs,direct,epoch,plot_samples,num_classes,constant_labels):
