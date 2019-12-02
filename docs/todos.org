@@ -8,6 +8,7 @@
 ***** TODO if normalizing feature helps, perhaps re-run newly normalized models with basic RGAN
 ***** TODO add rcgan to plot model functionality
 ***** TODO modify lfw for rcgan with artificially generated labels from other classifiers
+***** publish separate annotated lfw-crop dataset, or consider using CIFAR-10 if small dataset like MIMIC-III
 ***** bottom horizontal artifact keeps showing, investigate origin and how to circumvent
 ***** update readme with relevant changes
 
