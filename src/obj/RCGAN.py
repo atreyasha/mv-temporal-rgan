@@ -107,8 +107,14 @@ class RCGAN():
     def getDiscriminator(self,im_dim,droprate,momentum,alpha,num_classes):
         # reprocess image with provided label
         in_data = Input(shape=(im_dim,im_dim))
+        # initial convolution to prevent artifacts
+        out = Reshape((im_dim,im_dim,1))(in_data)
+        out = ConvSN2D(1, kernel_size=3, padding="same")(out)
+        out = BatchNormalization(momentum=momentum)(out)
+        out = LeakyReLU(alpha=alpha)(out)
+        out = Dropout(droprate)(out)
         # block 1: flatten and check sequence using LSTM
-        out = Reshape((im_dim**2,1))(in_data)
+        out = Reshape((im_dim**2,1))(out)
         if len(backend.tensorflow_backend._get_available_gpus()) > 0:
             out = CuDNNLSTM(1,return_sequences=True,
                        kernel_constraint=max_norm(3),
@@ -133,13 +139,8 @@ class RCGAN():
         out = BatchNormalization(momentum=momentum)(out)
         out = LeakyReLU(alpha=alpha)(out)
         out = Dropout(droprate)(out)
-        # block 5: convolution with dropout
-        out = ConvSN2D(32, kernel_size=3, padding="same")(out)
-        out = BatchNormalization(momentum=momentum)(out)
-        out = LeakyReLU(alpha=alpha)(out)
-        out = Dropout(droprate)(out)
         # block 5: flatten and detect final features using bi-LSTM
-        out = Reshape((4*4,32))(out)
+        out = Reshape((4*4,64))(out)
         if len(backend.tensorflow_backend._get_available_gpus()) > 0:
             out = Bidirectional(CuDNNLSTM(32,
                        kernel_constraint=max_norm(3),
@@ -153,7 +154,7 @@ class RCGAN():
         validity = BatchNormalization(momentum=momentum)(validity)
         validity = LeakyReLU(alpha=alpha)(validity)
         validity = Dropout(droprate)(validity)
-        validity = DenseSN(1)(validity)
+        validity = Dense(1)(validity)
         validity = Activation("sigmoid")(validity)
         # classify to actual class
         label = DenseSN(num_classes)(out)
@@ -198,7 +199,7 @@ class RCGAN():
         constant_noise = np.concatenate(np.repeat(constant_noise[None, :], self.num_classes, axis=0), axis=0)
         constant_labels = np.repeat(np.arange(0,self.num_classes),plot_samples)
         np.random.seed(None)
-        # define target labels
+        # generate target labels
         fake_labels = np.zeros((self.batch_size,1))
         real_labels = np.ones((self.batch_size,1))
         runs = int(np.ceil(data[0].shape[0]/self.batch_size))
@@ -220,13 +221,13 @@ class RCGAN():
                                                       [real_labels,sampled_img_labels])
                 # plot the progress
                 if (batch+1) % 20 == 0:
-                    print("epoch: %d [batch: %d] [D loss: %f, D.A loss: %f] [G loss: %f, G.A loss %f]" %
+                    print("epoch: %d [batch: %d] [D loss: %f, D.A Loss: %f] [G loss: %f, G.A Loss: %f]" %
                           (epoch+1,batch+1,d_loss[0],d_loss[1],g_loss[0],g_loss[1]))
                     with open("./pickles/"+direct+"/log.csv", "a") as csvfile:
                         writer = csv.DictWriter(csvfile, fieldnames=fieldnames)
                         writer.writerow({"epoch":str(epoch+1), "batch":str(batch+1),
                                          "d_loss":str(d_loss[0]), "g_loss":str(g_loss[0]),
-                                         "d_a_loss":str(d_loss[1]),"g_a_loss":str(g_loss[1])})
+                                         "d_a_loss":str(d_loss[1]), "g_a_loss":str(g_loss[1])})
             # at every epoch, generate images for reference
             test_img = self.generator.predict([constant_noise,constant_labels])
             self._plot_figures(test_img,direct,epoch,plot_samples,self.num_classes,constant_labels)
