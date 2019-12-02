@@ -24,10 +24,13 @@ Workflow changes
 7.  **TODO** modify lfw for rcgan with artificially generated
     labels from other classifiers
 
-8.  bottom horizontal artifact keeps showing, investigate origin and how
+8.  publish separate annotated lfw-crop dataset, or consider using
+    CIFAR-10 if small dataset like MIMIC-III
+
+9.  bottom horizontal artifact keeps showing, investigate origin and how
     to circumvent
 
-9.  update readme with relevant changes
+10. update readme with relevant changes
 
 ### Model stabilization and abstraction
 
