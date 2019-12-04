@@ -3,6 +3,7 @@
 *** Model extension to RCGAN
 ***** TODO add custom image shapes and prepare code to shift away from square images
 ***** TODO modify lfw for rcgan with artificially generated labels from other classifiers
+***** TODO update final RGAN run on faces with all required changes (denser activations and re-normalization)
 ***** read on more innovative semi-supervised gan architectures that we could also use
 ***** publish separate annotated lfw-crop dataset, or consider using CIFAR-10 with reduced dataset size
 ***** changing to CIFAR might require modified descriptions and stuff

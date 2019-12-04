@@ -9,31 +9,34 @@ Workflow changes
 2.  **TODO** modify lfw for rcgan with artificially generated
     labels from other classifiers
 
-3.  read on more innovative semi-supervised gan architectures that we
+3.  **TODO** update final RGAN run on faces with all required
+    changes (denser activations and re-normalization)
+
+4.  read on more innovative semi-supervised gan architectures that we
     could also use
 
-4.  publish separate annotated lfw-crop dataset, or consider using
+5.  publish separate annotated lfw-crop dataset, or consider using
     CIFAR-10 with reduced dataset size
 
-5.  changing to CIFAR might require modified descriptions and stuff
+6.  changing to CIFAR might require modified descriptions and stuff
 
-6.  how to make results better? perhaps make deeper, but focus should
+7.  how to make results better? perhaps make deeper, but focus should
     not be on images
 
-7.  bottom horizontal artifact keeps showing, investigate origin and how
+8.  bottom horizontal artifact keeps showing, investigate origin and how
     to circumvent
 
-8.  consider changing RCGAN name to RACGAN
+9.  consider changing RCGAN name to RACGAN
 
-9.  before publication, run models on simple data to get best results
+10. before publication, run models on simple data to get best results
     and publish models used
 
-10. replace discriminator with existing supervised network to see how
+11. replace discriminator with existing supervised network to see how
     that can work better
 
-11. modify model and run next iterations of R(AC)GAN
+12. modify model and run next iterations of R(AC)GAN
 
-12. make efficient pipeline to update documentation and logging
+13. make efficient pipeline to update documentation and logging
 
 ### Model stabilization and abstraction
 
