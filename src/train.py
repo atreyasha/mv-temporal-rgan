@@ -40,17 +40,17 @@ def loadData(data,model):
     elif model == "RCGAN":
         return X_train,y_train
 
-def singularTrain(model,data,latent_dim,epochs,batch_size,learning_rate,
+def singularTrain(model_name,data,latent_dim,epochs,batch_size,learning_rate,
                   g_factor,droprate,momentum,alpha,saving_rate):
-    train_images = loadData(data,model)
-    log_dir = getCurrentTime()+"_"+model+"_"+data
+    train_images = loadData(data,model_name)
+    log_dir = getCurrentTime()+"_"+model_name+"_"+data
     os.makedirs("./pickles/"+log_dir)
     os.makedirs("./pickles/"+log_dir+"/img")
-    if model == "RGAN":
+    if model_name == "RGAN":
         im_dim = train_images.shape[1]
         model = RGAN(latent_dim,im_dim,epochs,batch_size,learning_rate,
                      g_factor,droprate,momentum,alpha,saving_rate)
-    elif model == "RCGAN":
+    elif model_name == "RCGAN":
         im_dim = train_images[0].shape[1]
         num_classes = np.unique(train_images[1]).shape[0]
         model = RCGAN(num_classes,latent_dim,im_dim,epochs,batch_size,learning_rate,
@@ -167,11 +167,14 @@ if __name__ == "__main__":
     parser.add_argument("--plot-model", default=False, action="store_true",
                         help="option to plot keras model")
     args = parser.parse_args()
+    assert args.data in ["faces","mnist","fashion"]
+    assert args.model in ["RGAN","RCGAN"]
+    if args.model == "RCGAN" and args.data == "faces":
+        raise ValueError("Face generation not yet integrated with RCGAN")
     if args.plot_model:
         plot_M(args.model)
         sys.exit()
-    assert args.data in ["faces","mnist","fashion"]
-    if args.continue_train:
+    elif args.continue_train:
         # parse specified arguments as kwargs to continueTrain
         arguments = [el for el in sys.argv[1:] if el != "--continue-train"]
         todel = [i for i in range(len(arguments)) if arguments[i] == "--log-dir"]

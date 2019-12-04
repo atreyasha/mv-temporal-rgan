@@ -3,43 +3,37 @@ Workflow changes
 
 ### Model extension to RCGAN
 
-1.  **TODO** upate all pipelines to account for RCGAN, save
-    obj logs correctly and make nice documentation
+1.  **TODO** add custom image shapes and prepare code to
+    shift away from square images
 
-2.  **TODO** modify continue-train for rcgan, add custom
-    image shapes and prepare code to shift away from square images
-
-3.  **TODO** make plotting procedure more efficient within
-    rcgan
-
-4.  **TODO** check if additional transformation or np.reshape
-    for labels is required, read on more innovative gan architectures
-    that we could also use
-
-5.  **TODO** look up for normalizing feature in terms of
-    input data, perhaps this might help (or revert back)
-
-6.  **TODO** if normalizing feature helps, perhaps re-run
-    newly normalized models with basic RGAN
-
-7.  **TODO** add rcgan to plot model functionality
-
-8.  **TODO** modify lfw for rcgan with artificially generated
+2.  **TODO** modify lfw for rcgan with artificially generated
     labels from other classifiers
 
-9.  publish separate annotated lfw-crop dataset, or consider using
-    CIFAR-10 if small dataset like MIMIC-III
+3.  read on more innovative semi-supervised gan architectures that we
+    could also use
 
-10. bottom horizontal artifact keeps showing, investigate origin and how
+4.  publish separate annotated lfw-crop dataset, or consider using
+    CIFAR-10 with reduced dataset size
+
+5.  changing to CIFAR might require modified descriptions and stuff
+
+6.  how to make results better? perhaps make deeper, but focus should
+    not be on images
+
+7.  bottom horizontal artifact keeps showing, investigate origin and how
     to circumvent
 
-11. update readme with relevant changes to RCGAN
+8.  consider changing RCGAN name to RACGAN
 
-12. make consistent dataset between RGAN and RCGAN, re-run on RGAN after
-    re-normalizing just on faces
+9.  before publication, run models on simple data to get best results
+    and publish models used
 
-13. before publication, run models on simple data to get best results
-    and publish models used (need to decide on normlization technique)
+10. replace discriminator with existing supervised network to see how
+    that can work better
+
+11. modify model and run next iterations of R(AC)GAN
+
+12. make efficient pipeline to update documentation and logging
 
 ### Model stabilization and abstraction
 

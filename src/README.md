@@ -83,43 +83,42 @@ In order to train a RGAN/RCGAN model, you can run `train.py`. Following is the u
 ```
 $ python3 train.py --help
 
-usage: train.py [-h] [--data DATA] [--latent-dim LATENT_DIM] [--epochs EPOCHS]
-                [--batch-size BATCH_SIZE] [--learning-rate LEARNING_RATE]
-                [--g-factor G_FACTOR] [--droprate DROPRATE]
-                [--momentum MOMENTUM] [--alpha ALPHA]
-                [--saving-rate SAVING_RATE] [--continue-train]
-                [--log-dir LOG_DIR] [--plot-model]
+usage: train.py [-h] [--model MODEL] [--data DATA] [--latent-dim LATENT_DIM]
+                [--epochs EPOCHS] [--batch-size BATCH_SIZE]
+                [--learning-rate LEARNING_RATE] [--g-factor G_FACTOR]
+                [--droprate DROPRATE] [--momentum MOMENTUM] [--alpha ALPHA]
+                [--saving-rate SAVING_RATE] [--continue-train] [--log-dir LOG_DIR]
+                [--plot-model]
 
 optional arguments:
   -h, --help            show this help message and exit
-  --data DATA           which training data to use; either mnist, fashion or
-                        faces (default: mnist)
+  --model MODEL         which model to use; either RGAN or RCGAN (default: RGAN)
+  --data DATA           which training data to use; either mnist, fashion or faces
+                        (default: mnist)
   --latent-dim LATENT_DIM
                         latent dimensionality of GAN generator (default: 100)
   --epochs EPOCHS       number of training epochs (default: 100)
   --batch-size BATCH_SIZE
-                        batch size for stochastic gradient descent
-                        optimization (default: 256)
+                        batch size for stochastic gradient descent optimization
+                        (default: 256)
   --learning-rate LEARNING_RATE
-                        learning rate for stochastic gradient descent
-                        optimization (default: 0.0004)
-  --g-factor G_FACTOR   factor by which generator optimizer scales
-                        discriminator optimizer (default: 0.25)
+                        learning rate for stochastic gradient descent optimization
+                        (default: 0.0004)
+  --g-factor G_FACTOR   factor by which generator optimizer scales discriminator
+                        optimizer (default: 0.25)
   --droprate DROPRATE   droprate used in GAN discriminator for
                         generalization/robustness (default: 0.25)
-  --momentum MOMENTUM   momentum used across GAN batch-normalization (default:
-                        0.8)
-  --alpha ALPHA         alpha parameter used in discriminator leaky relu
-                        (default: 0.2)
+  --momentum MOMENTUM   momentum used across GAN batch-normalization (default: 0.8)
+  --alpha ALPHA         alpha parameter used in discriminator leaky relu (default:
+                        0.2)
   --saving-rate SAVING_RATE
-                        epoch period on which the model weights should be
-                        saved (default: 10)
-  --continue-train      option to continue training model within log
-                        directory; requires --log-dir option to be defined
-                        (default: False)
+                        epoch period on which the model weights should be saved
+                        (default: 10)
+  --continue-train      option to continue training model within log directory;
+                        requires --log-dir option to be defined (default: False)
   --log-dir LOG_DIR     log directory within ./pickles/ whose model should be
-                        further trained, only required when --continue-train
-                        option is specified (default: None)
+                        further trained, only required when --continue-train option
+                        is specified (default: None)
   --plot-model          option to plot keras model (default: False)
 ```
 
@@ -156,46 +155,45 @@ Given the dynamic nature of model training, sometimes training procedures need t
 ```
 $ python3 train.py --continue-train --help
 
-usage: train.py [-h] [--data DATA] [--latent-dim LATENT_DIM] [--epochs EPOCHS]
-                [--batch-size BATCH_SIZE] [--learning-rate LEARNING_RATE]
-                [--g-factor G_FACTOR] [--droprate DROPRATE]
-                [--momentum MOMENTUM] [--alpha ALPHA]
-                [--saving-rate SAVING_RATE] [--continue-train] --log-dir
-                LOG_DIR [--plot-model]
+usage: train.py [-h] [--model MODEL] [--data DATA] [--latent-dim LATENT_DIM]
+                [--epochs EPOCHS] [--batch-size BATCH_SIZE]
+                [--learning-rate LEARNING_RATE] [--g-factor G_FACTOR]
+                [--droprate DROPRATE] [--momentum MOMENTUM] [--alpha ALPHA]
+                [--saving-rate SAVING_RATE] [--continue-train] --log-dir LOG_DIR
+                [--plot-model]
 
 optional arguments:
   -h, --help            show this help message and exit
-  --data DATA           which training data to use; either mnist, fashion or
-                        faces (default: mnist)
+  --model MODEL         which model to use; either RGAN or RCGAN (default: RGAN)
+  --data DATA           which training data to use; either mnist, fashion or faces
+                        (default: mnist)
   --latent-dim LATENT_DIM
                         latent dimensionality of GAN generator (default: 100)
   --epochs EPOCHS       number of training epochs (default: 100)
   --batch-size BATCH_SIZE
-                        batch size for stochastic gradient descent
-                        optimization (default: 256)
+                        batch size for stochastic gradient descent optimization
+                        (default: 256)
   --learning-rate LEARNING_RATE
-                        learning rate for stochastic gradient descent
-                        optimization (default: 0.0004)
-  --g-factor G_FACTOR   factor by which generator optimizer scales
-                        discriminator optimizer (default: 0.25)
+                        learning rate for stochastic gradient descent optimization
+                        (default: 0.0004)
+  --g-factor G_FACTOR   factor by which generator optimizer scales discriminator
+                        optimizer (default: 0.25)
   --droprate DROPRATE   droprate used in GAN discriminator for
                         generalization/robustness (default: 0.25)
-  --momentum MOMENTUM   momentum used across GAN batch-normalization (default:
-                        0.8)
-  --alpha ALPHA         alpha parameter used in discriminator leaky relu
-                        (default: 0.2)
+  --momentum MOMENTUM   momentum used across GAN batch-normalization (default: 0.8)
+  --alpha ALPHA         alpha parameter used in discriminator leaky relu (default:
+                        0.2)
   --saving-rate SAVING_RATE
-                        epoch period on which the model weights should be
-                        saved (default: 10)
-  --continue-train      option to continue training model within log
-                        directory; requires --log-dir option to be defined
-                        (default: False)
+                        epoch period on which the model weights should be saved
+                        (default: 10)
+  --continue-train      option to continue training model within log directory;
+                        requires --log-dir option to be defined (default: False)
   --plot-model          option to plot keras model (default: False)
 
 required name arguments:
   --log-dir LOG_DIR     log directory within ./pickles/ whose model should be
-                        further trained, only required when --continue-train
-                        option is specified (default: None)
+                        further trained, only required when --continue-train option
+                        is specified (default: None)
 ```
 
 Here, the log directory argument becomes a required argument. To put this more concretely, assume you already ran a model and it was saved in the following log directory `2019_10_20_19_02_22_RGAN_faces`. To continue training it, you could run the following implementation:
@@ -344,16 +342,22 @@ As our repository and models are still under development, we document various st
 
 #### RGAN
 
-* [RGAN Model Performance Summary I](/src/docs/RGAN_v1.md)
-* [RGAN Model Performance Summary II](/src/docs/RGAN_v2.md)
-* [RGAN Model Performance Summary III](/src/docs/RGAN_v3.md)
-* [RGAN Model Performance Summary IV](/src/docs/RGAN_v4.md)
+* [RGAN Model Performance Summary I](/src/docs/RGAN/RGAN_v1.md)
+* [RGAN Model Performance Summary II](/src/docs/RGAN/RGAN_v2.md)
+* [RGAN Model Performance Summary III](/src/docs/RGAN/RGAN_v3.md)
+* [RGAN Model Performance Summary IV](/src/docs/RGAN/RGAN_v4.md)
+
+#### RCGAN
+
+* [RCGAN Model Performance Summary I](/src/docs/RCGAN/RCGAN_v1.md)
+* [RCGAN Model Performance Summary II](/src/docs/RCGAN/RCGAN_v2.md)
+* [RCGAN Model Performance Summary III](/src/docs/RCGAN/RCGAN_v3.md)
 
 ## Caveats
 
 1. The models are still being tested on preliminary datasets such as MNIST; support for MIMIC-III is under development and will properly commence once performance is verified on preliminary datasets
 
-2. RCGAN support is still under development and will come after successful development of our RGAN
+2. RCGAN support is still under development and LFWcrop greyscale is not as yet integrated for the RCGAN
 
 3. Model architectures are not fixed as yet and will undergo further changes in terms of increased depth and enhanced stabilization techniques
 

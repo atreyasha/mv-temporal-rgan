@@ -1,16 +1,18 @@
 ** Workflow changes
-   
+
 *** Model extension to RCGAN
-***** TODO modify continue-train for rcgan, add custom image shapes and prepare code to shift away from square images
-***** TODO make plotting procedure more efficient within rcgan
-***** TODO check if additional transformation or np.reshape for labels is required, read on more innovative gan architectures that we could also use
-***** TODO look up for normalizing feature in terms of input data, perhaps this might help (or revert back)
-***** TODO if normalizing feature helps, perhaps re-run newly normalized models with basic RGAN
-***** TODO add rcgan to plot model functionality
+***** TODO add custom image shapes and prepare code to shift away from square images
 ***** TODO modify lfw for rcgan with artificially generated labels from other classifiers
-***** publish separate annotated lfw-crop dataset, or consider using CIFAR-10 if small dataset like MIMIC-III
+***** read on more innovative semi-supervised gan architectures that we could also use
+***** publish separate annotated lfw-crop dataset, or consider using CIFAR-10 with reduced dataset size
+***** changing to CIFAR might require modified descriptions and stuff
+***** how to make results better? perhaps make deeper, but focus should not be on images
 ***** bottom horizontal artifact keeps showing, investigate origin and how to circumvent
-***** update readme with relevant changes
+***** consider changing RCGAN name to RACGAN
+***** before publication, run models on simple data to get best results and publish models used
+***** replace discriminator with existing supervised network to see how that can work better
+***** modify model and run next iterations of R(AC)GAN
+***** make efficient pipeline to update documentation and logging
 
 *** Model stabilization and abstraction
 ***** TODO work on more efficient (automated) hard model memory handling (saving only one instance of weights in comb.h5 and abstracting via layer numbers) -> necessary for github clones to be light
@@ -27,7 +29,6 @@
 
 *** Model visualization and presentation
 ***** TODO add extra option to ignore pics/gifs when cloning unless prompted
-***** TODO add functionality to show correct generator accuracy when using noisy labels for both discriminator and generator, current bug always shows zero accuracy -> might not be relevant with tensorflow2 port
 ***** add function to generate best samples from trained model aside from already generated images
 ***** change matplotlib backend default back to instant working version when necessary
 
