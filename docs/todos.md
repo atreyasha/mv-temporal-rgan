@@ -36,7 +36,7 @@ Workflow changes
 11. update readme with relevant changes to RCGAN
 
 12. make consistent dataset between RGAN and RCGAN, re-run on RGAN after
-    re-normalizing, re-run face code
+    re-normalizing just on faces
 
 13. before publication, run models on simple data to get best results
     and publish models used (need to decide on normlization technique)

@@ -74,7 +74,7 @@ def continueTrain(direct,arguments):
     rem = {el:meta.iloc[-1][el] for el in toParse}
     # add arguments parsed into memory
     globals().update(rem)
-    train_images = loadData(data)
+    train_set = loadData(data)
     # create new log directory depending on left-off training state
     if "_" not in re.sub(r".*_R(C)?GAN_","",direct):
         log_dir = re.sub(r"(R(C)?GAN_)","\g<1>"+getCurrentTime()+"_",directLong)
@@ -89,31 +89,40 @@ def continueTrain(direct,arguments):
         dis_opt_weights = pickle.load(f)
     with open(directLong+"/comb_opt_weights.pickle", "rb") as f:
         comb_opt_weights = pickle.load(f)
-    rgan = RGAN(latent_dim,im_dim,epochs,batch_size,learning_rate,
-                g_factor,droprate,momentum,alpha,saving_rate)
+    if "RGAN" in direct:
+        model = RGAN(latent_dim,im_dim,epochs,batch_size,learning_rate,
+                     g_factor,droprate,momentum,alpha,saving_rate)
+    elif "RCGAN" in direct:
+        model = RCGAN(num_classes,latent_dim,im_dim,epochs,batch_size,learning_rate,
+                     g_factor,droprate,momentum,alpha,saving_rate)
     # load models into memory
-    rgan.generator.load_weights(directLong+"/gen_weights.h5")
-    rgan.discriminator.load_weights(directLong+"/dis_weights.h5")
-    rgan.combined.load_weights(directLong+"/comb_weights.h5")
+    model.generator.load_weights(directLong+"/gen_weights.h5")
+    model.discriminator.load_weights(directLong+"/dis_weights.h5")
+    model.combined.load_weights(directLong+"/comb_weights.h5")
     # initialize optimizer weights
-    hold_epochs = rgan.epochs
-    hold_batch_size = rgan.batch_size
-    rgan.epochs = 1
-    rgan.batch_size = 1
-    rgan.train(train_images[:1],log_dir_pass)
-    rgan.epochs = hold_epochs
-    rgan.batch_size = hold_batch_size
+    hold_epochs = model.epochs
+    hold_batch_size = model.batch_size
+    model.epochs = 1
+    model.batch_size = 1
+    if "RGAN" in direct:
+        model.train(train_set[:1],log_dir_pass)
+    elif "RCGAN" in direct:
+        model.train((train_set[0][:1],train_set[1][:1]),log_dir_pass)
+    model.epochs = hold_epochs
+    model.batch_size = hold_batch_size
     # load previous optimizer weights
-    rgan.discriminator.optimizer.set_weights(dis_opt_weights)
-    rgan.combined.optimizer.set_weights(comb_opt_weights)
+    model.discriminator.optimizer.set_weights(dis_opt_weights)
+    model.combined.optimizer.set_weights(comb_opt_weights)
     # clear memory
     del dis_opt_weights, comb_opt_weights
     # resume training
-    rgan.train(train_images,log_dir_pass)
+    model.train(train_set,log_dir_pass)
 
-def plot_M(model="RGAN"):
+def plot_M(model):
     if model == "RGAN":
         model = RGAN()
+    elif model == "RCGAN":
+        model = RCGAN(num_classes=10)
     plot_model(model.generator,to_file="./img/gen.png",show_shapes=True)
     plot_model(model.discriminator,to_file="./img/dis.png",show_shapes=True)
 
@@ -158,7 +167,7 @@ if __name__ == "__main__":
                         help="option to plot keras model")
     args = parser.parse_args()
     if args.plot_model:
-        plot_M()
+        plot_M(args.model)
         sys.exit()
     assert args.data in ["faces","mnist","fashion"]
     if args.continue_train:
