@@ -63,7 +63,7 @@ def continueTrain(direct,arguments):
     directLong = "./pickles/"+direct
     if not os.path.isdir(directLong):
         sys.exit(directLong +" does not exist")
-    model = re.sub(r".*(R(C)?GAN).*","\g<1>",direct)
+    model_name = re.sub(r".*(R(C)?GAN).*","\g<1>",direct)
     # read init.csv and return construction parameters
     meta = pd.read_csv(directLong+"/init.csv")
     # remove "until" in case file is a combined type
@@ -90,10 +90,10 @@ def continueTrain(direct,arguments):
         dis_opt_weights = pickle.load(f)
     with open(directLong+"/comb_opt_weights.pickle", "rb") as f:
         comb_opt_weights = pickle.load(f)
-    if model == "RGAN":
+    if model_name == "RGAN":
         model = RGAN(latent_dim,im_dim,epochs,batch_size,learning_rate,
                      g_factor,droprate,momentum,alpha,saving_rate)
-    elif model == "RCGAN":
+    elif model_name == "RCGAN":
         model = RCGAN(num_classes,latent_dim,im_dim,epochs,batch_size,learning_rate,
                      g_factor,droprate,momentum,alpha,saving_rate)
     # load models into memory
@@ -105,9 +105,9 @@ def continueTrain(direct,arguments):
     hold_batch_size = model.batch_size
     model.epochs = 1
     model.batch_size = 1
-    if model == "RGAN":
+    if model_name == "RGAN":
         model.train(train_set[:1],log_dir_pass)
-    elif model ==  "RCGAN":
+    elif model_name ==  "RCGAN":
         model.train((train_set[0][:1],train_set[1][:1]),log_dir_pass)
     model.epochs = hold_epochs
     model.batch_size = hold_batch_size
