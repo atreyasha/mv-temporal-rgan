@@ -1,38 +1,76 @@
 Workflow changes
 ----------------
 
+### Model extension to RCGAN
+
+1.  **TODO** add custom image shapes and prepare code to
+    shift away from square images
+
+2.  **TODO** modify lfw for rcgan with artificially generated
+    labels from other classifiers
+
+3.  **TODO** update final RGAN run on faces with all required
+    changes (denser activations and re-normalization)
+
+4.  read on more innovative semi-supervised gan architectures that we
+    could also use
+
+5.  publish separate annotated lfw-crop dataset, or consider using
+    CIFAR-10 with reduced dataset size
+
+6.  changing to CIFAR might require modified descriptions and stuff
+
+7.  how to make results better? perhaps make deeper, but focus should
+    not be on images
+
+8.  bottom horizontal artifact keeps showing, investigate origin and how
+    to circumvent
+
+9.  consider changing RCGAN name to RACGAN
+
+10. before publication, run models on simple data to get best results
+    and publish models used
+
+11. replace discriminator with existing supervised network to see how
+    that can work better
+
+12. modify model and run next iterations of R(AC)GAN
+
+13. make efficient pipeline to update documentation and logging
+
 ### Model stabilization and abstraction
 
-1.  **TODO** choose best model and extend to RCGAN, look up
-    ganhacks for further possible improvements such as adding leaky-relu
-    everywhere; leave best model training much longer on faces to check
-    for better convergence
-
-2.  **TODO** read up on how embeddings to lower dimensions
-    actually work and how if affects doing local processes
-
-3.  **TODO** work on more efficient (automated) hard model
+1.  **TODO** work on more efficient (automated) hard model
     memory handling (saving only one instance of weights in comb.h5 and
     abstracting via layer numbers) -\> necessary for github clones to be
     light
 
-4.  **TODO** export optimizer weights as h5 instead of pickle
+2.  **TODO** export optimizer weights as h5 instead of pickle
     for data consistency and compactness
 
-5.  **TODO** make modular function for model restoration
+3.  **TODO** make modular function for model restoration,
+    edit readme with new continue training details afterwards
 
-6.  **TODO** consider borrowing model architecture from other
+4.  **TODO** consider borrowing model architecture from other
     successful models and employ within local biomedical task
 
-7.  port code to tensorflow2 for better integration -\> might solve
+5.  work on introspection tasks, where data is passed through layers
+    step-wise and results are manually/automatically checked for
+    explainability
+
+6.  port code to tensorflow2 for better integration -\> might solve
     problem with accuracy printing based on non-binary target labels
 
-8.  consider that performance on images is not paramount, abstraction to
+7.  consider that performance on images is not paramount, abstraction to
     medical data and construction of local evaluation techniques is more
     important
 
-9.  consider developing online per-epoch similarity checks, MMD and TRTS
+8.  consider developing online per-epoch similarity checks, MMD and TRTS
     to check quality of samples
+
+9.  look up ganhacks for further possible improvements such as adding
+    leaky-relu everywhere, and read on successful/innovative gan
+    architectures
 
 10. make pipeline variable/adaptable/scalable to higher (possibly
     non-square) dimensional data in case of 64 dimensional lfw faces
@@ -42,19 +80,13 @@ Workflow changes
 
 ### Model visualization and presentation
 
-1.  **TODO** update RGAN version 4 with performance summary
-    and manage branches, add extra option to ignore pics/gifs when
+1.  **TODO** add extra option to ignore pics/gifs when
     cloning unless prompted
 
-2.  **TODO** add functionality to show correct generator
-    accuracy when using noisy labels for both discriminator and
-    generator, current bug always shows zero accuracy -\> might not be
-    relevant with tensorflow2 port
-
-3.  add function to generate best samples from trained model aside from
+2.  add function to generate best samples from trained model aside from
     already generated images
 
-4.  change matplotlib backend default back to instant working version
+3.  change matplotlib backend default back to instant working version
     when necessary
 
 ### Model extension to biomedical time series

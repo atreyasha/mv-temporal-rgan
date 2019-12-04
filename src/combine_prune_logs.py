@@ -28,10 +28,10 @@ def iter_temporal_find(direct):
     while found:
         found = False
         for log in logs:
-            if prefix in re.sub(r"(.*RGAN_).*","\g<1>",log):
+            if prefix in re.sub(r"(.*R(C)?GAN_).*","\g<1>",log):
                 found = True
                 chron.append(log)
-                prefix = re.sub(r"(.*_RGAN_)(.*)(_.*)$","\g<2>",log)
+                prefix = re.sub(r"(.*_R(C)?GAN_)(.*)(_.*)$","\g<2>",log)
                 logs.remove(log)
                 break
     return chron
@@ -119,9 +119,7 @@ def make_fake_df(epochs):
     fieldnames = {"epoch":np.arange(1,epochs+1),
                   "batch":np.full(epochs,np.nan),
                   "d_loss":np.full(epochs,np.nan),
-                  "d_acc":np.full(epochs,np.nan),
-                  "g_loss":np.full(epochs,np.nan),
-                  "g_acc":np.full(epochs,np.nan)}
+                  "g_loss":np.full(epochs,np.nan)}
     return pd.DataFrame(fieldnames)
 
 def combine_prune_logs(direct):

@@ -1,4 +1,5 @@
 #!/bin/sh
+
 #
 # An example hook script to verify what is about to be committed.
 # Called by "git commit" with no arguments.  The hook should
@@ -8,7 +9,7 @@
 # To enable this hook, rename this file to "pre-commit".
 
 # update requirements.txt
-pipreqs --force .
+pipreqs --force ./src
 
 # convert todos.org to todos.md
 pandoc -f org -t markdown -o ./docs/todos.md ./docs/todos.org

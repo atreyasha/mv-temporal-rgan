@@ -1,21 +1,35 @@
 ** Workflow changes
 
+*** Model extension to RCGAN
+***** TODO add custom image shapes and prepare code to shift away from square images
+***** TODO modify lfw for rcgan with artificially generated labels from other classifiers
+***** TODO update final RGAN run on faces with all required changes (denser activations and re-normalization)
+***** read on more innovative semi-supervised gan architectures that we could also use
+***** publish separate annotated lfw-crop dataset, or consider using CIFAR-10 with reduced dataset size
+***** changing to CIFAR might require modified descriptions and stuff
+***** how to make results better? perhaps make deeper, but focus should not be on images
+***** bottom horizontal artifact keeps showing, investigate origin and how to circumvent
+***** consider changing RCGAN name to RACGAN
+***** before publication, run models on simple data to get best results and publish models used
+***** replace discriminator with existing supervised network to see how that can work better
+***** modify model and run next iterations of R(AC)GAN
+***** make efficient pipeline to update documentation and logging
+
 *** Model stabilization and abstraction
-***** TODO choose best model and extend to RCGAN, look up ganhacks for further possible improvements such as adding leaky-relu everywhere; leave best model training much longer on faces to check for better convergence
-***** TODO read up on how embeddings to lower dimensions actually work and how if affects doing local processes
 ***** TODO work on more efficient (automated) hard model memory handling (saving only one instance of weights in comb.h5 and abstracting via layer numbers) -> necessary for github clones to be light
 ***** TODO export optimizer weights as h5 instead of pickle for data consistency and compactness
-***** TODO make modular function for model restoration
+***** TODO make modular function for model restoration, edit readme with new continue training details afterwards
 ***** TODO consider borrowing model architecture from other successful models and employ within local biomedical task
+***** work on introspection tasks, where data is passed through layers step-wise and results are manually/automatically checked for explainability
 ***** port code to tensorflow2 for better integration -> might solve problem with accuracy printing based on non-binary target labels
 ***** consider that performance on images is not paramount, abstraction to medical data and construction of local evaluation techniques is more important
 ***** consider developing online per-epoch similarity checks, MMD and TRTS to check quality of samples
+***** look up ganhacks for further possible improvements such as adding leaky-relu everywhere, and read on successful/innovative gan architectures
 ***** make pipeline variable/adaptable/scalable to higher (possibly non-square) dimensional data in case of 64 dimensional lfw faces (user more variables in models instead of hard-coding)
 ***** read papers for strategies/uses of synthetic data
 
 *** Model visualization and presentation
-***** TODO update RGAN version 4 with performance summary and manage branches, add extra option to ignore pics/gifs when cloning unless prompted
-***** TODO add functionality to show correct generator accuracy when using noisy labels for both discriminator and generator, current bug always shows zero accuracy -> might not be relevant with tensorflow2 port
+***** TODO add extra option to ignore pics/gifs when cloning unless prompted
 ***** add function to generate best samples from trained model aside from already generated images
 ***** change matplotlib backend default back to instant working version when necessary
 

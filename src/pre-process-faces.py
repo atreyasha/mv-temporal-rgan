@@ -18,7 +18,7 @@ def makeBin(out,size_factor):
     train_images = [zoom(mpimg.imread(file),size_factor,mode="mirror")
                     for file in tqdm(glob.glob("./data/lfwcrop_grey/faces/*"))]
     train_images = np.asarray(train_images,dtype="float32")
-    train_images /= 255
+    train_images = (train_images-127.5)/127.5
     np.save("./data/"+out,train_images)
 
 ###############################
