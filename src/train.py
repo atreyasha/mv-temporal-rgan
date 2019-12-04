@@ -75,7 +75,7 @@ def continueTrain(direct,arguments):
     rem = {el:meta.iloc[-1][el] for el in toParse}
     # add arguments parsed into memory
     globals().update(rem)
-    train_set = loadData(data,model)
+    train_set = loadData(data,model_name)
     # create new log directory depending on left-off training state
     if "_" not in re.sub(r".*_R(C)?GAN_","",direct):
         log_dir = re.sub(r"(R(C)?GAN_)","\g<1>"+getCurrentTime()+"_",directLong)
