@@ -63,6 +63,6 @@
 
 ### Improvements
 
-1. Replace sparse activations ie. "relu" with LeakyReLU.
+1. Replace sparse activations with continuous albeit slightly sparse ones ie. "relu" with LeakyReLU.
 
 2. These results can be deemed as satisfactory. The next step would be to extend these models to conditional ones.

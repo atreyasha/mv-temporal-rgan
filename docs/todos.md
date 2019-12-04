@@ -3,34 +3,43 @@ Workflow changes
 
 ### Model extension to RCGAN
 
-1.  **TODO** modify continue-train for rcgan, add custom
+1.  **TODO** upate all pipelines to account for RCGAN, save
+    obj logs correctly and make nice documentation
+
+2.  **TODO** modify continue-train for rcgan, add custom
     image shapes and prepare code to shift away from square images
 
-2.  **TODO** make plotting procedure more efficient within
+3.  **TODO** make plotting procedure more efficient within
     rcgan
 
-3.  **TODO** check if additional transformation or np.reshape
+4.  **TODO** check if additional transformation or np.reshape
     for labels is required, read on more innovative gan architectures
     that we could also use
 
-4.  **TODO** look up for normalizing feature in terms of
+5.  **TODO** look up for normalizing feature in terms of
     input data, perhaps this might help (or revert back)
 
-5.  **TODO** if normalizing feature helps, perhaps re-run
+6.  **TODO** if normalizing feature helps, perhaps re-run
     newly normalized models with basic RGAN
 
-6.  **TODO** add rcgan to plot model functionality
+7.  **TODO** add rcgan to plot model functionality
 
-7.  **TODO** modify lfw for rcgan with artificially generated
+8.  **TODO** modify lfw for rcgan with artificially generated
     labels from other classifiers
 
-8.  publish separate annotated lfw-crop dataset, or consider using
+9.  publish separate annotated lfw-crop dataset, or consider using
     CIFAR-10 if small dataset like MIMIC-III
 
-9.  bottom horizontal artifact keeps showing, investigate origin and how
+10. bottom horizontal artifact keeps showing, investigate origin and how
     to circumvent
 
-10. update readme with relevant changes
+11. update readme with relevant changes to RCGAN
+
+12. make consistent dataset between RGAN and RCGAN, re-run on RGAN after
+    re-normalizing, re-run face code
+
+13. before publication, run models on simple data to get best results
+    and publish models used (need to decide on normlization technique)
 
 ### Model stabilization and abstraction
 
@@ -77,15 +86,10 @@ Workflow changes
 1.  **TODO** add extra option to ignore pics/gifs when
     cloning unless prompted
 
-2.  **TODO** add functionality to show correct generator
-    accuracy when using noisy labels for both discriminator and
-    generator, current bug always shows zero accuracy -\> might not be
-    relevant with tensorflow2 port
-
-3.  add function to generate best samples from trained model aside from
+2.  add function to generate best samples from trained model aside from
     already generated images
 
-4.  change matplotlib backend default back to instant working version
+3.  change matplotlib backend default back to instant working version
     when necessary
 
 ### Model extension to biomedical time series

@@ -33,11 +33,12 @@ def loadData(data,model):
     elif data == "fashion":
         train_set, _ = fashion_mnist.load_data()
     # return data type based on model
+    X_train = ((train_set[0]-127.5)/127.5).astype(np.float32)
+    y_train = train_set[1]
     if model == "RGAN":
-        return train_set[0]/255
+        return X_train
     elif model == "RCGAN":
-        X_train = (train_set[0].astype(np.float32) - 127.5)/127.5
-        return (X_train,train_set[1].reshape(-1,1))
+        return X_train,y_train
 
 def singularTrain(model,data,latent_dim,epochs,batch_size,learning_rate,
                   g_factor,droprate,momentum,alpha,saving_rate):

@@ -215,6 +215,7 @@ class RGAN():
                                          "d_loss":str(d_loss), "g_loss":str(g_loss)})
             # at every epoch, generate images for reference
             test_img = self.generator.predict(constant_noise)
+            test_img = (0.5*test_img)+0.5
             test_img = {str(i+1):test_img[i] for i in range(test_img.shape[0])}
             self._plot_figures(test_img,direct,epoch,sq_dim)
             if (epoch+1) % self.saving_rate == 0 or (epoch+1) == self.epochs:

@@ -28,10 +28,10 @@ def iter_temporal_find(direct):
     while found:
         found = False
         for log in logs:
-            if prefix in re.sub(r"(.*RGAN_).*","\g<1>",log):
+            if prefix in re.sub(r"(.*R(C)?GAN_).*","\g<1>",log):
                 found = True
                 chron.append(log)
-                prefix = re.sub(r"(.*_RGAN_)(.*)(_.*)$","\g<2>",log)
+                prefix = re.sub(r"(.*_R(C)?GAN_)(.*)(_.*)$","\g<2>",log)
                 logs.remove(log)
                 break
     return chron
