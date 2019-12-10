@@ -3,40 +3,45 @@ Workflow changes
 
 ### Model extension to RCGAN
 
-1.  **TODO** add custom image shapes and prepare code to
-    shift away from square images
-
-2.  **TODO** modify lfw for rcgan with artificially generated
-    labels from other classifiers
-
-3.  **TODO** update final RGAN run on faces with all required
+1.  **TODO** update final RGAN run on faces with all required
     changes (denser activations and re-normalization)
 
-4.  read on more innovative semi-supervised gan architectures that we
+2.  **TODO** find mid-way between generation quality and
+    classification accuracy; run final model on this
+
+3.  **TODO** modify lfw for rcgan with artificially generated
+    labels from other classifiers
+
+4.  **TODO** add custom image shapes and prepare code to
+    shift away from square images
+
+5.  **TODO** work on extension to MIMIC-III data with
+    evaluation protocols
+
+6.  read on more innovative semi-supervised gan architectures that we
     could also use
 
-5.  publish separate annotated lfw-crop dataset, or consider using
+7.  publish separate annotated lfw-crop dataset, or consider using
     CIFAR-10 with reduced dataset size
 
-6.  changing to CIFAR might require modified descriptions and stuff
+8.  changing to CIFAR might require modified descriptions and
+    motivations
 
-7.  how to make results better? perhaps make deeper, but focus should
+9.  how to make results better? perhaps make deeper, but focus should
     not be on images
 
-8.  bottom horizontal artifact keeps showing, investigate origin and how
+10. bottom horizontal artifact keeps showing, investigate origin and how
     to circumvent
 
-9.  consider changing RCGAN name to RACGAN
-
-10. before publication, run models on simple data to get best results
+11. before publication, run models on simple data to get best results
     and publish models used
 
-11. replace discriminator with existing supervised network to see how
+12. replace discriminator with existing supervised network to see how
     that can work better
 
-12. modify model and run next iterations of R(AC)GAN
-
 13. make efficient pipeline to update documentation and logging
+
+14. consider changing RCGAN name to RACGAN
 
 ### Model stabilization and abstraction
 

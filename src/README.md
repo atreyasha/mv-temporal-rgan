@@ -355,11 +355,17 @@ As our repository and models are still under development, we document various st
 
 ## Caveats
 
-1. The models are still being tested on preliminary datasets such as MNIST; support for MIMIC-III is under development and will properly commence once performance is verified on preliminary datasets
+1. Code for model training is optimized for training on one GPU. Furthermore, the command descriptions above have omitted a flag for using a GPU, since this might be user specific. But generally, if you wish to use CUDA GPU 0 you can execute the (generic) code as follows:
 
-2. RCGAN support is still under development and LFWcrop greyscale is not as yet integrated for the RCGAN
+```shell
+$ CUDA_VISIBLE_DEVICES=0 python3 train.py
+```
 
-3. Model architectures are not fixed as yet and will undergo further changes in terms of increased depth and enhanced stabilization techniques
+2. The models are still being tested on preliminary datasets such as MNIST; support for MIMIC-III is under development and will properly commence once performance is verified on preliminary datasets
+
+3. RCGAN support is still under development and LFWcrop greyscale is not as yet integrated for the RCGAN
+
+4. Model architectures are not fixed as yet and will undergo further changes in terms of increased depth and enhanced stabilization techniques
 
 ## Workflow changes
 
