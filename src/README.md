@@ -346,16 +346,18 @@ As our repository and models are still under development, we document various st
 * [RGAN Model Performance Summary II](/src/docs/RGAN/RGAN_v2.md)
 * [RGAN Model Performance Summary III](/src/docs/RGAN/RGAN_v3.md)
 * [RGAN Model Performance Summary IV](/src/docs/RGAN/RGAN_v4.md)
+* [RGAN Model Performance Summary V](/src/docs/RGAN/RGAN_v5.md)
 
 #### RCGAN
 
 * [RCGAN Model Performance Summary I](/src/docs/RCGAN/RCGAN_v1.md)
 * [RCGAN Model Performance Summary II](/src/docs/RCGAN/RCGAN_v2.md)
 * [RCGAN Model Performance Summary III](/src/docs/RCGAN/RCGAN_v3.md)
+* [RCGAN Model Performance Summary IV](/src/docs/RCGAN/RCGAN_v4.md)
 
 ## Caveats
 
-1. Code for model training is optimized for training on one GPU. Furthermore, the command descriptions above have omitted a flag for using a GPU, since this might be user specific. But generally, if you wish to use CUDA GPU 0 you can execute the (generic) code as follows:
+1. Code for model training is optimized for training on one GPU. Furthermore, the command descriptions above have omitted a flag for using a GPU, since this might be user specific. But generally, if you wish to use `CUDA-GPU '0'` you can add the local variable `CUDA_VISIBLE_DEVICES=0` as a flag to the main python script command, as shown below:
 
 ```shell
 $ CUDA_VISIBLE_DEVICES=0 python3 train.py
