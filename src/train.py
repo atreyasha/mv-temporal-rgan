@@ -15,6 +15,7 @@ import datetime
 import numpy as np
 from obj.RGAN import RGAN
 from obj.RCGAN import RCGAN
+from obj.model_utils import restore_model
 from keras.utils import plot_model
 from keras.datasets import mnist, fashion_mnist
 
