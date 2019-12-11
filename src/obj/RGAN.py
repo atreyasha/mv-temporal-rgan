@@ -163,7 +163,7 @@ class RGAN():
         fig.clear()
         plt.close("all")
 
-    def train(self,data,direct,sq_dim=4):
+    def train(self,data,direct,sq_dim=4,check_rate=20):
         plot_samples=sq_dim**2
         data_type = re.sub(r".*_","",direct)
         dict_field = {"data":data_type}
@@ -206,7 +206,7 @@ class RGAN():
                 # train generator while freezing discriminator
                 g_loss = self.combined.train_on_batch(noise, real_labels)
                 # plot the progress
-                if (batch+1) % 20 == 0:
+                if (batch+1) % check_rate == 0:
                     print("epoch: %d [batch: %d] [D loss: %f] [G loss: %f]" %
                           (epoch+1,batch+1,d_loss,g_loss))
                     with open("./pickles/"+direct+"/log.csv", "a") as csvfile:
