@@ -137,7 +137,6 @@ $ tree ./pickles/2019_10_20_19_02_22_RGAN_faces -L 1
 
 ./pickles/2019_10_20_19_02_22_RGAN_faces
 ├── comb_opt_weights.pickle
-├── comb_weights.h5
 ├── dis_opt_weights.pickle
 ├── dis_weights.h5
 ├── gen_weights.h5
@@ -324,7 +323,6 @@ $ tree ./pickles/2019_10_24_13_45_01_RGAN_faces -L 1
 
 ./pickles/2019_10_24_13_45_01_RGAN_faces
 ├── comb_opt_weights.pickle
-├── comb_weights.h5
 ├── dis_opt_weights.pickle
 ├── dis_weights.h5
 ├── gen_weights.h5

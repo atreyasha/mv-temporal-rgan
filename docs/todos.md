@@ -1,9 +1,6 @@
 Workflow changes
 ----------------
 
-extend and test same modification to RCGAN
-==========================================
-
 ### Model stabilization and abstraction
 
 1.  **TODO** work on more efficient (automated) hard model
@@ -49,8 +46,9 @@ extend and test same modification to RCGAN
 1.  **TODO** work on extension to MIMIC-III data with
     evaluation protocols
 
-2.  **TODO** update final RCGAN run with best practice
-    examples
+2.  **TODO** consider changing RGAN name to CRGAN
+    (convolutional-recurrent-GAN), with conditional one as CRAGAN
+    (auxiliary as addition)
 
 3.  add custom image shapes and prepare code to shift away from square
     images
@@ -63,9 +61,8 @@ extend and test same modification to RCGAN
 
 6.  before publication, publish some of the preliminary models used
 
-7.  consider changing RCGAN name to RACGAN
-
-8.  consider using encoder-decoder or transformers in GAN
+7.  consider using encoder-decoder or transformers in GAN for variable
+    sequence length generation
 
 ### Model visualization and presentation
 

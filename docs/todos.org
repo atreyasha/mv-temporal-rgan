@@ -1,7 +1,5 @@
 ** Workflow changes
 
-* extend and test same modification to RCGAN
-
 *** Model stabilization and abstraction
 ***** TODO work on more efficient (automated) hard model memory handling (saving only one instance of weights in comb.h5 and abstracting via layer numbers) -> necessary for github clones to be light
 ***** TODO export optimizer weights as h5 instead of pickle for data consistency and compactness
@@ -17,13 +15,12 @@
 
 *** Model extension to RCGAN
 ***** TODO work on extension to MIMIC-III data with evaluation protocols
-***** TODO update final RCGAN run with best practice examples
+***** TODO consider changing RGAN name to CRGAN (convolutional-recurrent-GAN), with conditional one as CRAGAN (auxiliary as addition)
 ***** add custom image shapes and prepare code to shift away from square images
 ***** read on more innovative semi-supervised gan architectures that we could also use
 ***** replace discriminator with existing supervised network to see how that can work better
 ***** before publication, publish some of the preliminary models used
-***** consider changing RCGAN name to RACGAN
-***** consider using encoder-decoder or transformers in GAN
+***** consider using encoder-decoder or transformers in GAN for variable sequence length generation
 
 *** Model visualization and presentation
 ***** add extra option to ignore pics/gifs when cloning unless prompted

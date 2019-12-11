@@ -10,6 +10,7 @@ import matplotlib
 matplotlib.use('Agg')
 import matplotlib.pyplot as plt
 from keras import backend
+from .model_utils import save_model
 from keras.models import Model
 from keras.optimizers import Adam
 from keras.constraints import max_norm
@@ -163,7 +164,7 @@ class RGAN():
         fig.clear()
         plt.close("all")
 
-    def train(self,data,direct,sq_dim=4):
+    def train(self,data,direct,sq_dim=4,check_rate=20):
         plot_samples=sq_dim**2
         data_type = re.sub(r".*_","",direct)
         dict_field = {"data":data_type}
@@ -206,7 +207,7 @@ class RGAN():
                 # train generator while freezing discriminator
                 g_loss = self.combined.train_on_batch(noise, real_labels)
                 # plot the progress
-                if (batch+1) % 20 == 0:
+                if (batch+1) % check_rate == 0:
                     print("epoch: %d [batch: %d] [D loss: %f] [G loss: %f]" %
                           (epoch+1,batch+1,d_loss,g_loss))
                     with open("./pickles/"+direct+"/log.csv", "a") as csvfile:
@@ -220,9 +221,4 @@ class RGAN():
             self._plot_figures(test_img,direct,epoch,sq_dim)
             if (epoch+1) % self.saving_rate == 0 or (epoch+1) == self.epochs:
                 # save models with defined periodicity
-                self.generator.save_weights("./pickles/"+direct+"/gen_weights.h5")
-                self.discriminator.save_weights("./pickles/"+direct+"/dis_weights.h5")
-                with open("./pickles/"+direct+"/dis_opt_weights.pickle","wb") as f:
-                    pickle.dump(self.discriminator.optimizer.get_weights(),f)
-                with open("./pickles/"+direct+"/comb_opt_weights.pickle","wb") as f:
-                    pickle.dump(self.combined.optimizer.get_weights(),f)
+                save_model(self,direct)

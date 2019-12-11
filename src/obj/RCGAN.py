@@ -10,6 +10,7 @@ import matplotlib
 matplotlib.use('Agg')
 import matplotlib.pyplot as plt
 from keras import backend
+from .model_utils import save_model
 from keras.models import Model
 from keras.optimizers import Adam
 from keras.constraints import max_norm
@@ -178,7 +179,7 @@ class RCGAN():
         fig.clear()
         plt.close("all")
 
-    def train(self,data,direct,plot_samples=5):
+    def train(self,data,direct,plot_samples=5,check_rate=20):
         data_type = re.sub(r".*_","",direct)
         dict_field = {"data":data_type}
         dict_field.update({el[0]:el[1] for el in self.__dict__.items()
@@ -222,7 +223,7 @@ class RCGAN():
                 g_loss = self.combined.train_on_batch([noise,sampled_img_labels],
                                                       [real_labels,sampled_img_labels])
                 # plot the progress
-                if (batch+1) % 20 == 0:
+                if (batch+1) % check_rate == 0:
                     print("epoch: %d [batch: %d] [D loss: %f, D.A Loss: %f] [G loss: %f, G.A Loss: %f]" %
                           (epoch+1,batch+1,d_loss[0],d_loss[1],g_loss[0],g_loss[1]))
                     with open("./pickles/"+direct+"/log.csv", "a") as csvfile:
@@ -235,9 +236,4 @@ class RCGAN():
             self._plot_figures(test_img,direct,epoch,plot_samples,self.num_classes,constant_labels)
             if (epoch+1) % self.saving_rate == 0 or (epoch+1) == self.epochs:
                 # save models with defined periodicity
-                self.generator.save_weights("./pickles/"+direct+"/gen_weights.h5")
-                self.discriminator.save_weights("./pickles/"+direct+"/dis_weights.h5")
-                with open("./pickles/"+direct+"/dis_opt_weights.pickle","wb") as f:
-                    pickle.dump(self.discriminator.optimizer.get_weights(),f)
-                with open("./pickles/"+direct+"/comb_opt_weights.pickle","wb") as f:
-                    pickle.dump(self.combined.optimizer.get_weights(),f)
+                save_model(self,direct)

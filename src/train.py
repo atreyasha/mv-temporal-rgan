@@ -15,6 +15,7 @@ import datetime
 import numpy as np
 from obj.RGAN import RGAN
 from obj.RCGAN import RCGAN
+from obj.model_utils import restore_model
 from keras.utils import plot_model
 from keras.datasets import mnist, fashion_mnist
 
@@ -86,39 +87,16 @@ def continueTrain(direct,arguments):
         log_dir = "./pickles/"+log_dir_pass
     os.makedirs(log_dir)
     os.makedirs(log_dir+"/img")
-    with open(directLong+"/dis_opt_weights.pickle", "rb") as f:
-        dis_opt_weights = pickle.load(f)
-    with open(directLong+"/comb_opt_weights.pickle", "rb") as f:
-        comb_opt_weights = pickle.load(f)
+    # create randomized model
     if model_name == "RGAN":
         model = RGAN(latent_dim,im_dim,epochs,batch_size,learning_rate,
                      g_factor,droprate,momentum,alpha,saving_rate)
     elif model_name == "RCGAN":
         model = RCGAN(num_classes,latent_dim,im_dim,epochs,batch_size,learning_rate,
                      g_factor,droprate,momentum,alpha,saving_rate)
-    # load models into memory
-    model.generator.load_weights(directLong+"/gen_weights.h5")
-    model.discriminator.load_weights(directLong+"/dis_weights.h5")
-    model.combined.layers[-2].set_weights(model.generator.get_weights())
-    model.combined.layers[-1].set_weights(model.discriminator.get_weights())
-    # hold back model information
-    hold_epochs = model.epochs
-    hold_batch_size = model.batch_size
-    model.epochs = 1
-    model.batch_size = 1
-    # initialize dummy optimizer weights
-    if model_name == "RGAN":
-        model.train(train_set[:1],log_dir_pass)
-    elif model_name ==  "RCGAN":
-        model.train((train_set[0][:1],train_set[1][:1]),log_dir_pass)
-    # return model information
-    model.epochs = hold_epochs
-    model.batch_size = hold_batch_size
-    # load previous optimizer weights
-    model.discriminator.optimizer.set_weights(dis_opt_weights)
-    model.combined.optimizer.set_weights(comb_opt_weights)
-    # clear memory
-    del dis_opt_weights, comb_opt_weights
+    # restore original model
+    model = restore_model(model,train_set,model_name,
+                          directLong,log_dir_pass)
     # resume training
     model.train(train_set,log_dir_pass)
 
