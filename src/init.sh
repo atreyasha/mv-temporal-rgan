@@ -18,5 +18,5 @@ fi
 
 read -rep "pre-process lfw-faces into numpy binary? (y/n): " ans
 if [ $ans == "y" ]; then
-    python3 pre-process-faces.py
+    python3 pre_process_faces.py
 fi

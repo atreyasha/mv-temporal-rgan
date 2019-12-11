@@ -1,68 +1,68 @@
 Workflow changes
 ----------------
 
-### Model stabilization and abstraction
-
-1.  **TODO** work on more efficient (automated) hard model
-    memory handling (saving only one instance of weights in comb.h5 and
-    abstracting via layer numbers) -\> necessary for github clones to be
-    light
-
-2.  **TODO** export optimizer weights as h5 instead of pickle
-    for data consistency and compactness
-
-3.  **TODO** make modular function for model restoration,
-    edit readme with new continue training details afterwards
-
-4.  work on introspection tasks, where data is passed through layers
-    step-wise and results are manually/automatically checked for
-    explainability
-
-5.  consider borrowing model architecture from other successful models
-    and employ within local biomedical task
-
-6.  port code to tensorflow2 for better integration -\> might solve
-    problem with accuracy printing based on non-binary target labels
-
-7.  consider that performance on images is not paramount, abstraction to
-    medical data and construction of local evaluation techniques is more
-    important
-
-8.  consider developing online per-epoch similarity checks, MMD and TRTS
-    to check quality of samples
-
-9.  look up ganhacks for further possible improvements such as adding
-    leaky-relu everywhere, and read on successful/innovative gan
-    architectures
-
-10. make pipeline variable/adaptable/scalable to higher (possibly
-    non-square) dimensional data in case of 64 dimensional lfw faces
-    (user more variables in models instead of hard-coding)
-
-11. read papers for strategies/uses of synthetic data
-
-### Model extension to RCGAN
+### Model extension to MIMIC-III with conditional framework
 
 1.  **TODO** work on extension to MIMIC-III data with
     evaluation protocols
 
-2.  **TODO** consider changing RGAN name to CRGAN
+2.  **TODO** start working on mortality data generation with
+    descriptive statistics first
+
+3.  **TODO** consider using encoder-decoder or transformers
+    in GAN for variable sequence length generation
+
+4.  **TODO** consider changing RGAN name to CRGAN
     (convolutional-recurrent-GAN), with conditional one as CRAGAN
     (auxiliary as addition)
 
-3.  add custom image shapes and prepare code to shift away from square
+5.  visualize data from MIMIC-III github repository in 2-dimensions to
+    see smoothness or roughness
+
+6.  use ETH model on MIMIC-III and compare evaluations with own model
+
+7.  apply RCGAN technique towards this process and verify results with
+    existing models through TSTR/TRTS and MMD checks
+
+8.  add custom image shapes and prepare code to shift away from square
     images
 
-4.  read on more innovative semi-supervised gan architectures that we
+9.  read on more innovative semi-supervised gan architectures that we
     could also use
 
-5.  replace discriminator with existing supervised network to see how
+10. replace discriminator with existing supervised network to see how
     that can work better
 
-6.  before publication, publish some of the preliminary models used
+11. before publication, publish some of the preliminary models used
 
-7.  consider using encoder-decoder or transformers in GAN for variable
-    sequence length generation
+### Model stabilization and abstraction
+
+1.  work on introspection tasks, where data is passed through layers
+    step-wise and results are manually/automatically checked for
+    explainability
+
+2.  consider borrowing model architecture from other successful models
+    and employ within local biomedical task
+
+3.  port code to tensorflow2 for better integration -\> might solve
+    problem with accuracy printing based on non-binary target labels
+
+4.  consider that performance on images is not paramount, abstraction to
+    medical data and construction of local evaluation techniques is more
+    important
+
+5.  consider developing online per-epoch similarity checks, MMD and TRTS
+    to check quality of samples
+
+6.  look up ganhacks for further possible improvements such as adding
+    leaky-relu everywhere, and read on successful/innovative gan
+    architectures
+
+7.  make pipeline variable/adaptable/scalable to higher (possibly
+    non-square) dimensional data in case of 64 dimensional lfw faces
+    (user more variables in models instead of hard-coding)
+
+8.  read papers for strategies/uses of synthetic data
 
 ### Model visualization and presentation
 
@@ -73,16 +73,6 @@ Workflow changes
 
 3.  change matplotlib backend default back to instant working version
     when necessary
-
-### Model extension to biomedical time series
-
-1.  visualize data from MIMIC-III github repository in 2-dimensions to
-    see smoothness or roughness
-
-2.  use ETH model on MIMIC-III and compare evaluations with own model
-
-3.  apply RCGAN technique towards this process and verify results with
-    existing models through TSTR/TRTS and MMD checks
 
 ### Heuristics
 

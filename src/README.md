@@ -59,12 +59,12 @@ Upon running this script, three prompts will appear sequentially.
 
 3. The final prompt requests if the user wants to downsample the native LFWcrop greyscale faces from 64x64 to 28x28, such that it can be easier to run unit tests.
 
-The downsampling of LFWcrop faces occurs through `pre-process-faces.py`:
+The downsampling of LFWcrop faces occurs through `pre_process_faces.py`:
 
 ```
-$ python3 pre-process-faces.py --help
+$ python3 pre_process_faces.py --help
 
-usage: pre-process-faces.py [-h] [--size-factor SIZE_FACTOR] [--out OUT]
+usage: pre_process_faces.py [-h] [--size-factor SIZE_FACTOR] [--out OUT]
 
 optional arguments:
   -h, --help            show this help message and exit
