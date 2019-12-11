@@ -1,11 +1,5 @@
 ** Workflow changes
 
-* TODO add modular function to save models and restore them, add if's in case old formatting is present
-* TODO drop all variables into single compressed file, which can be reconstructed in pipeline
-* TODO add new pipeline to decompress file when reading
-* TODO add corresponding information to src readme
-* TODO add remaining to-do's from personal list
-
 *** Model stabilization and abstraction
 ***** TODO work on more efficient (automated) hard model memory handling (saving only one instance of weights in comb.h5 and abstracting via layer numbers) -> necessary for github clones to be light
 ***** TODO export optimizer weights as h5 instead of pickle for data consistency and compactness
