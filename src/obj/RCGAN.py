@@ -10,7 +10,7 @@ import matplotlib
 matplotlib.use('Agg')
 import matplotlib.pyplot as plt
 from keras import backend
-from model_utils import save_model
+from .model_utils import save_model
 from keras.models import Model
 from keras.optimizers import Adam
 from keras.constraints import max_norm

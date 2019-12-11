@@ -10,6 +10,7 @@ import matplotlib
 matplotlib.use('Agg')
 import matplotlib.pyplot as plt
 from keras import backend
+from .model_utils import save_model
 from keras.models import Model
 from keras.optimizers import Adam
 from keras.constraints import max_norm
@@ -220,9 +221,4 @@ class RGAN():
             self._plot_figures(test_img,direct,epoch,sq_dim)
             if (epoch+1) % self.saving_rate == 0 or (epoch+1) == self.epochs:
                 # save models with defined periodicity
-                self.generator.save_weights("./pickles/"+direct+"/gen_weights.h5")
-                self.discriminator.save_weights("./pickles/"+direct+"/dis_weights.h5")
-                with open("./pickles/"+direct+"/dis_opt_weights.pickle","wb") as f:
-                    pickle.dump(self.discriminator.optimizer.get_weights(),f)
-                with open("./pickles/"+direct+"/comb_opt_weights.pickle","wb") as f:
-                    pickle.dump(self.combined.optimizer.get_weights(),f)
+                save_model(self,direct)
