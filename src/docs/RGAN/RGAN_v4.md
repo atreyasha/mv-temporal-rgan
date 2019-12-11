@@ -66,5 +66,3 @@
 1. Replace sparse activations with continuous albeit slightly sparse ones ie. "relu" with LeakyReLU.
 
 2. Re-normalize input data distribution between -1 and 1, instead of 0 and 1.
-
-2. These results can be deemed as satisfactory. The next step would be to extend these models to conditional ones.

@@ -18,7 +18,7 @@ pandoc -f org -t markdown -o ./docs/todos.md ./docs/todos.org
 sed -i 's/\[.*\]{.*}/**TODO**/g' ./docs/todos.md
 
 # add requirements.txt to stage for commit
-git add requirements.txt
+git add ./src/requirements.txt
 git add ./docs/todos.md
 
 if git rev-parse --verify HEAD >/dev/null 2>&1

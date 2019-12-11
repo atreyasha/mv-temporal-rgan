@@ -99,16 +99,19 @@ def continueTrain(direct,arguments):
     # load models into memory
     model.generator.load_weights(directLong+"/gen_weights.h5")
     model.discriminator.load_weights(directLong+"/dis_weights.h5")
-    model.combined.load_weights(directLong+"/comb_weights.h5")
-    # initialize optimizer weights
+    model.combined.layers[-2].set_weights(model.generator.get_weights())
+    model.combined.layers[-1].set_weights(model.discriminator.get_weights())
+    # hold back model information
     hold_epochs = model.epochs
     hold_batch_size = model.batch_size
     model.epochs = 1
     model.batch_size = 1
+    # initialize dummy optimizer weights
     if model_name == "RGAN":
         model.train(train_set[:1],log_dir_pass)
     elif model_name ==  "RCGAN":
         model.train((train_set[0][:1],train_set[1][:1]),log_dir_pass)
+    # return model information
     model.epochs = hold_epochs
     model.batch_size = hold_batch_size
     # load previous optimizer weights

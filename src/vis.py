@@ -75,7 +75,7 @@ if __name__ == "__main__":
     parser.add_argument("--number-ticks", type=int, default=10,
                         help="number of x-axis ticks to use in main plots")
     parser.add_argument("--create-gif", default=False, action="store_true",
-                        help="option to active gif creation")
+                        help="option to activate gif creation")
     parser.add_argument("--shrink-factor", type=int, default=4,
                         help="shrinking factor for images, applies only when --create-gif is supplied")
     parser.add_argument("--skip-rate", type=int, default=2,

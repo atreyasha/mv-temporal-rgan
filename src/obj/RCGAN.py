@@ -201,9 +201,11 @@ class RCGAN():
         np.random.seed(None)
         # generate target labels
         fake_labels = np.zeros((self.batch_size,1))
-        real_labels = np.ones((self.batch_size,1))
         runs = int(np.ceil(data[0].shape[0]/self.batch_size))
         for epoch in range(self.epochs):
+            # make noisy real labels per epoch
+            real_labels = np.clip(np.random.normal(loc=0.90,
+                                                   scale=0.005,size=(self.batch_size,1)),None,1)
             for batch in range(runs):
                 # randomize data and generate noise
                 idx = np.random.randint(0,data[0].shape[0],self.batch_size)
@@ -235,7 +237,6 @@ class RCGAN():
                 # save models with defined periodicity
                 self.generator.save_weights("./pickles/"+direct+"/gen_weights.h5")
                 self.discriminator.save_weights("./pickles/"+direct+"/dis_weights.h5")
-                self.combined.save_weights("./pickles/"+direct+"/comb_weights.h5")
                 with open("./pickles/"+direct+"/dis_opt_weights.pickle","wb") as f:
                     pickle.dump(self.discriminator.optimizer.get_weights(),f)
                 with open("./pickles/"+direct+"/comb_opt_weights.pickle","wb") as f:
