@@ -222,7 +222,6 @@ class RGAN():
                 # save models with defined periodicity
                 self.generator.save_weights("./pickles/"+direct+"/gen_weights.h5")
                 self.discriminator.save_weights("./pickles/"+direct+"/dis_weights.h5")
-                self.combined.save_weights("./pickles/"+direct+"/comb_weights.h5")
                 with open("./pickles/"+direct+"/dis_opt_weights.pickle","wb") as f:
                     pickle.dump(self.discriminator.optimizer.get_weights(),f)
                 with open("./pickles/"+direct+"/comb_opt_weights.pickle","wb") as f:

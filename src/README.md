@@ -287,7 +287,7 @@ optional arguments:
   --number-ticks NUMBER_TICKS
                         number of x-axis ticks to use in main plots (default:
                         10)
-  --create-gif          option to active gif creation (default: False)
+  --create-gif          option to activate gif creation (default: False)
   --shrink-factor SHRINK_FACTOR
                         shrinking factor for images, applies only when
                         --create-gif is supplied (default: 4)

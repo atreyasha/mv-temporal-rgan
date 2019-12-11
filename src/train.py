@@ -99,7 +99,8 @@ def continueTrain(direct,arguments):
     # load models into memory
     model.generator.load_weights(directLong+"/gen_weights.h5")
     model.discriminator.load_weights(directLong+"/dis_weights.h5")
-    model.combined.load_weights(directLong+"/comb_weights.h5")
+    model.combined.layers[1].set_weights(model.generator.get_weights())
+    model.combined.layers[2].set_weights(model.discriminator.get_weights())
     # initialize optimizer weights
     hold_epochs = model.epochs
     hold_batch_size = model.batch_size

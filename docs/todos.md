@@ -1,47 +1,8 @@
 Workflow changes
 ----------------
 
-### Model extension to RCGAN
-
-1.  **TODO** update final RGAN run on faces with all required
-    changes (denser activations and re-normalization)
-
-2.  **TODO** find mid-way between generation quality and
-    classification accuracy; run final model on this
-
-3.  **TODO** modify lfw for rcgan with artificially generated
-    labels from other classifiers
-
-4.  **TODO** add custom image shapes and prepare code to
-    shift away from square images
-
-5.  **TODO** work on extension to MIMIC-III data with
-    evaluation protocols
-
-6.  read on more innovative semi-supervised gan architectures that we
-    could also use
-
-7.  publish separate annotated lfw-crop dataset, or consider using
-    CIFAR-10 with reduced dataset size
-
-8.  changing to CIFAR might require modified descriptions and
-    motivations
-
-9.  how to make results better? perhaps make deeper, but focus should
-    not be on images
-
-10. bottom horizontal artifact keeps showing, investigate origin and how
-    to circumvent
-
-11. before publication, run models on simple data to get best results
-    and publish models used
-
-12. replace discriminator with existing supervised network to see how
-    that can work better
-
-13. make efficient pipeline to update documentation and logging
-
-14. consider changing RCGAN name to RACGAN
+extend and test same modification to RCGAN
+==========================================
 
 ### Model stabilization and abstraction
 
@@ -56,12 +17,12 @@ Workflow changes
 3.  **TODO** make modular function for model restoration,
     edit readme with new continue training details afterwards
 
-4.  **TODO** consider borrowing model architecture from other
-    successful models and employ within local biomedical task
-
-5.  work on introspection tasks, where data is passed through layers
+4.  work on introspection tasks, where data is passed through layers
     step-wise and results are manually/automatically checked for
     explainability
+
+5.  consider borrowing model architecture from other successful models
+    and employ within local biomedical task
 
 6.  port code to tensorflow2 for better integration -\> might solve
     problem with accuracy printing based on non-binary target labels
@@ -83,10 +44,32 @@ Workflow changes
 
 11. read papers for strategies/uses of synthetic data
 
+### Model extension to RCGAN
+
+1.  **TODO** work on extension to MIMIC-III data with
+    evaluation protocols
+
+2.  **TODO** update final RCGAN run with best practice
+    examples
+
+3.  add custom image shapes and prepare code to shift away from square
+    images
+
+4.  read on more innovative semi-supervised gan architectures that we
+    could also use
+
+5.  replace discriminator with existing supervised network to see how
+    that can work better
+
+6.  before publication, publish some of the preliminary models used
+
+7.  consider changing RCGAN name to RACGAN
+
+8.  consider using encoder-decoder or transformers in GAN
+
 ### Model visualization and presentation
 
-1.  **TODO** add extra option to ignore pics/gifs when
-    cloning unless prompted
+1.  add extra option to ignore pics/gifs when cloning unless prompted
 
 2.  add function to generate best samples from trained model aside from
     already generated images
@@ -106,8 +89,8 @@ Workflow changes
 
 ### Heuristics
 
-1.  **TODO** add convergent pathway polynomial fit to check
-    whether training is diverging or converging in given time frame
+1.  add convergent pathway polynomial fit to check whether training is
+    diverging or converging in given time frame
 
 2.  add gradient checks for logging and change vis.py to include colour
     on loss line for gradients
@@ -135,19 +118,16 @@ Workflow changes
 1.  models appear more stable when discriminator is significantly less
     powerful than generator
 
-2.  models are better when same noisy labels are used for both generator
-    and discriminator
+2.  models are more stable when same noisy labels are used for
+    discriminator
 
 3.  track how many epochs or batch runs needed to converge and try to
     optimize this (\~500/2000 for mnist/lfw respectively)
 
-4.  add conditions to \"train.py\" to add separate pipeline in RCGAN
-    training
-
-5.  add MIMIC-III 2d projection depiction and learning as gif on initial
+4.  add MIMIC-III 2d projection depiction and learning as gif on initial
     readme
 
-6.  remove caveats in readme once relevant developments are complete
+5.  remove caveats in readme once relevant developments are complete
 
 ### High-level ideas
 

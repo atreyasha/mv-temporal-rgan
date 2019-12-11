@@ -1,27 +1,13 @@
 ** Workflow changes
 
-*** Model extension to RCGAN
-***** TODO update final RGAN run on faces with all required changes (denser activations and re-normalization)
-***** TODO find mid-way between generation quality and classification accuracy; run final model on this
-***** TODO modify lfw for rcgan with artificially generated labels from other classifiers
-***** TODO add custom image shapes and prepare code to shift away from square images
-***** TODO work on extension to MIMIC-III data with evaluation protocols
-***** read on more innovative semi-supervised gan architectures that we could also use
-***** publish separate annotated lfw-crop dataset, or consider using CIFAR-10 with reduced dataset size
-***** changing to CIFAR might require modified descriptions and motivations
-***** how to make results better? perhaps make deeper, but focus should not be on images
-***** bottom horizontal artifact keeps showing, investigate origin and how to circumvent
-***** before publication, run models on simple data to get best results and publish models used
-***** replace discriminator with existing supervised network to see how that can work better
-***** make efficient pipeline to update documentation and logging
-***** consider changing RCGAN name to RACGAN
+* extend and test same modification to RCGAN
 
 *** Model stabilization and abstraction
 ***** TODO work on more efficient (automated) hard model memory handling (saving only one instance of weights in comb.h5 and abstracting via layer numbers) -> necessary for github clones to be light
 ***** TODO export optimizer weights as h5 instead of pickle for data consistency and compactness
 ***** TODO make modular function for model restoration, edit readme with new continue training details afterwards
-***** TODO consider borrowing model architecture from other successful models and employ within local biomedical task
 ***** work on introspection tasks, where data is passed through layers step-wise and results are manually/automatically checked for explainability
+***** consider borrowing model architecture from other successful models and employ within local biomedical task
 ***** port code to tensorflow2 for better integration -> might solve problem with accuracy printing based on non-binary target labels
 ***** consider that performance on images is not paramount, abstraction to medical data and construction of local evaluation techniques is more important
 ***** consider developing online per-epoch similarity checks, MMD and TRTS to check quality of samples
@@ -29,8 +15,18 @@
 ***** make pipeline variable/adaptable/scalable to higher (possibly non-square) dimensional data in case of 64 dimensional lfw faces (user more variables in models instead of hard-coding)
 ***** read papers for strategies/uses of synthetic data
 
+*** Model extension to RCGAN
+***** TODO work on extension to MIMIC-III data with evaluation protocols
+***** TODO update final RCGAN run with best practice examples
+***** add custom image shapes and prepare code to shift away from square images
+***** read on more innovative semi-supervised gan architectures that we could also use
+***** replace discriminator with existing supervised network to see how that can work better
+***** before publication, publish some of the preliminary models used
+***** consider changing RCGAN name to RACGAN
+***** consider using encoder-decoder or transformers in GAN
+
 *** Model visualization and presentation
-***** TODO add extra option to ignore pics/gifs when cloning unless prompted
+***** add extra option to ignore pics/gifs when cloning unless prompted
 ***** add function to generate best samples from trained model aside from already generated images
 ***** change matplotlib backend default back to instant working version when necessary
 
@@ -40,7 +36,7 @@
 ***** apply RCGAN technique towards this process and verify results with existing models through TSTR/TRTS and MMD checks
 
 *** Heuristics
-***** TODO add convergent pathway polynomial fit to check whether training is diverging or converging in given time frame
+***** add convergent pathway polynomial fit to check whether training is diverging or converging in given time frame
 ***** add gradient checks for logging and change vis.py to include colour on loss line for gradients
 ***** use tensorboard to analyze learning process
 ***** develop similarity/quality metrics which could be used alongside training
@@ -53,9 +49,8 @@
 
 *** Miscellaneous
 ***** models appear more stable when discriminator is significantly less powerful than generator
-***** models are better when same noisy labels are used for both generator and discriminator
+***** models are more stable when same noisy labels are used for discriminator
 ***** track how many epochs or batch runs needed to converge and try to optimize this (~500/2000 for mnist/lfw respectively)
-***** add conditions to "train.py" to add separate pipeline in RCGAN training
 ***** add MIMIC-III 2d projection depiction and learning as gif on initial readme
 ***** remove caveats in readme once relevant developments are complete
 
