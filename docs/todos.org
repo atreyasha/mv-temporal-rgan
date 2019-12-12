@@ -3,9 +3,9 @@
 *** Model extension to MIMIC-III with conditional framework
 ***** TODO work on extension to MIMIC-III data with evaluation protocols
 ***** TODO start working on mortality data generation with descriptive statistics first
+***** TODO visualize data from MIMIC-III github repository in 2-dimensions to see smoothness or roughness
 ***** TODO consider using encoder-decoder or transformers in GAN for variable sequence length generation
 ***** TODO consider changing RGAN name to CRGAN (convolutional-recurrent-GAN), with conditional one as CRAGAN (auxiliary as addition)
-***** visualize data from MIMIC-III github repository in 2-dimensions to see smoothness or roughness
 ***** use ETH model on MIMIC-III and compare evaluations with own model
 ***** apply RCGAN technique towards this process and verify results with existing models through TSTR/TRTS and MMD checks
 ***** add custom image shapes and prepare code to shift away from square images

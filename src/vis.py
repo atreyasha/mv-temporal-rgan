@@ -5,7 +5,6 @@
 import sys
 import re
 import os
-import PIL
 import glob
 import imageio
 import argparse
@@ -51,7 +50,7 @@ def make_gif(direct,shrink_factor=4,skip_rate=2,
     new_size = tuple([int(el/shrink_factor) for el in size])
     if isinstance(until,int):
         sorted_list = sorted_list[:until]
-    sorted_list = [Image.open(img).resize(new_size,PIL.Image.ANTIALIAS)
+    sorted_list = [Image.open(img).resize(new_size,Image.ANTIALIAS)
                    for i,img in tqdm(enumerate(sorted_list),total=len(sorted_list))
                    if ((i+1) % skip_rate == 0 or i == 0)]
     kargs = {'duration': interval}

@@ -9,15 +9,15 @@ Workflow changes
 2.  **TODO** start working on mortality data generation with
     descriptive statistics first
 
-3.  **TODO** consider using encoder-decoder or transformers
+3.  **TODO** visualize data from MIMIC-III github repository
+    in 2-dimensions to see smoothness or roughness
+
+4.  **TODO** consider using encoder-decoder or transformers
     in GAN for variable sequence length generation
 
-4.  **TODO** consider changing RGAN name to CRGAN
+5.  **TODO** consider changing RGAN name to CRGAN
     (convolutional-recurrent-GAN), with conditional one as CRAGAN
     (auxiliary as addition)
-
-5.  visualize data from MIMIC-III github repository in 2-dimensions to
-    see smoothness or roughness
 
 6.  use ETH model on MIMIC-III and compare evaluations with own model
 
