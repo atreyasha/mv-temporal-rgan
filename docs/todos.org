@@ -14,6 +14,7 @@
 ***** before publication, publish some of the preliminary models used
 
 *** Model visualization and presentation
+***** TODO enforce tensorflow-gpu=1.14.0 in requirements.txt, or have it based on morty
 ***** fix column enforcements and add documentation for log files
 ***** add extra option to ignore pics/gifs when cloning unless prompted
 ***** add function to generate best samples from trained model aside from already generated images

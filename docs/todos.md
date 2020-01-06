@@ -37,14 +37,17 @@ Workflow changes
 
 ### Model visualization and presentation
 
-1.  fix column enforcements and add documentation for log files
+1.  **TODO** enforce tensorflow-gpu=1.14.0 in
+    requirements.txt, or have it based on morty
 
-2.  add extra option to ignore pics/gifs when cloning unless prompted
+2.  fix column enforcements and add documentation for log files
 
-3.  add function to generate best samples from trained model aside from
+3.  add extra option to ignore pics/gifs when cloning unless prompted
+
+4.  add function to generate best samples from trained model aside from
     already generated images
 
-4.  change matplotlib backend default back to instant working version
+5.  change matplotlib backend default back to instant working version
     when necessary
 
 ### Model stabilization and abstraction

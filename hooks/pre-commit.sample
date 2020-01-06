@@ -16,6 +16,7 @@ pandoc -f org -t markdown -o ./docs/todos.md ./docs/todos.org
 
 # replace TODOs cleanly
 sed -i 's/\[.*\]{.*}/**TODO**/g' ./docs/todos.md
+sed -i "s/tensorflow.*/tensorflow_gpu==1.14.0/g" ./src/requirements.txt
 
 # add requirements.txt to stage for commit
 git add ./src/requirements.txt
