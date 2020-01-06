@@ -1,10 +1,8 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 
-# ignore tensorflow/numpy warnings
 import warnings
 warnings.filterwarnings('ignore')
-# import dependencies
 import os
 import pickle
 import sys
@@ -16,12 +14,9 @@ import numpy as np
 from obj.RGAN import RGAN
 from obj.RCGAN import RCGAN
 from obj.model_utils import restore_model
+from obj.arg_formatter import arg_metav_formatter
 from keras.utils import plot_model
 from keras.datasets import mnist, fashion_mnist
-
-################################
-# define key functions
-################################
 
 def getCurrentTime():
     return datetime.datetime.now().strftime("%Y_%m_%d_%H_%M_%S")
@@ -54,7 +49,8 @@ def singularTrain(model_name,data,latent_dim,epochs,batch_size,learning_rate,
     elif model_name == "RCGAN":
         im_dim = train_images[0].shape[1]
         num_classes = np.unique(train_images[1]).shape[0]
-        model = RCGAN(num_classes,latent_dim,im_dim,epochs,batch_size,learning_rate,
+        model = RCGAN(num_classes,latent_dim,im_dim,epochs,
+                      batch_size,learning_rate,
                      g_factor,droprate,momentum,alpha,saving_rate)
     model.train(train_images,log_dir)
 
@@ -92,7 +88,8 @@ def continueTrain(direct,arguments):
         model = RGAN(latent_dim,im_dim,epochs,batch_size,learning_rate,
                      g_factor,droprate,momentum,alpha,saving_rate)
     elif model_name == "RCGAN":
-        model = RCGAN(num_classes,latent_dim,im_dim,epochs,batch_size,learning_rate,
+        model = RCGAN(num_classes,latent_dim,im_dim,epochs,
+                      batch_size,learning_rate,
                      g_factor,droprate,momentum,alpha,saving_rate)
     # restore original model
     model = restore_model(model,train_set,model_name,
@@ -108,43 +105,51 @@ def plot_M(model):
     plot_model(model.generator,to_file="./img/gen.png",show_shapes=True)
     plot_model(model.discriminator,to_file="./img/dis.png",show_shapes=True)
 
-###############################
-# main command call
-###############################
-
 if __name__ == "__main__":
-    parser = argparse.ArgumentParser(formatter_class=argparse.ArgumentDefaultsHelpFormatter)
+    parser = argparse.ArgumentParser(formatter_class=
+                                     arg_metav_formatter)
     parser.add_argument("--model", type=str, default="RGAN",
                         help="which model to use; either RGAN or RCGAN")
     parser.add_argument("--data", type=str, default="mnist",
-                        help="which training data to use; either mnist, fashion or faces")
+                        help="which training data to use;"+
+                        " either mnist, fashion or faces")
     parser.add_argument("--latent-dim", type=int, default=100,
                         help="latent dimensionality of GAN generator")
     parser.add_argument("--epochs", type=int, default=100,
                         help="number of training epochs")
     parser.add_argument("--batch-size", type=int, default=256,
-                        help="batch size for stochastic gradient descent optimization")
+                        help="batch size for stochastic"+
+                        " gradient descent optimization")
     parser.add_argument("--learning-rate", type=float, default=0.0004,
-                        help="learning rate for stochastic gradient descent optimization")
+                        help="learning rate for stochastic"+
+                        " gradient descent optimization")
     parser.add_argument("--g-factor", type=float, default=0.25,
-                        help="factor by which generator optimizer scales discriminator optimizer")
+                        help="factor by which generator optimizer"+
+                        " scales discriminator optimizer")
     parser.add_argument("--droprate", type=float, default=0.25,
-                        help="droprate used in GAN discriminator for generalization/robustness")
+                        help="droprate used in GAN discriminator"+
+                        " for generalization/robustness")
     parser.add_argument("--momentum", type=float, default=0.8,
                         help="momentum used across GAN batch-normalization")
     parser.add_argument("--alpha", type=float, default=0.2,
                         help="alpha parameter used in discriminator leaky relu")
     parser.add_argument("--saving-rate", type=int, default=10,
-                        help="epoch period on which the model weights should be saved")
+                        help="epoch period on which the model"+
+                        " weights should be saved")
     parser.add_argument("--continue-train", default=False, action="store_true",
-                        help="option to continue training model within log directory; requires --log-dir option to be defined")
+                        help="option to continue training model within log"+
+                        " directory; requires --log-dir option to be defined")
     if "--continue-train" in sys.argv:
         required = parser.add_argument_group("required name arguments")
-        required.add_argument("--log-dir", required=True,
-                        help="log directory within ./pickles/ whose model should be further trained, only required when --continue-train option is specified")
+        required.add_argument("--log-dir", required=True, type=str,
+                        help="log directory within ./pickles/ whose model"+
+                              " should be further trained, only required when"+
+                              " --continue-train option is specified")
     else:
-        parser.add_argument("--log-dir", required=False,
-                        help="log directory within ./pickles/ whose model should be further trained, only required when --continue-train option is specified")
+        parser.add_argument("--log-dir", required=False, type=str,
+                        help="log directory within ./pickles/ whose model"+
+                            " should be further trained, only required when"+
+                            " --continue-train option is specified")
     parser.add_argument("--plot-model", default=False, action="store_true",
                         help="option to plot keras model")
     args = parser.parse_args()
@@ -158,10 +163,12 @@ if __name__ == "__main__":
     elif args.continue_train:
         # parse specified arguments as kwargs to continueTrain
         arguments = [el for el in sys.argv[1:] if el != "--continue-train"]
-        todel = [i for i in range(len(arguments)) if arguments[i] == "--log-dir"]
+        todel = [i for i in range(len(arguments))
+                 if arguments[i] == "--log-dir"]
         for i in sorted(todel, reverse=True):
             del arguments[i:i+2]
-        arguments = [re.sub("-","_",re.sub("--","",arguments[i])) if i%2 == 0 else
+        arguments = [re.sub("-","_",re.sub("--","",arguments[i]))
+                     if i%2 == 0 else
                      arguments[i] for i in range(len(arguments))]
         arguments = dict(zip(arguments[::2], arguments[1::2]))
         for key in arguments.keys():
@@ -174,6 +181,6 @@ if __name__ == "__main__":
                 arguments[key] = float(arguments[key])
         continueTrain(args.log_dir,arguments)
     else:
-        singularTrain(args.model,args.data,args.latent_dim,args.epochs,args.batch_size,
-                      args.learning_rate,args.g_factor,args.droprate,args.momentum,
-                      args.alpha,args.saving_rate)
+        singularTrain(args.model,args.data,args.latent_dim,args.epochs,
+                      args.batch_size,args.learning_rate,args.g_factor,
+                      args.droprate,args.momentum,args.alpha,args.saving_rate)

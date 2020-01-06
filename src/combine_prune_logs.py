@@ -1,7 +1,6 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 
-# get all dependencies
 import re
 import sys
 import os
@@ -10,10 +9,7 @@ import shutil
 import argparse
 import numpy as np
 import pandas as pd
-
-################################
-# define key functions
-################################
+from obj.arg_formatter import arg_metav_formatter
 
 def iter_temporal_find(direct):
     directLong = "./pickles/"+direct
@@ -65,7 +61,10 @@ def prune_dirs(chron):
             last_saved_epochs = run_epochs - offset
             local_log_df = local_log_df[local_log_df.epoch <= last_saved_epochs]
             local_log_df.to_csv(dr+"/log.csv",index=False)
-            [os.rename(img,re.sub(".png",".bak",img)) for img in glob.glob(dr+"/img/*") if int(re.sub(r".*epoch([0-9]+)\.png","\g<1>",img)) > last_saved_epochs]
+            [os.rename(img,re.sub(".png",".bak",img))
+             for img in glob.glob(dr+"/img/*")
+             if int(re.sub(r".*epoch([0-9]+)\.png",
+                           "\g<1>",img)) > last_saved_epochs]
 
 def copy_increment_images(chron,new_direct_long):
     # recursively combine images
@@ -78,7 +77,9 @@ def copy_increment_images(chron,new_direct_long):
         else:
             max_count = max([int(re.sub(r".*epoch([0-9]+)\.png","\g<1>",img))
                              for img in src])
-            [shutil.copyfile(img,new_direct_long+"/img/epoch"+str(int(re.sub(r".*epoch([0-9]+)\.png","\g<1>",img))+max_count)+".png") for img in imgs]
+            [shutil.copyfile(img,new_direct_long+"/img/epoch"+str(int(
+                re.sub(r".*epoch([0-9]+)\.png","\g<1>",img))+max_count)+".png")
+             for img in imgs]
 
 def copy_log_init(chron,new_direct_long):
     for dr in chron:
@@ -113,7 +114,8 @@ def copy_log_init(chron,new_direct_long):
             local_init_file = [fl for fl in local if "init.csv" in fl][0]
             local_init_df = pd.read_csv(local_init_file)
             local_init_df["until"] = max_epoch
-            pd.concat([src_init_df,local_init_df]).to_csv(src_init_file,index=False)
+            pd.concat([src_init_df,local_init_df]).to_csv(src_init_file,
+                                                          index=False)
 
 def make_fake_df(epochs):
     fieldnames = {"epoch":np.arange(1,epochs+1),
@@ -133,7 +135,8 @@ def combine_prune_logs(direct):
     chron = iter_temporal_find(direct)
     if len(chron) > 1:
         # create new directory to replace old ones
-        new_direct = re.sub("(.*)(_R(C)?GAN)(_)(.*)(_.*)$","\g<5>\g<2>\g<6>",chron[-1:][0])
+        new_direct = re.sub("(.*)(_R(C)?GAN)(_)(.*)(_.*)$","\g<5>\g<2>\g<6>",
+                            chron[-1:][0])
         new_direct_long = "./pickles/"+new_direct
         os.makedirs(new_direct_long,exist_ok=True)
         os.makedirs(new_direct_long+"/img",exist_ok=True)
@@ -166,14 +169,11 @@ def combine_prune_logs(direct):
             src_init_df["until"] = max_epoch
             src_init_df.to_csv(src_init_file,index=False)
 
-###############################
-# main command call
-###############################
-
 if __name__ == "__main__":
-    parser = argparse.ArgumentParser()
+    parser = argparse.ArgumentParser(formatter_class=arg_metav_formatter)
     required = parser.add_argument_group("required name arguments")
     required.add_argument("--log-dir", type=str, required=True,
-                        help="base directory within pickles from which to combine/prune recursively forward in time")
+                        help="base directory within pickles from which"+
+                          " to combine/prune recursively forward in time")
     args = parser.parse_args()
     combine_prune_logs(args.log_dir)

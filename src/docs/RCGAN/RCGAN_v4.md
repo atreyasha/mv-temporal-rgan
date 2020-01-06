@@ -54,6 +54,6 @@
 
 ### Improvements
 
-1. Accpetable tradeoff between generator quality and classification accuracy.
+1. Acceptable tradeoff between generator quality and classification accuracy.
 
 2. Next step would be to extend this network to a MIMIC-III task.

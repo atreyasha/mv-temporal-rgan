@@ -1,9 +1,7 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 
-# import all dependencies
 import re
-import pickle
 import csv
 import numpy as np
 import matplotlib
@@ -15,18 +13,15 @@ from keras.models import Model
 from keras.optimizers import Adam
 from keras.constraints import max_norm
 from keras.layers import Dense, Activation, Reshape
-from keras.layers import LSTM, CuDNNLSTM, Input, Bidirectional, Conv2D
+from keras.layers import LSTM, CuDNNLSTM, Input, Bidirectional
 from keras.layers import BatchNormalization, LeakyReLU, Dropout, UpSampling2D
 from .spec_norm.SpectralNormalizationKeras import ConvSN2D, DenseSN
 from keras.backend.tensorflow_backend import clear_session
 
-################################
-# define class and functions
-################################
-
 class RGAN():
-    def __init__(self,latent_dim=100,im_dim=28,epochs=100,batch_size=256,learning_rate=0.0004,
-                 g_factor=0.25,droprate=0.25,momentum=0.8,alpha=0.2,saving_rate=10):
+    def __init__(self,latent_dim=100,im_dim=28,epochs=100,batch_size=256,
+                 learning_rate=0.0004,g_factor=0.25,droprate=0.25,
+                 momentum=0.8,alpha=0.2,saving_rate=10):
         # define and store local variables
         clear_session()
         self.latent_dim = latent_dim
@@ -42,18 +37,21 @@ class RGAN():
         self.alpha = alpha
         self.saving_rate = saving_rate
         # define and compile discriminator
-        self.discriminator = self.getDiscriminator(self.im_dim,self.droprate,self.momentum,
-                                                   self.alpha)
-        self.discriminator.compile(loss=['binary_crossentropy'], optimizer=self.optimizer_d)
+        self.discriminator = self.getDiscriminator(self.im_dim,self.droprate,
+                                                   self.momentum,self.alpha)
+        self.discriminator.compile(loss=['binary_crossentropy'],
+                                   optimizer=self.optimizer_d)
         # define generator
-        self.generator = self.getGenerator(self.latent_dim,self.momentum,self.alpha)
+        self.generator = self.getGenerator(self.latent_dim,self.momentum,
+                                           self.alpha)
         self.discriminator.trainable = False
         # define combined network with partial gradient application
         z = Input(shape=(self.latent_dim,))
         img = self.generator(z)
         validity = self.discriminator(img)
         self.combined = Model(z, validity)
-        self.combined.compile(loss=['binary_crossentropy'], optimizer=self.optimizer_g)
+        self.combined.compile(loss=['binary_crossentropy'],
+                              optimizer=self.optimizer_g)
 
     def getGenerator(self,latent_dim,momentum,alpha):
         in_data = Input(shape=(latent_dim,))
@@ -80,11 +78,13 @@ class RGAN():
         if len(backend.tensorflow_backend._get_available_gpus()) > 0:
             out = CuDNNLSTM(32,return_sequences=True,
                        kernel_constraint=max_norm(3),
-                       recurrent_constraint=max_norm(3),bias_constraint=max_norm(3))(out)
+                       recurrent_constraint=max_norm(3),
+                            bias_constraint=max_norm(3))(out)
         else:
             out = LSTM(32,return_sequences=True,
                        kernel_constraint=max_norm(3),
-                       recurrent_constraint=max_norm(3),bias_constraint=max_norm(3))(out)
+                       recurrent_constraint=max_norm(3),
+                       bias_constraint=max_norm(3))(out)
         out = Reshape((28,28,32))(out)
         # block 6: continuous convolutions for smoother features
         out = ConvSN2D(32, kernel_size=3, padding="same")(out)
@@ -109,11 +109,13 @@ class RGAN():
         if len(backend.tensorflow_backend._get_available_gpus()) > 0:
             out = CuDNNLSTM(1,return_sequences=True,
                        kernel_constraint=max_norm(3),
-                       recurrent_constraint=max_norm(3),bias_constraint=max_norm(3))(out)
+                       recurrent_constraint=max_norm(3),
+                            bias_constraint=max_norm(3))(out)
         else:
             out = LSTM(1,return_sequences=True,
                        kernel_constraint=max_norm(3),
-                       recurrent_constraint=max_norm(3),bias_constraint=max_norm(3))(out)
+                       recurrent_constraint=max_norm(3),
+                       bias_constraint=max_norm(3))(out)
         out = Reshape((im_dim,im_dim,1))(out)
         # block 2: convolution with dropout
         out = ConvSN2D(256, kernel_size=3, strides=2)(out)
@@ -135,11 +137,13 @@ class RGAN():
         if len(backend.tensorflow_backend._get_available_gpus()) > 0:
             out = Bidirectional(CuDNNLSTM(8,
                        kernel_constraint=max_norm(3),
-                       recurrent_constraint=max_norm(3),bias_constraint=max_norm(3)))(out)
+                       recurrent_constraint=max_norm(3),
+                                          bias_constraint=max_norm(3)))(out)
         else:
             out = Bidirectional(LSTM(8,
                        kernel_constraint=max_norm(3),
-                       recurrent_constraint=max_norm(3),bias_constraint=max_norm(3)))(out)
+                       recurrent_constraint=max_norm(3),
+                                     bias_constraint=max_norm(3)))(out)
         # block 6: map final features to dense output
         out = Dense(1)(out)
         out = Activation("sigmoid")(out)
@@ -160,7 +164,8 @@ class RGAN():
             axeslist.ravel()[ind].set_title(title)
             axeslist.ravel()[ind].set_axis_off()
         plt.tight_layout()
-        fig.savefig("./pickles/"+direct+"/img/epoch"+str(epoch+1)+".png", format='png', dpi=500)
+        fig.savefig("./pickles/"+direct+"/img/epoch"+str(epoch+1)+".png",
+                    format='png', dpi=500)
         fig.clear()
         plt.close("all")
 
@@ -169,7 +174,8 @@ class RGAN():
         data_type = re.sub(r".*_","",direct)
         dict_field = {"data":data_type}
         dict_field.update({el[0]:el[1] for el in self.__dict__.items()
-                           if type(el[1]) in [int,str,float,np.int64,np.float64]})
+                           if type(el[1]) in
+                           [int,str,float,np.int64,np.float64]})
         fieldnames = list(dict_field.keys())
         # write init.csv to file for future class reconstruction
         with open("./pickles/"+direct+"/init.csv", "w") as csvfile:
@@ -190,20 +196,25 @@ class RGAN():
         for epoch in range(self.epochs):
             # make noisy labels per epoch
             real_labels = np.clip(np.random.normal(loc=0.90,
-                                                   scale=0.005,size=(self.batch_size,1)),None,1)
+                                                   scale=0.005,size=
+                                                   (self.batch_size,1)),None,1)
             for batch in range(runs):
                 # randomize data and generate noise
                 idx = np.random.randint(0,data.shape[0],self.batch_size)
                 real = data[idx]
-                noise = np.random.normal(size=(self.batch_size,self.latent_dim,))
+                noise = np.random.normal(size=
+                                         (self.batch_size,self.latent_dim,))
                 # generate fake data
                 fake = self.generator.predict(noise)
                 # train the discriminator
-                d_loss_real = self.discriminator.train_on_batch(real, real_labels)
-                d_loss_fake = self.discriminator.train_on_batch(fake, fake_labels)
+                d_loss_real = self.discriminator.train_on_batch(real,
+                                                                real_labels)
+                d_loss_fake = self.discriminator.train_on_batch(fake,
+                                                                fake_labels)
                 d_loss = 0.5 * np.add(d_loss_real, d_loss_fake)
                 # generate new set of noise
-                noise = np.random.normal(size=(self.batch_size,self.latent_dim,))
+                noise = np.random.normal(size=(self.batch_size,
+                                               self.latent_dim,))
                 # train generator while freezing discriminator
                 g_loss = self.combined.train_on_batch(noise, real_labels)
                 # plot the progress
@@ -212,8 +223,10 @@ class RGAN():
                           (epoch+1,batch+1,d_loss,g_loss))
                     with open("./pickles/"+direct+"/log.csv", "a") as csvfile:
                         writer = csv.DictWriter(csvfile, fieldnames=fieldnames)
-                        writer.writerow({"epoch":str(epoch+1), "batch":str(batch+1),
-                                         "d_loss":str(d_loss), "g_loss":str(g_loss)})
+                        writer.writerow({"epoch":str(epoch+1),
+                                         "batch":str(batch+1),
+                                         "d_loss":str(d_loss),
+                                         "g_loss":str(g_loss)})
             # at every epoch, generate images for reference
             test_img = self.generator.predict(constant_noise)
             test_img = (0.5*test_img)+0.5

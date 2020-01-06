@@ -27,8 +27,8 @@ From this, we can make a simplified assumption that a recurrent GAN model that c
 
 1. Install python dependencies located in `requirements.txt`:
 
-```
-$ pip install --user -r requirements.txt
+```shell
+$ pip install -r requirements.txt
 ```
 
 2. Install R-based dependencies used in `gg.R`:
@@ -64,14 +64,13 @@ The downsampling of LFWcrop faces occurs through `pre_process_faces.py`:
 ```
 $ python3 pre_process_faces.py --help
 
-usage: pre_process_faces.py [-h] [--size-factor SIZE_FACTOR] [--out OUT]
+usage: pre_process_faces.py [-h] [--size-factor float] [--out str]
 
 optional arguments:
-  -h, --help            show this help message and exit
-  --size-factor SIZE_FACTOR
-                        factor by which to upsample or downsample images
-                        (default: 0.4375)
-  --out OUT             output file name (default: lfw.npy)
+  -h, --help           show this help message and exit
+  --size-factor float  factor by which to upsample or downsample images (default:
+                       0.4375)
+  --out str            output file name (default: lfw.npy)
 ```
 
 The motivation for having LFWcrop greyscale faces is that it has much fewer data instances compared to its MNIST counterparts (~13,000 vs. 60,000; similar to MIMIC-III), and faces tend to be much more complex in terms of sequential pixel patterns. As a result, we believe that effectively generating LFWcrop faces through a recurrent GAN architecture could provide a stronger backing for the ability to abstract to other complex time series such as those in the biomedical field.
@@ -83,40 +82,36 @@ In order to train a RGAN/RCGAN model, you can run `train.py`. Following is the u
 ```
 $ python3 train.py --help
 
-usage: train.py [-h] [--model MODEL] [--data DATA] [--latent-dim LATENT_DIM]
-                [--epochs EPOCHS] [--batch-size BATCH_SIZE]
-                [--learning-rate LEARNING_RATE] [--g-factor G_FACTOR]
-                [--droprate DROPRATE] [--momentum MOMENTUM] [--alpha ALPHA]
-                [--saving-rate SAVING_RATE] [--continue-train] [--log-dir LOG_DIR]
+usage: train.py [-h] [--model str] [--data str] [--latent-dim int] [--epochs int]
+                [--batch-size int] [--learning-rate float] [--g-factor float]
+                [--droprate float] [--momentum float] [--alpha float]
+                [--saving-rate int] [--continue-train] [--log-dir str]
                 [--plot-model]
 
 optional arguments:
   -h, --help            show this help message and exit
-  --model MODEL         which model to use; either RGAN or RCGAN (default: RGAN)
-  --data DATA           which training data to use; either mnist, fashion or faces
+  --model str           which model to use; either RGAN or RCGAN (default: RGAN)
+  --data str            which training data to use; either mnist, fashion or faces
                         (default: mnist)
-  --latent-dim LATENT_DIM
-                        latent dimensionality of GAN generator (default: 100)
-  --epochs EPOCHS       number of training epochs (default: 100)
-  --batch-size BATCH_SIZE
-                        batch size for stochastic gradient descent optimization
+  --latent-dim int      latent dimensionality of GAN generator (default: 100)
+  --epochs int          number of training epochs (default: 100)
+  --batch-size int      batch size for stochastic gradient descent optimization
                         (default: 256)
-  --learning-rate LEARNING_RATE
+  --learning-rate float
                         learning rate for stochastic gradient descent optimization
                         (default: 0.0004)
-  --g-factor G_FACTOR   factor by which generator optimizer scales discriminator
+  --g-factor float      factor by which generator optimizer scales discriminator
                         optimizer (default: 0.25)
-  --droprate DROPRATE   droprate used in GAN discriminator for
+  --droprate float      droprate used in GAN discriminator for
                         generalization/robustness (default: 0.25)
-  --momentum MOMENTUM   momentum used across GAN batch-normalization (default: 0.8)
-  --alpha ALPHA         alpha parameter used in discriminator leaky relu (default:
+  --momentum float      momentum used across GAN batch-normalization (default: 0.8)
+  --alpha float         alpha parameter used in discriminator leaky relu (default:
                         0.2)
-  --saving-rate SAVING_RATE
-                        epoch period on which the model weights should be saved
+  --saving-rate int     epoch period on which the model weights should be saved
                         (default: 10)
   --continue-train      option to continue training model within log directory;
                         requires --log-dir option to be defined (default: False)
-  --log-dir LOG_DIR     log directory within ./pickles/ whose model should be
+  --log-dir str         log directory within ./pickles/ whose model should be
                         further trained, only required when --continue-train option
                         is specified (default: None)
   --plot-model          option to plot keras model (default: False)
@@ -154,43 +149,38 @@ Given the dynamic nature of model training, sometimes training procedures need t
 ```
 $ python3 train.py --continue-train --help
 
-usage: train.py [-h] [--model MODEL] [--data DATA] [--latent-dim LATENT_DIM]
-                [--epochs EPOCHS] [--batch-size BATCH_SIZE]
-                [--learning-rate LEARNING_RATE] [--g-factor G_FACTOR]
-                [--droprate DROPRATE] [--momentum MOMENTUM] [--alpha ALPHA]
-                [--saving-rate SAVING_RATE] [--continue-train] --log-dir LOG_DIR
-                [--plot-model]
+usage: train.py [-h] [--model str] [--data str] [--latent-dim int] [--epochs int]
+                [--batch-size int] [--learning-rate float] [--g-factor float]
+                [--droprate float] [--momentum float] [--alpha float]
+                [--saving-rate int] [--continue-train] --log-dir str [--plot-model]
 
 optional arguments:
   -h, --help            show this help message and exit
-  --model MODEL         which model to use; either RGAN or RCGAN (default: RGAN)
-  --data DATA           which training data to use; either mnist, fashion or faces
+  --model str           which model to use; either RGAN or RCGAN (default: RGAN)
+  --data str            which training data to use; either mnist, fashion or faces
                         (default: mnist)
-  --latent-dim LATENT_DIM
-                        latent dimensionality of GAN generator (default: 100)
-  --epochs EPOCHS       number of training epochs (default: 100)
-  --batch-size BATCH_SIZE
-                        batch size for stochastic gradient descent optimization
+  --latent-dim int      latent dimensionality of GAN generator (default: 100)
+  --epochs int          number of training epochs (default: 100)
+  --batch-size int      batch size for stochastic gradient descent optimization
                         (default: 256)
-  --learning-rate LEARNING_RATE
+  --learning-rate float
                         learning rate for stochastic gradient descent optimization
                         (default: 0.0004)
-  --g-factor G_FACTOR   factor by which generator optimizer scales discriminator
+  --g-factor float      factor by which generator optimizer scales discriminator
                         optimizer (default: 0.25)
-  --droprate DROPRATE   droprate used in GAN discriminator for
+  --droprate float      droprate used in GAN discriminator for
                         generalization/robustness (default: 0.25)
-  --momentum MOMENTUM   momentum used across GAN batch-normalization (default: 0.8)
-  --alpha ALPHA         alpha parameter used in discriminator leaky relu (default:
+  --momentum float      momentum used across GAN batch-normalization (default: 0.8)
+  --alpha float         alpha parameter used in discriminator leaky relu (default:
                         0.2)
-  --saving-rate SAVING_RATE
-                        epoch period on which the model weights should be saved
+  --saving-rate int     epoch period on which the model weights should be saved
                         (default: 10)
   --continue-train      option to continue training model within log directory;
                         requires --log-dir option to be defined (default: False)
   --plot-model          option to plot keras model (default: False)
 
 required name arguments:
-  --log-dir LOG_DIR     log directory within ./pickles/ whose model should be
+  --log-dir str         log directory within ./pickles/ whose model should be
                         further trained, only required when --continue-train option
                         is specified (default: None)
 ```
@@ -241,14 +231,16 @@ $ tree ./pickles -L 1
 At the end of your training sessions, you can combine these directories into a single directory by using `combine_prune_logs.py`:
 
 ```
-usage: combine_prune_logs.py [-h] --log-dir LOG_DIR
+$ python3 combine_prune_logs.py --help
+
+usage: combine_prune_logs.py [-h] --log-dir str
 
 optional arguments:
-  -h, --help         show this help message and exit
+  -h, --help     show this help message and exit
 
 required name arguments:
-  --log-dir LOG_DIR  base directory within pickles from which to combine/prune
-                     recursively forward in time
+  --log-dir str  base directory within pickles from which to combine/prune
+                 recursively forward in time (default: None)
 ```
 
 In the above defined example, you could combine both logs by running the following on the `base` or oldest directory:
@@ -276,36 +268,31 @@ $ tree ./pickles -L 1
 Once we have our pruned and combined log directories, we can proceed with plotting some of the training metrics with `vis.py`.
 
 ```
-usage: vis.py [-h] --log-dir LOG_DIR [--number-ticks NUMBER_TICKS]
-              [--create-gif] [--shrink-factor SHRINK_FACTOR]
-              [--skip-rate SKIP_RATE] [--interval INTERVAL] [--until UNTIL]
-              [--progress-bar]
+$ python3 vis.py --help
+
+usage: vis.py [-h] --log-dir str [--number-ticks int] [--create-gif]
+              [--shrink-factor int] [--skip-rate int] [--interval float]
+              [--until int] [--progress-bar]
 
 optional arguments:
-  -h, --help            show this help message and exit
-  --number-ticks NUMBER_TICKS
-                        number of x-axis ticks to use in main plots (default:
-                        10)
-  --create-gif          option to activate gif creation (default: False)
-  --shrink-factor SHRINK_FACTOR
-                        shrinking factor for images, applies only when
-                        --create-gif is supplied (default: 4)
-  --skip-rate SKIP_RATE
-                        skip interval when using images to construct gif,
-                        applies only when --create-gif is supplied (default:
-                        2)
-  --interval INTERVAL   time interval when constructing gifs from images,
-                        applies only when --create-gif is supplied (default:
-                        0.1)
-  --until UNTIL         set upper epoch limit for gif creation, applies only
-                        when --create-gif is supplied (default: None)
-  --progress-bar        option to add progress bar to gifs, applies only when
-                        --create-gif is supplied; check readme for additional
-                        go package installation instructions (default: False)
+  -h, --help           show this help message and exit
+  --number-ticks int   number of x-axis ticks to use in main plots (default: 10)
+  --create-gif         option to activate gif creation (default: False)
+  --shrink-factor int  shrinking factor for images, applies only when --create-gif
+                       is supplied (default: 4)
+  --skip-rate int      skip interval when using images to construct gif applies only
+                       when --create-gif is supplied (default: 2)
+  --interval float     time interval when constructing gifs from images, applies
+                       only when --create-gif is supplied (default: 0.1)
+  --until int          set upper epoch limit for gif creation, applies only when
+                       --create-gif is supplied (default: None)
+  --progress-bar       option to add progress bar to gifs, appliesonly when
+                       --create-gif is supplied; check readme for additional go
+                       package installation instructions (default: False)
 
 required name arguments:
-  --log-dir LOG_DIR     base directory within pickles from which to visualize
-                        (default: None)
+  --log-dir str        base directory within pickles from which to visualize
+                       (default: None)
 ```
 
 This script requires a log directory or `--log-dir` as an input. It creates a subfolder `vis` in the log directory and places visualizations there. Specifically, this will create resulting loss evolution graphs and optionally a gif with a (optional) progress bar showing how constant noise vector image generations evolved with training epochs.

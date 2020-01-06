@@ -9,15 +9,15 @@ Workflow changes
 2.  **TODO** start working on mortality data generation with
     descriptive statistics first
 
-3.  **TODO** consider using encoder-decoder or transformers
+3.  **TODO** visualize data from MIMIC-III github repository
+    in 2-dimensions to see smoothness or roughness
+
+4.  **TODO** consider using encoder-decoder or transformers
     in GAN for variable sequence length generation
 
-4.  **TODO** consider changing RGAN name to CRGAN
+5.  **TODO** consider changing RGAN name to CRGAN
     (convolutional-recurrent-GAN), with conditional one as CRAGAN
     (auxiliary as addition)
-
-5.  visualize data from MIMIC-III github repository in 2-dimensions to
-    see smoothness or roughness
 
 6.  use ETH model on MIMIC-III and compare evaluations with own model
 
@@ -34,6 +34,20 @@ Workflow changes
     that can work better
 
 11. before publication, publish some of the preliminary models used
+
+### Model visualization and presentation
+
+1.  **TODO** add documentation for regular files
+
+2.  fix column enforcements and add documentation for log files
+
+3.  add extra option to ignore pics/gifs when cloning unless prompted
+
+4.  add function to generate best samples from trained model aside from
+    already generated images
+
+5.  change matplotlib backend default back to instant working version
+    when necessary
 
 ### Model stabilization and abstraction
 
@@ -64,16 +78,6 @@ Workflow changes
 
 8.  read papers for strategies/uses of synthetic data
 
-### Model visualization and presentation
-
-1.  add extra option to ignore pics/gifs when cloning unless prompted
-
-2.  add function to generate best samples from trained model aside from
-    already generated images
-
-3.  change matplotlib backend default back to instant working version
-    when necessary
-
 ### Heuristics
 
 1.  add convergent pathway polynomial fit to check whether training is
@@ -91,13 +95,20 @@ Workflow changes
 
 1.  use Wasserstein loss with standard or improved training
 
-2.  use feature matching and minibatch discrimination to prevent mode
+2.  try out vae architecture within generation process
+
+3.  think more about constraining gradients in various network parts to
+    achieve some interpretability
+
+4.  think more about complex networks integration
+
+5.  use feature matching and minibatch discrimination to prevent mode
     collapse
 
-3.  consider adding Gaussian noise to images for stability (mixed
+6.  consider adding Gaussian noise to images for stability (mixed
     outcomes predicted)
 
-4.  consider resnet architecture for certain skip-connections, could be
+7.  consider resnet architecture for certain skip-connections, could be
     linked to multi-scale gradient structure
 
 ### Miscellaneous
