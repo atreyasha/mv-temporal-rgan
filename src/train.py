@@ -14,6 +14,7 @@ import numpy as np
 from obj.RGAN import RGAN
 from obj.RCGAN import RCGAN
 from obj.model_utils import restore_model
+from obj.arg_formatter import arg_metav_formatter
 from keras.utils import plot_model
 from keras.datasets import mnist, fashion_mnist
 
@@ -106,7 +107,7 @@ def plot_M(model):
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(formatter_class=
-                                     argparse.ArgumentDefaultsHelpFormatter)
+                                     arg_metav_formatter)
     parser.add_argument("--model", type=str, default="RGAN",
                         help="which model to use; either RGAN or RCGAN")
     parser.add_argument("--data", type=str, default="mnist",
@@ -140,12 +141,12 @@ if __name__ == "__main__":
                         " directory; requires --log-dir option to be defined")
     if "--continue-train" in sys.argv:
         required = parser.add_argument_group("required name arguments")
-        required.add_argument("--log-dir", required=True,
+        required.add_argument("--log-dir", required=True, type=str,
                         help="log directory within ./pickles/ whose model"+
                               " should be further trained, only required when"+
                               " --continue-train option is specified")
     else:
-        parser.add_argument("--log-dir", required=False,
+        parser.add_argument("--log-dir", required=False, type=str,
                         help="log directory within ./pickles/ whose model"+
                             " should be further trained, only required when"+
                             " --continue-train option is specified")

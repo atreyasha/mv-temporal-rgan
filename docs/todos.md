@@ -1,17 +1,19 @@
 Workflow changes
 ----------------
 
-**TODO**
-===========================================
+### Model visualization and presentation
 
-**TODO**
-=================================================================================================
+1.  **TODO** add documentation for regular files
 
-**TODO**
-====================================================
+2.  fix column enforcements and add documentation for log files
 
-**TODO**
-=================================================
+3.  add extra option to ignore pics/gifs when cloning unless prompted
+
+4.  add function to generate best samples from trained model aside from
+    already generated images
+
+5.  change matplotlib backend default back to instant working version
+    when necessary
 
 ### Model extension to MIMIC-III with conditional framework
 
@@ -75,18 +77,6 @@ Workflow changes
     (user more variables in models instead of hard-coding)
 
 8.  read papers for strategies/uses of synthetic data
-
-### Model visualization and presentation
-
-1.  add new argparse formatter with metavar and defaults
-
-2.  add extra option to ignore pics/gifs when cloning unless prompted
-
-3.  add function to generate best samples from trained model aside from
-    already generated images
-
-4.  change matplotlib backend default back to instant working version
-    when necessary
 
 ### Heuristics
 

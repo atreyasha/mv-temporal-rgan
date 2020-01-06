@@ -6,6 +6,7 @@ import glob
 import argparse
 import numpy as np
 import matplotlib.image as mpimg
+from obj.arg_formatter import arg_metav_formatter
 from scipy.ndimage import zoom
 from tqdm import tqdm
 
@@ -18,7 +19,7 @@ def makeBin(out,size_factor):
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(formatter_class=
-                                     argparse.ArgumentDefaultsHelpFormatter)
+                                     arg_metav_formatter)
     parser.add_argument("--size-factor", type=float, default=0.4375,
                         help="factor by which to upsample or downsample images")
     parser.add_argument("--out", type=str, default="lfw.npy",

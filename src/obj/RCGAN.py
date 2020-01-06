@@ -3,20 +3,19 @@
 
 import re
 import csv
-import pickle
 import numpy as np
 import matplotlib
 matplotlib.use('Agg')
 import matplotlib.pyplot as plt
 from keras import backend
-from .spec_norm import *
 from .model_utils import save_model
 from keras.models import Model
 from keras.optimizers import Adam
 from keras.constraints import max_norm
 from keras.layers import Dense, Activation, Reshape, Flatten, Embedding
-from keras.layers import LSTM, CuDNNLSTM, Input, Bidirectional, Conv2D, Multiply
+from keras.layers import LSTM, CuDNNLSTM, Input, Bidirectional, Multiply
 from keras.layers import BatchNormalization, LeakyReLU, Dropout, UpSampling2D
+from .spec_norm.SpectralNormalizationKeras import ConvSN2D, DenseSN
 from keras.backend.tensorflow_backend import clear_session
 
 class RCGAN():

@@ -13,6 +13,7 @@ import numpy as np
 from tqdm import tqdm
 from PIL import Image
 from pygifsicle import optimize
+from obj.arg_formatter import arg_metav_formatter
 
 def sorted_alphanumeric(data):
     convert = lambda text: int(text) if text.isdigit() else text.lower()
@@ -60,8 +61,7 @@ def make_gif(direct,shrink_factor=4,skip_rate=2,
             sys.exit("error occurred with gif progress bar, do manual check")
 
 if __name__ == "__main__":
-    parser = argparse.ArgumentParser(formatter_class=
-                                     argparse.ArgumentDefaultsHelpFormatter)
+    parser = argparse.ArgumentParser(formatter_class=arg_metav_formatter)
     required = parser.add_argument_group("required name arguments")
     required.add_argument("--log-dir", type=str, required=True,
                         help="base directory within pickles from which to"

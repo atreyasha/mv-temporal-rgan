@@ -2,7 +2,6 @@
 # -*- coding: utf-8 -*-
 
 import re
-import pickle
 import csv
 import numpy as np
 import matplotlib
@@ -14,7 +13,7 @@ from keras.models import Model
 from keras.optimizers import Adam
 from keras.constraints import max_norm
 from keras.layers import Dense, Activation, Reshape
-from keras.layers import LSTM, CuDNNLSTM, Input, Bidirectional, Conv2D
+from keras.layers import LSTM, CuDNNLSTM, Input, Bidirectional
 from keras.layers import BatchNormalization, LeakyReLU, Dropout, UpSampling2D
 from .spec_norm.SpectralNormalizationKeras import ConvSN2D, DenseSN
 from keras.backend.tensorflow_backend import clear_session

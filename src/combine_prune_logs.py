@@ -9,6 +9,7 @@ import shutil
 import argparse
 import numpy as np
 import pandas as pd
+from obj.arg_formatter import arg_metav_formatter
 
 def iter_temporal_find(direct):
     directLong = "./pickles/"+direct
@@ -169,7 +170,7 @@ def combine_prune_logs(direct):
             src_init_df.to_csv(src_init_file,index=False)
 
 if __name__ == "__main__":
-    parser = argparse.ArgumentParser()
+    parser = argparse.ArgumentParser(formatter_class=arg_metav_formatter)
     required = parser.add_argument_group("required name arguments")
     required.add_argument("--log-dir", type=str, required=True,
                         help="base directory within pickles from which"+
