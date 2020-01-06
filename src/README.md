@@ -240,7 +240,7 @@ optional arguments:
 
 required name arguments:
   --log-dir str  base directory within pickles from which to combine/prune
-                 recursively forward in time (default: None
+                 recursively forward in time (default: None)
 ```
 
 In the above defined example, you could combine both logs by running the following on the `base` or oldest directory:

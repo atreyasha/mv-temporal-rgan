@@ -1,20 +1,6 @@
 Workflow changes
 ----------------
 
-### Model visualization and presentation
-
-1.  **TODO** add documentation for regular files
-
-2.  fix column enforcements and add documentation for log files
-
-3.  add extra option to ignore pics/gifs when cloning unless prompted
-
-4.  add function to generate best samples from trained model aside from
-    already generated images
-
-5.  change matplotlib backend default back to instant working version
-    when necessary
-
 ### Model extension to MIMIC-III with conditional framework
 
 1.  **TODO** work on extension to MIMIC-III data with
@@ -48,6 +34,20 @@ Workflow changes
     that can work better
 
 11. before publication, publish some of the preliminary models used
+
+### Model visualization and presentation
+
+1.  **TODO** add documentation for regular files
+
+2.  fix column enforcements and add documentation for log files
+
+3.  add extra option to ignore pics/gifs when cloning unless prompted
+
+4.  add function to generate best samples from trained model aside from
+    already generated images
+
+5.  change matplotlib backend default back to instant working version
+    when necessary
 
 ### Model stabilization and abstraction
 
