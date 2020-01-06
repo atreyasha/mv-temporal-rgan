@@ -1,5 +1,10 @@
 ** Workflow changes
 
+* TODO fix column enforcements
+* TODO fix argparse data structures in helper with <""> and change documentation
+* TODO add documentation to all scripts
+* TODO submit and merge pull request
+
 *** Model extension to MIMIC-III with conditional framework
 ***** TODO work on extension to MIMIC-III data with evaluation protocols
 ***** TODO start working on mortality data generation with descriptive statistics first
@@ -24,6 +29,7 @@
 ***** read papers for strategies/uses of synthetic data
 
 *** Model visualization and presentation
+***** add new argparse formatter with metavar and defaults
 ***** add extra option to ignore pics/gifs when cloning unless prompted
 ***** add function to generate best samples from trained model aside from already generated images
 ***** change matplotlib backend default back to instant working version when necessary
@@ -36,6 +42,9 @@
 
 *** Possible architecture improvements
 ***** use Wasserstein loss with standard or improved training
+***** try out vae architecture within generation process
+***** think more about constraining gradients in various network parts to achieve some interpretability
+***** think more about complex networks integration
 ***** use feature matching and minibatch discrimination to prevent mode collapse
 ***** consider adding Gaussian noise to images for stability (mixed outcomes predicted)
 ***** consider resnet architecture for certain skip-connections, could be linked to multi-scale gradient structure

@@ -1,6 +1,18 @@
 Workflow changes
 ----------------
 
+**TODO**
+===========================================
+
+**TODO**
+=================================================================================================
+
+**TODO**
+====================================================
+
+**TODO**
+=================================================
+
 ### Model extension to MIMIC-III with conditional framework
 
 1.  **TODO** work on extension to MIMIC-III data with
@@ -66,12 +78,14 @@ Workflow changes
 
 ### Model visualization and presentation
 
-1.  add extra option to ignore pics/gifs when cloning unless prompted
+1.  add new argparse formatter with metavar and defaults
 
-2.  add function to generate best samples from trained model aside from
+2.  add extra option to ignore pics/gifs when cloning unless prompted
+
+3.  add function to generate best samples from trained model aside from
     already generated images
 
-3.  change matplotlib backend default back to instant working version
+4.  change matplotlib backend default back to instant working version
     when necessary
 
 ### Heuristics
@@ -91,13 +105,20 @@ Workflow changes
 
 1.  use Wasserstein loss with standard or improved training
 
-2.  use feature matching and minibatch discrimination to prevent mode
+2.  try out vae architecture within generation process
+
+3.  think more about constraining gradients in various network parts to
+    achieve some interpretability
+
+4.  think more about complex networks integration
+
+5.  use feature matching and minibatch discrimination to prevent mode
     collapse
 
-3.  consider adding Gaussian noise to images for stability (mixed
+6.  consider adding Gaussian noise to images for stability (mixed
     outcomes predicted)
 
-4.  consider resnet architecture for certain skip-connections, could be
+7.  consider resnet architecture for certain skip-connections, could be
     linked to multi-scale gradient structure
 
 ### Miscellaneous

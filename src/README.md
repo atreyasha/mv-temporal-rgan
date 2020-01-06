@@ -27,8 +27,8 @@ From this, we can make a simplified assumption that a recurrent GAN model that c
 
 1. Install python dependencies located in `requirements.txt`:
 
-```
-$ pip install --user -r requirements.txt
+```shell
+$ pip install -r requirements.txt
 ```
 
 2. Install R-based dependencies used in `gg.R`:

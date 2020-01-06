@@ -1,7 +1,6 @@
 #!/usr/bin/env Rscript
 # -*- coding: utf-8 -*-
 
-# import dependencies
 library(ggplot2)
 library(tools)
 library(extrafont)
@@ -10,10 +9,6 @@ library(optparse)
 library(plyr)
 font_install('fontcm')
 loadfonts()
-
-###########################
-# define main function
-###########################
 
 plot_evolution <- function(direct,ideal_ticks = 10){
   # read in main data
@@ -73,10 +68,6 @@ plot_evolution <- function(direct,ideal_ticks = 10){
   embed_fonts(paste0(direct,"/vis/evolution.pdf"),
               outfile=paste0(direct,"/vis/evolution.pdf"))
 }
-
-###########################
-# main command call
-###########################
 
 parser = OptionParser()
 parser <- add_option(parser,c("-d", "--dir"), type="character",
