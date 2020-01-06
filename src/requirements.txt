@@ -1,7 +1,7 @@
 imageio==2.6.1
 pandas==0.25.3
 numpy==1.18.0
-tensorflow_gpu==1.14.0
+tensorflow_gpu==1.15.0
 tqdm==4.28.1
 scipy==1.4.1
 Keras==2.3.1
