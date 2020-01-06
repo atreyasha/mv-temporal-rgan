@@ -16,11 +16,27 @@ from pygifsicle import optimize
 from obj.arg_formatter import arg_metav_formatter
 
 def sorted_alphanumeric(data):
+    """
+    Function to sort number-containing strings
+
+    Args:
+        data (list): list of strings to sort
+
+    Returns:
+        (list): sorted list
+    """
     convert = lambda text: int(text) if text.isdigit() else text.lower()
     alphanum_key = lambda key: [ convert(c) for c in re.split('([0-9]+)', key) ]
     return sorted(data, key=alphanum_key)
 
 def make_plot(direct,number_ticks):
+    """
+    Function to plot values from log csv file
+
+    Args:
+        direct (str): base directory of logged model
+        number_ticks (int): number of ticks to have on graph
+    """
     direct = re.sub(r"(\/)?$","",direct)
     direct = re.sub(r"(\.\/)?pickles\/","",direct)
     directLong = "./pickles/" + direct
@@ -32,6 +48,17 @@ def make_plot(direct,number_ticks):
 
 def make_gif(direct,shrink_factor=4,skip_rate=2,
              interval=0.1,until=None,progress_bar=False):
+    """
+    Function to create gif from images
+
+    Args:
+        direct (str): base directory of logged model
+        shrink_factor (int): factor by which to downsample images
+        skip_rate (int): interval to images to use for gif
+        interval (float): temporal interval for gif construction or speed
+        until (int): upper limit for epoch to be used in gif construction
+        progress_bar (bool): True if progress bar should be added to gif
+    """
     print("creating training evolution gif")
     # clean up directory input
     direct = re.sub(r"(\/)?$","",direct)

@@ -4,6 +4,13 @@
 import pickle
 
 def save_model(model,direct):
+    """
+    Function to save model and optimizer weights
+
+    Args:
+        model (str): type of model to use, either "RGAN" or "RCGAN"
+        direct (str): log directory to store outputs
+    """
     model.generator.save_weights("./pickles/"+direct+"/gen_weights.h5")
     model.discriminator.save_weights("./pickles/"+direct+"/dis_weights.h5")
     with open("./pickles/"+direct+"/dis_opt_weights.pickle","wb") as f:
@@ -13,6 +20,20 @@ def save_model(model,direct):
 
 def restore_model(model,train_set,model_name,
                   directLong,log_dir_pass):
+    """
+    Function to restore model for training continuation
+
+    Args:
+        model (RGAN|RCGAN): uninstantiated model to restore
+        train_set (numpy.ndarray|(numpy.ndarry,numpy.ndarray)):
+        output of "loadData" in "/src/train.py"
+        model_name (str): type of model to use, either "RGAN" or "RCGAN"
+        directLong (str): log directory from where to start training
+        log_dir_pass (str): new log directory to save restored model
+
+    Returns:
+        model (RGAN|RCGAN): model restored with last saved weights
+    """
     model.generator.load_weights(directLong+"/gen_weights.h5")
     model.discriminator.load_weights(directLong+"/dis_weights.h5")
     model.combined.layers[-2].set_weights(model.generator.get_weights())

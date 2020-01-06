@@ -37,16 +37,14 @@ Workflow changes
 
 ### Model visualization and presentation
 
-1.  **TODO** add documentation for regular files
+1.  fix column enforcements and add documentation for log files
 
-2.  fix column enforcements and add documentation for log files
+2.  add extra option to ignore pics/gifs when cloning unless prompted
 
-3.  add extra option to ignore pics/gifs when cloning unless prompted
-
-4.  add function to generate best samples from trained model aside from
+3.  add function to generate best samples from trained model aside from
     already generated images
 
-5.  change matplotlib backend default back to instant working version
+4.  change matplotlib backend default back to instant working version
     when necessary
 
 ### Model stabilization and abstraction

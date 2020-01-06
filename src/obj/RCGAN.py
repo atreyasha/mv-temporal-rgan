@@ -19,9 +19,28 @@ from .spec_norm.SpectralNormalizationKeras import ConvSN2D, DenseSN
 from keras.backend.tensorflow_backend import clear_session
 
 class RCGAN():
+    """ Class definition for RCGAN """
     def __init__(self,num_classes,latent_dim=100,im_dim=28,epochs=100,
                  batch_size=256,learning_rate=0.0004,g_factor=0.25,
                  droprate=0.25,momentum=0.8,alpha=0.2,saving_rate=10):
+        """
+        Initialize RCGAN with model parameters
+
+        Args:
+            num_classes (int): number of unique classes
+            latent_dim (int): latent dimensions of generator
+            im_dim (int): square dimensionality of images
+            epochs (int): maximum number of training epochs
+            batch_size (int): batch size for stochastic gradient descent
+            learning_rate (float): learning rate for stochastic gradient descent,
+            particularly for the discriminator
+            g_factor (float): learning rate for generator =
+            g_factor*learning_rate, which is defined above
+            droprate (float): dropout-rate used within the model
+            momentum (float): momentum used in batch normalization
+            alpha (float): alpha used in leaky relu
+            saving_rate (int): epoch interval when model is saved
+        """
         # define and store local variables
         clear_session()
         self.num_classes = num_classes
@@ -56,6 +75,18 @@ class RCGAN():
         self.combined.compile(loss=losses, optimizer=self.optimizer_g)
 
     def getGenerator(self,latent_dim,momentum,alpha,num_classes):
+        """
+        Initialize generator model
+
+        Args:
+            latent_dim (int): latent dimensions of generator
+            momentum (float): momentum used in batch normalization
+            alpha (float): alpha used in leaky relu
+            num_classes (int): number of unique classes
+
+        Returns:
+            (keras.models.Model): keras model for generator
+        """
         # generate conditional noise vectors
         noise = Input(shape=(latent_dim,))
         label = Input(shape=(1,), dtype='int32')
@@ -104,6 +135,19 @@ class RCGAN():
         return Model(inputs=[noise,label],outputs=out)
 
     def getDiscriminator(self,im_dim,droprate,momentum,alpha,num_classes):
+        """
+        Initialize discriminator model
+
+        Args:
+            im_dim (int): square dimensionality of images
+            droprate (float): dropout-rate used within the model
+            momentum (float): momentum used in batch normalization
+            alpha (float): alpha used in leaky relu
+            num_classes (int): number of unique classes
+
+        Returns:
+            (keras.models.Model): keras model for discriminator
+        """
         # reprocess image with provided label
         in_data = Input(shape=(im_dim,im_dim))
         # initial convolution to prevent artifacts
@@ -166,6 +210,17 @@ class RCGAN():
 
     def _plot_figures(self,gen_imgs,direct,epoch,plot_samples,
                       num_classes,constant_labels):
+        """
+        Plot images produced from model
+
+        Args:
+            gen_imgs (numpy.ndarray): interim images produced by model
+            direct (str): log directory to save plot
+            epoch (int): current epoch for plot
+            plot_samples (int): number of samples per class
+            num_classes (int): number of unique classes
+            constant_labels (int): indices of unique classes
+        """
         # plotting function
         gen_imgs = 0.5 * gen_imgs + 0.5
         fig, axs = plt.subplots(ncols=num_classes,nrows=plot_samples)
@@ -184,6 +239,15 @@ class RCGAN():
         plt.close("all")
 
     def train(self,data,direct,plot_samples=5,check_rate=20):
+        """
+        Train RCGAN model
+
+        Args:
+            data (numpy.ndarray): numpy array of training data
+            direct (str): log-directory to store model
+            plot_samples (int): number of samples per class
+            check_rate (int): epoch interval to log performance
+        """
         data_type = re.sub(r".*_","",direct)
         dict_field = {"data":data_type}
         dict_field.update({el[0]:el[1] for el in self.__dict__.items()

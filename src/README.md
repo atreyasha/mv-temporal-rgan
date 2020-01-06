@@ -105,7 +105,7 @@ optional arguments:
   --droprate float      droprate used in GAN discriminator for
                         generalization/robustness (default: 0.25)
   --momentum float      momentum used across GAN batch-normalization (default: 0.8)
-  --alpha float         alpha parameter used in discriminator leaky relu (default:
+  --alpha float         alpha parameter used in leaky relu (default:
                         0.2)
   --saving-rate int     epoch period on which the model weights should be saved
                         (default: 10)
@@ -171,7 +171,7 @@ optional arguments:
   --droprate float      droprate used in GAN discriminator for
                         generalization/robustness (default: 0.25)
   --momentum float      momentum used across GAN batch-normalization (default: 0.8)
-  --alpha float         alpha parameter used in discriminator leaky relu (default:
+  --alpha float         alpha parameter used in leaky relu (default:
                         0.2)
   --saving-rate int     epoch period on which the model weights should be saved
                         (default: 10)

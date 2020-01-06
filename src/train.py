@@ -1,8 +1,6 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 
-import warnings
-warnings.filterwarnings('ignore')
 import os
 import pickle
 import sys
@@ -23,7 +21,7 @@ def getCurrentTime():
     Function to provide a date-time string for logging
 
     Returns:
-        str: date-time string
+        (str): date-time string
     """
     return datetime.datetime.now().strftime("%Y_%m_%d_%H_%M_%S")
 
@@ -37,8 +35,8 @@ def loadData(data,model):
         model (str): type of model to use, either "RGAN" or "RCGAN"
 
     Returns:
-        X_train (numpy.ndarray): Training data as numpy arrays
-        y_train (numpy.ndarray): Training labels as numpy arrays
+        X_train (numpy.ndarray): training data as numpy arrays
+        y_train (numpy.ndarray): training labels as numpy arrays
     """
     if data == "faces":
         return np.load("./data/lfw.npy")
@@ -98,8 +96,8 @@ def continueTrain(direct,arguments):
     Args:
         direct (str): base directory containing model
         arguments (dict): dictionary containing keys with names of arguments
-        above in "singularTrain", values for keys are determined via command
-        line parser
+        above in "singularTrain", values for keys are determined via
+        command-line parser
     """
     direct = re.sub(r"(\/)?$","",direct)
     direct = re.sub(r"(\.\/)?pickles\/","",direct)

@@ -12,6 +12,15 @@ import pandas as pd
 from obj.arg_formatter import arg_metav_formatter
 
 def iter_temporal_find(direct):
+    """
+    Function to recursively find all log files that are temporally related
+
+    Args:
+        direct (str): initial log directory to start off search
+
+    Returns:
+        chron (list): sorted list of temporally related log directories
+    """
     directLong = "./pickles/"+direct
     dat_type = re.sub(r".*_(.*)$","\g<1>",direct)
     prefix = re.sub(r"(.*_)(.*)$","\g<1>",direct)
@@ -33,6 +42,12 @@ def iter_temporal_find(direct):
     return chron
 
 def prune_dirs(chron):
+    """
+    Function to prune temporally related log directories
+
+    Args:
+        chron (list): sorted list of temporally related log directories
+    """
     for dr in chron:
         local = glob.glob(dr+"/*csv")
         local_log_file = [fl for fl in local if "log.csv" in fl]
@@ -67,6 +82,13 @@ def prune_dirs(chron):
                            "\g<1>",img)) > last_saved_epochs]
 
 def copy_increment_images(chron,new_direct_long):
+    """
+    Function to incrementally copy images
+
+    Args:
+        chron (list): sorted list of temporally related log directories
+        new_direct_long (str): path of new log directory
+    """
     # recursively combine images
     for dr in chron:
         # image copying/combination pipeline
@@ -82,6 +104,13 @@ def copy_increment_images(chron,new_direct_long):
              for img in imgs]
 
 def copy_log_init(chron,new_direct_long):
+    """
+    Function to incrementally update new init.csv file
+
+    Args:
+        chron (list): sorted list of temporally related log directories
+        new_direct_long (str): path of new log directory
+    """
     for dr in chron:
         local = glob.glob(dr+"/*csv")
         src = glob.glob(new_direct_long+"/*csv")
@@ -118,6 +147,15 @@ def copy_log_init(chron,new_direct_long):
                                                           index=False)
 
 def make_fake_df(epochs):
+    """
+    Function to make dummy log.csv in case of missing data
+
+    Args:
+        epochs (int): number of fake epochs
+
+    Returns:
+        (pd.DataFrame): dummy values to update
+    """
     fieldnames = {"epoch":np.arange(1,epochs+1),
                   "batch":np.full(epochs,np.nan),
                   "d_loss":np.full(epochs,np.nan),
@@ -125,6 +163,12 @@ def make_fake_df(epochs):
     return pd.DataFrame(fieldnames)
 
 def combine_prune_logs(direct):
+    """
+    Ensemble function to combine and prune log directories
+
+    Args:
+        direct (str): initial log directory to start off search
+    """
     # clean up directory input
     direct = re.sub(r"(\/)?$","",direct)
     direct = re.sub(r"(\.\/)?pickles\/","",direct)
