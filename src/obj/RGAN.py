@@ -19,9 +19,27 @@ from .spec_norm.SpectralNormalizationKeras import ConvSN2D, DenseSN
 from keras.backend.tensorflow_backend import clear_session
 
 class RGAN():
+    """ Class definition for RGAN """
     def __init__(self,latent_dim=100,im_dim=28,epochs=100,batch_size=256,
                  learning_rate=0.0004,g_factor=0.25,droprate=0.25,
                  momentum=0.8,alpha=0.2,saving_rate=10):
+        """
+        Initialize RGAN with model parameters
+
+        Args:
+            latent_dim (int): latent dimensions of generator
+            im_dim (int): square dimensionality of images
+            epochs (int): maximum number of training epochs
+            batch_size (int): batch size for stochastic gradient descent
+            learning_rate (float): learning rate for stochastic gradient descent,
+            particularly for the discriminator
+            g_factor (float): learning rate for generator =
+            g_factor*learning_rate, which is defined above
+            droprate (float): dropout-rate used within the model
+            momentum (float): momentum used in batch normalization
+            alpha (float): alpha used in leaky relu
+            saving_rate (int): epoch interval when model is saved
+        """
         # define and store local variables
         clear_session()
         self.latent_dim = latent_dim
@@ -54,6 +72,17 @@ class RGAN():
                               optimizer=self.optimizer_g)
 
     def getGenerator(self,latent_dim,momentum,alpha):
+        """
+        Initialize generator model
+
+        Args:
+            latent_dim (int): latent dimensions of generator
+            momentum (float): momentum used in batch normalization
+            alpha (float): alpha used in leaky relu
+
+        Returns:
+            (keras.models.Model): keras model for generator
+        """
         in_data = Input(shape=(latent_dim,))
         # block 1: upsampling using dense layers
         out = DenseSN(128*49)(in_data)
@@ -98,6 +127,18 @@ class RGAN():
         return Model(inputs=in_data,outputs=out)
 
     def getDiscriminator(self,im_dim,droprate,momentum,alpha):
+        """
+        Initialize discriminator model
+
+        Args:
+            im_dim (int): square dimensionality of images
+            droprate (float): dropout-rate used within the model
+            momentum (float): momentum used in batch normalization
+            alpha (float): alpha used in leaky relu
+
+        Returns:
+            (keras.models.Model): keras model for discriminator
+        """
         in_data = Input(shape=(im_dim,im_dim))
         out = Reshape((im_dim,im_dim,1))(in_data)
         out = ConvSN2D(1, kernel_size=3, padding="same")(out)
@@ -150,13 +191,15 @@ class RGAN():
         return Model(inputs=in_data,outputs=out)
 
     def _plot_figures(self,figures,direct,epoch,dim=1):
-        """Plot a dictionary of figures.
-        adapted from https://stackoverflow.com/questions/11159436/multiple-figures-in-a-single-window
-        Parameters
-        ----------
-        figures : <title, figure> dictionary
-        ncols : number of columns of subplots wanted in the display
-        nrows : number of rows of subplots wanted in the figure
+        """
+        Plot a dictionary of figures, adapted from:
+        https://stackoverflow.com/questions/11159436/multiple-figures-in-a-single-window
+
+        Args:
+            figures (dict): contains titles (keys) and figures (values)
+            direct (str): log directory to save plot
+            epoch (int): current epoch for plot
+            dim (int): square dimensionality of plot
         """
         fig, axeslist = plt.subplots(ncols=dim, nrows=dim)
         for ind,title in enumerate(figures):
@@ -170,6 +213,15 @@ class RGAN():
         plt.close("all")
 
     def train(self,data,direct,sq_dim=4,check_rate=20):
+        """
+        Train RGAN model
+
+        Args:
+            data (numpy.ndarray): numpy array of training data
+            direct (str): log-directory to store model
+            sq_dim (int): square dimensionality of model plot
+            check_rate (int): epoch interval to log performance
+        """
         plot_samples=sq_dim**2
         data_type = re.sub(r".*_","",direct)
         dict_field = {"data":data_type}

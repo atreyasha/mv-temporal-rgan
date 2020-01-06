@@ -1,8 +1,6 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 
-import warnings
-warnings.filterwarnings('ignore')
 import os
 import pickle
 import sys
@@ -19,9 +17,27 @@ from keras.utils import plot_model
 from keras.datasets import mnist, fashion_mnist
 
 def getCurrentTime():
+    """
+    Function to provide a date-time string for logging
+
+    Returns:
+        (str): date-time string
+    """
     return datetime.datetime.now().strftime("%Y_%m_%d_%H_%M_%S")
 
 def loadData(data,model):
+    """
+    Function to load data for model training
+
+    Args:
+        data (str): type of data to process, can be either "mnist",
+        "fashion" or "faces"
+        model (str): type of model to use, either "RGAN" or "RCGAN"
+
+    Returns:
+        X_train (numpy.ndarray): training data as numpy arrays
+        y_train (numpy.ndarray): training labels as numpy arrays
+    """
     if data == "faces":
         return np.load("./data/lfw.npy")
     elif data == "mnist":
@@ -38,6 +54,25 @@ def loadData(data,model):
 
 def singularTrain(model_name,data,latent_dim,epochs,batch_size,learning_rate,
                   g_factor,droprate,momentum,alpha,saving_rate):
+    """
+    Function to train and save model
+
+    Args:
+        model_name (str): type of model to use, either "RGAN" or "RCGAN"
+        data (str): type of data to process, can be either "mnist",
+        "fashion" or "faces"
+        latent_dim (int): latent dimensions of generator
+        epochs (int): maximum number of training epochs
+        batch_size (int): batch size for stochastic gradient descent
+        learning_rate (float): learning rate for stochastic gradient descent,
+        particularly for the discriminator
+        g_factor (float): learning rate for generator =
+        g_factor*learning_rate, which is defined above
+        droprate (float): dropout-rate used within the model
+        momentum (float): momentum used in batch normalization
+        alpha (float): alpha used in leaky relu
+        saving_rate (int): epoch interval when model is saved
+    """
     train_images = loadData(data,model_name)
     log_dir = getCurrentTime()+"_"+model_name+"_"+data
     os.makedirs("./pickles/"+log_dir)
@@ -55,6 +90,15 @@ def singularTrain(model_name,data,latent_dim,epochs,batch_size,learning_rate,
     model.train(train_images,log_dir)
 
 def continueTrain(direct,arguments):
+    """
+    Function to continue training a saved model, and later re-save it
+
+    Args:
+        direct (str): base directory containing model
+        arguments (dict): dictionary containing keys with names of arguments
+        above in "singularTrain", values for keys are determined via
+        command-line parser
+    """
     direct = re.sub(r"(\/)?$","",direct)
     direct = re.sub(r"(\.\/)?pickles\/","",direct)
     directLong = "./pickles/"+direct
@@ -98,6 +142,12 @@ def continueTrain(direct,arguments):
     model.train(train_set,log_dir_pass)
 
 def plot_M(model):
+    """
+    Function to plot model graph
+
+    Args:
+        model (str): type of model to plot, either "RGAN" or "RCGAN"
+    """
     if model == "RGAN":
         model = RGAN()
     elif model == "RCGAN":
@@ -132,7 +182,7 @@ if __name__ == "__main__":
     parser.add_argument("--momentum", type=float, default=0.8,
                         help="momentum used across GAN batch-normalization")
     parser.add_argument("--alpha", type=float, default=0.2,
-                        help="alpha parameter used in discriminator leaky relu")
+                        help="alpha parameter used in leaky relu")
     parser.add_argument("--saving-rate", type=int, default=10,
                         help="epoch period on which the model"+
                         " weights should be saved")
@@ -156,7 +206,7 @@ if __name__ == "__main__":
     assert args.data in ["faces","mnist","fashion"]
     assert args.model in ["RGAN","RCGAN"]
     if args.model == "RCGAN" and args.data == "faces":
-        raise ValueError("Face generation not yet integrated with RCGAN")
+        raise ValueError("Face generation not integrated with RCGAN")
     if args.plot_model:
         plot_M(args.model)
         sys.exit()

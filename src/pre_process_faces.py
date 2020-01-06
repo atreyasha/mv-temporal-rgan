@@ -11,6 +11,13 @@ from scipy.ndimage import zoom
 from tqdm import tqdm
 
 def makeBin(out,size_factor):
+    """
+    Resample and convert lfw faces data into numpy array
+
+    Args:
+        out (str): name of output numpy array
+        size_factor (float): resampling factor
+    """
     train_images = [zoom(mpimg.imread(file),size_factor,mode="mirror")
                     for file in tqdm(glob.glob("./data/lfwcrop_grey/faces/*"))]
     train_images = np.asarray(train_images,dtype="float32")
