@@ -325,7 +325,7 @@ $ tree ./pickles/2019_10_24_13_45_01_RGAN_faces -L 1
 
 As our repository and models are still under development, we document various stages and performances of our models here.
 
-### Preliminary non-medical data
+### Preliminary results on non-medical data
 
 #### RGAN
 
