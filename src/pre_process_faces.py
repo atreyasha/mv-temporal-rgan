@@ -22,7 +22,7 @@ def makeBin(out,size_factor):
                     for file in tqdm(glob.glob("./data/lfwcrop_grey/faces/*"))]
     train_images = np.asarray(train_images,dtype="float32")
     train_images = (train_images-127.5)/127.5
-    np.save("./data/"+out,train_images)
+    np.save("./data/lfwcrop_grey/"+out,train_images)
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(formatter_class=

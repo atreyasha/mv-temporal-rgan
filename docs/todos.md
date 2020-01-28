@@ -3,37 +3,41 @@ Workflow changes
 
 ### Model extension to MIMIC-III with conditional framework
 
-1.  **TODO** work on extension to MIMIC-III data with
-    evaluation protocols
+1.  **TODO** current architecture can easily be extrapolated
+    to in-hospital-mortality data generation task
 
-2.  **TODO** start working on mortality data generation with
-    descriptive statistics first
-
-3.  **TODO** visualize data from MIMIC-III github repository
+2.  **TODO** visualize data from MIMIC-III github repository
     in 2-dimensions to see smoothness or roughness
 
-4.  **TODO** consider using encoder-decoder or transformers
-    in GAN for variable sequence length generation
+3.  **TODO** use same color frame range for even comparison
 
-5.  **TODO** consider changing RGAN name to CRGAN
-    (convolutional-recurrent-GAN), with conditional one as CRAGAN
-    (auxiliary as addition)
+4.  **TODO** work on extension to MIMIC-III data with
+    evaluation protocols
 
-6.  use ETH model on MIMIC-III and compare evaluations with own model
+5.  **TODO** start working on mortality data generation with
+    descriptive statistics first
 
-7.  apply RCGAN technique towards this process and verify results with
+6.  consider using encoder-decoder or transformers in GAN for variable
+    sequence length generation
+
+7.  consider changing RGAN name to CRGAN (convolutional-recurrent-GAN),
+    with conditional one as CRAGAN (auxiliary as addition)
+
+8.  use ETH model on MIMIC-III and compare evaluations with own model
+
+9.  apply RCGAN technique towards this process and verify results with
     existing models through TSTR/TRTS and MMD checks
 
-8.  add custom image shapes and prepare code to shift away from square
+10. add custom image shapes and prepare code to shift away from square
     images
 
-9.  read on more innovative semi-supervised gan architectures that we
+11. read on more innovative semi-supervised gan architectures that we
     could also use
 
-10. replace discriminator with existing supervised network to see how
+12. replace discriminator with existing supervised network to see how
     that can work better
 
-11. before publication, publish some of the preliminary models used
+13. before publication, publish some of the preliminary models used
 
 ### Model visualization and presentation
 
@@ -52,15 +56,16 @@ Workflow changes
 
 ### Model stabilization and abstraction
 
-1.  work on introspection tasks, where data is passed through layers
+1.  **TODO** port code to tf 1.15 for security or
+    tensorflow2/pytorch for better integration -\> might solve problem
+    with accuracy printing based on non-binary target labels
+
+2.  work on introspection tasks, where data is passed through layers
     step-wise and results are manually/automatically checked for
     explainability
 
-2.  consider borrowing model architecture from other successful models
+3.  consider borrowing model architecture from other successful models
     and employ within local biomedical task
-
-3.  port code to tensorflow2 for better integration -\> might solve
-    problem with accuracy printing based on non-binary target labels
 
 4.  consider that performance on images is not paramount, abstraction to
     medical data and construction of local evaluation techniques is more

@@ -39,7 +39,7 @@ def loadData(data,model):
         y_train (numpy.ndarray): training labels as numpy arrays
     """
     if data == "faces":
-        return np.load("./data/lfw.npy")
+        return np.load("./data/lfwcrop_grey/lfw.npy")
     elif data == "mnist":
         train_set, _ = mnist.load_data()
     elif data == "fashion":
@@ -86,7 +86,7 @@ def singularTrain(model_name,data,latent_dim,epochs,batch_size,learning_rate,
         num_classes = np.unique(train_images[1]).shape[0]
         model = RCGAN(num_classes,latent_dim,im_dim,epochs,
                       batch_size,learning_rate,
-                     g_factor,droprate,momentum,alpha,saving_rate)
+                      g_factor,droprate,momentum,alpha,saving_rate)
     model.train(train_images,log_dir)
 
 def continueTrain(direct,arguments):
