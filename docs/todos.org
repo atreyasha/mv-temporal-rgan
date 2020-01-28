@@ -1,11 +1,13 @@
 ** Workflow changes
 
 *** Model extension to MIMIC-III with conditional framework
+***** TODO current architecture can easily be extrapolated to in-hospital-mortality data generation task
+***** TODO visualize data from MIMIC-III github repository in 2-dimensions to see smoothness or roughness
+***** TODO use same color frame range for even comparison
 ***** TODO work on extension to MIMIC-III data with evaluation protocols
 ***** TODO start working on mortality data generation with descriptive statistics first
-***** TODO visualize data from MIMIC-III github repository in 2-dimensions to see smoothness or roughness
-***** TODO consider using encoder-decoder or transformers in GAN for variable sequence length generation
-***** TODO consider changing RGAN name to CRGAN (convolutional-recurrent-GAN), with conditional one as CRAGAN (auxiliary as addition)
+***** consider using encoder-decoder or transformers in GAN for variable sequence length generation
+***** consider changing RGAN name to CRGAN (convolutional-recurrent-GAN), with conditional one as CRAGAN (auxiliary as addition)
 ***** use ETH model on MIMIC-III and compare evaluations with own model
 ***** apply RCGAN technique towards this process and verify results with existing models through TSTR/TRTS and MMD checks
 ***** add custom image shapes and prepare code to shift away from square images
@@ -21,9 +23,9 @@
 ***** change matplotlib backend default back to instant working version when necessary
 
 *** Model stabilization and abstraction
+***** TODO port code to tf 1.15 for security or tensorflow2/pytorch for better integration -> might solve problem with accuracy printing based on non-binary target labels
 ***** work on introspection tasks, where data is passed through layers step-wise and results are manually/automatically checked for explainability
 ***** consider borrowing model architecture from other successful models and employ within local biomedical task
-***** port code to tensorflow2 for better integration -> might solve problem with accuracy printing based on non-binary target labels
 ***** consider that performance on images is not paramount, abstraction to medical data and construction of local evaluation techniques is more important
 ***** consider developing online per-epoch similarity checks, MMD and TRTS to check quality of samples
 ***** look up ganhacks for further possible improvements such as adding leaky-relu everywhere, and read on successful/innovative gan architectures

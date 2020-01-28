@@ -13,6 +13,7 @@ if [ $ans == "y" ]; then
     cd ./data
     wget -O lfwcrop_grey.zip http://conradsanderson.id.au/lfwcrop/lfwcrop_grey.zip
     unzip -o lfwcrop_grey.zip
+		mv lfwcrop_grey.zip lfwcrop_grey
     cd ..
 fi
 
