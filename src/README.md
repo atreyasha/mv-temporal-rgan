@@ -362,4 +362,4 @@ Developments to this repository and its workflow are documented in our developme
 
 ## Acknowledgments
 
-@eriklindernoren Keras-GAN GitHub [repository](https://github.com/eriklindernoren/Keras-GAN) (inspired source code for this repository)
+**@eriklindernoren** Keras-GAN GitHub [repository](https://github.com/eriklindernoren/Keras-GAN) (inspired source code for this repository)
