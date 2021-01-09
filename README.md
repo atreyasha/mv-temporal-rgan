@@ -8,7 +8,7 @@ In terms of methodologies, we are inspired by the RGAN and RCGAN (conditional RG
 
 In terms of biomedical data, we aim to work with the existing MIMIC-III benchmarks which are documented in [Harutyunyan, Khachatrian, Kale, Ver Steeg and Galstyan 2019](https://arxiv.org/abs/1703.07771). The MIMIC-III benchmark workflows can be found in the following public GitHub [repository](https://github.com/YerevaNN/mimic3-benchmarks).
 
-## Dependencies
+### Dependencies
 
 This repository's source code was tested with python versions `3.7.*` and R versions `3.6.*`.
 
