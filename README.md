@@ -14,23 +14,23 @@ This repository's source code was tested with python versions `3.7.*` and R vers
 
 1. Install python dependencies located in `requirements.txt`:
 
-```shell
-$ pip install -r requirements.txt
-```
+  ```shell
+  $ pip install -r requirements.txt
+  ```
 
 2. Install R-based dependencies:
 
-```R
-> install.packages(c("ggplot2","tools","extrafont","reshape2","optparse","plyr"))
-```
+  ```R
+  > install.packages(c("ggplot2","tools","extrafont","reshape2","optparse","plyr"))
+  ```
 
 3. Optional: Install [binary](https://github.com/nwtgck/gif-progress) for adding progress bar to produced gif's.
 
-In order to develop this repository, it is recommended to initialize a pre-commit hook for automatic updates of python dependencies:
+4. Optional: To develop this repository, it is recommended to initialize a pre-commit hook for automatic updates of python dependencies:
 
-```shell
-$ ./init.sh
-```
+  ```shell
+  $ ./init.sh
+  ```
 
 ### Workflow
 
