@@ -18,7 +18,7 @@ This repository's source code was tested with python versions `3.7.*` and R vers
 $ pip install -r requirements.txt
 ```
 
-2. Install R-based dependencies used in `gg.R`:
+2. Install R-based dependencies:
 
 ```R
 > install.packages(c("ggplot2","tools","extrafont","reshape2","optparse","plyr"))
