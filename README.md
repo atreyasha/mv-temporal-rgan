@@ -26,6 +26,12 @@ $ pip install -r requirements.txt
 
 3. Optional: Install [binary](https://github.com/nwtgck/gif-progress) for adding progress bar to produced gif's.
 
+In order to develop this repository, it is recommended to initialize a pre-commit hook for automatic updates of python dependencies:
+
+```shell
+$ ./init.sh
+```
+
 ### Workflow
 
 Our workflow and source code can be found in the `src` directory of this repository. Additionally, the [readme](/src/README.md) in the `src` directory documents our functions, scripts and results.

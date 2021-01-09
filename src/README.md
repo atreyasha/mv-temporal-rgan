@@ -32,16 +32,14 @@ In order to acquire MIMIC-III data, please follow the instructions [here](https:
 The three preliminary image datasets that we will use for early model inspection will be [MNIST](https://en.wikipedia.org/wiki/MNIST_database), [fashion-MNIST](https://github.com/zalandoresearch/fashion-mnist) and [LFWcrop Faces](https://conradsanderson.id.au/lfwcrop/). MNIST and fashion-MNIST acquisition is automated within most modern machine learning frameworks. In order to automatically acquire the greyscale version of LFWcrop faces, you can run the following script:
 
 ```shell
-$ ./init.sh
+$ ./faces.sh
 ```
 
-Upon running this script, three prompts will appear sequentially. 
+Upon running this script, two prompts will appear sequentially. 
 
-1. The first requests initializing a pre-commit git hook to keep python dependencies in `requirements.txt` up-to-date.
+1. The next prompt requests if the user wants to download and unzip the LFWcrop greyscale faces
 
-2. The next prompt requests if the user wants to download and unzip the LFWcrop greyscale faces
-
-3. The final prompt requests if the user wants to downsample the native LFWcrop greyscale faces from 64x64 to 28x28, such that it can be easier to run unit tests.
+2. The final prompt requests if the user wants to downsample the native LFWcrop greyscale faces from 64x64 to 28x28, such that it can be easier to run unit tests.
 
 The downsampling of LFWcrop faces occurs through `pre_process_faces.py`:
 

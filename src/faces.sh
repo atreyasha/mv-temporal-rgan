@@ -1,12 +1,6 @@
 #!/bin/bash
 set -e
 
-read -rep "create pre-commit hook for updating python dependencies? (y/n): " ans
-if [ $ans == "y" ]; then
-  # move pre-commit hook into local .git folder for activation
-  cp ../hooks/pre-commit ../.git/hooks/pre-commit
-fi
-
 read -rep "download and unzip lfw-faces data? (y/n): " ans
 if [ $ans == "y" ]; then
   # get lfw-faces data
