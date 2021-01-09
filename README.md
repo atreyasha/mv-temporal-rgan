@@ -8,6 +8,24 @@ In terms of methodologies, we are inspired by the RGAN and RCGAN (conditional RG
 
 In terms of biomedical data, we aim to work with the existing MIMIC-III benchmarks which are documented in [Harutyunyan, Khachatrian, Kale, Ver Steeg and Galstyan 2019](https://arxiv.org/abs/1703.07771). The MIMIC-III benchmark workflows can be found in the following public GitHub [repository](https://github.com/YerevaNN/mimic3-benchmarks).
 
+## Dependencies
+
+This repository's source code was tested with python versions `3.7.*` and R versions `3.6.*`.
+
+1. Install python dependencies located in `requirements.txt`:
+
+```shell
+$ pip install -r requirements.txt
+```
+
+2. Install R-based dependencies used in `gg.R`:
+
+```R
+> install.packages(c("ggplot2","tools","extrafont","reshape2","optparse","plyr"))
+```
+
+3. Optional: Install [binary](https://github.com/nwtgck/gif-progress) for adding progress bar to produced gif's.
+
 ### Workflow
 
 Our workflow and source code can be found in the `src` directory of this repository. Additionally, the [readme](/src/README.md) in the `src` directory documents our functions, scripts and results.

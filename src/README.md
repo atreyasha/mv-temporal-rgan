@@ -23,22 +23,6 @@ However, we must acknowledge that a jump to these frameworks is difficult since 
 
 From this, we can make a simplified assumption that a recurrent GAN model that can arbitrarily generate complex images can also (probably) abstract its performance to other time series of similar dimensionality and complexity. As a result, we aim to start off by generating realistic images (modeled as time series) and to eventually extend our application to MIMIC-III biomedical data.
 
-## Dependencies
-
-1. Install python dependencies located in `requirements.txt`:
-
-```shell
-$ pip install -r requirements.txt
-```
-
-2. Install R-based dependencies used in `gg.R`:
-
-```R
-> install.packages(c("ggplot2","tools","extrafont","reshape2","optparse","plyr"))
-```
-
-3. Optional: Install [binary](https://github.com/nwtgck/gif-progress) for adding progress bar to produced gif's.
-
 ## Usage
 
 ### 1. Data acquisition
