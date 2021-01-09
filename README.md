@@ -10,7 +10,7 @@ In terms of biomedical data, we aim to work with the existing MIMIC-III benchmar
 
 ### Dependencies
 
-This repository's source code was tested with python versions `3.7.*` and R versions `3.6.*`.
+This repository's source code was tested with Python versions `3.7.*` and R versions `3.6.*`.
 
 1. Install python dependencies located in `requirements.txt`:
 
