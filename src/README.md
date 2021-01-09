@@ -37,9 +37,9 @@ $ ./faces.sh
 
 Upon running this script, two prompts will appear sequentially. 
 
-1. The next prompt requests if the user wants to download and unzip the LFWcrop greyscale faces
+1. The first prompt requests if the user wants to download and unzip the LFWcrop greyscale faces
 
-2. The final prompt requests if the user wants to downsample the native LFWcrop greyscale faces from 64x64 to 28x28, such that it can be easier to run unit tests.
+2. The next prompt requests if the user wants to downsample the native LFWcrop greyscale faces from 64x64 to 28x28, such that it can be easier to run unit tests.
 
 The downsampling of LFWcrop faces occurs through `pre_process_faces.py`:
 
