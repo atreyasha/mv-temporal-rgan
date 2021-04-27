@@ -24,7 +24,7 @@ This repository's source code was tested with Python versions `3.7.*` and R vers
     > install.packages(c("ggplot2","tools","extrafont","reshape2","optparse","plyr"))
     ```
 
-3. **Optional:** Install [binary](https://github.com/nwtgck/gif-progress) for adding progress bar to produced gif's.
+3. Install [binary](https://github.com/nwtgck/gif-progress) for adding progress bar to produced gif's.
 
 4. **Optional:** To develop this repository, it is recommended to initialize a pre-commit hook for automatic updates of python dependencies:
 
