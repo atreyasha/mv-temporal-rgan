@@ -1,4 +1,4 @@
-## Multivariate recurrent GANs for generating biomedical time-series
+## Multivariate recurrent GANs
 
 ## Table of Contents
 
