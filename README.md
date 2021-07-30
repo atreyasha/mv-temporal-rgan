@@ -4,7 +4,7 @@
 
 This project is focused on developing recurrent GAN architecture(s) that can generate biomedical time series. In terms of methodologies, we are inspired by the RGAN and RCGAN (conditional RGAN) architecture proposed by [Esteban, Hyland and Rätsch 2017](https://arxiv.org/abs/1706.02633). In terms of biomedical data, we aim to work with the existing MIMIC-III benchmarks documented in [Harutyunyan, Khachatrian, Kale, Ver Steeg and Galstyan 2019](https://arxiv.org/abs/1703.07771) with the following public GitHub [repository](https://github.com/YerevaNN/mimic3-benchmarks).
 
-**Note:** This project is incomplete. Details of its current status can be found on the bottom of this [page](src/README.md).
+**Note:** This project is incomplete. Details of its current status can be found [here](https://github.com/atreyasha/mv-temporal-rgan/blob/master/src/README.md#caveats).
 
 ### Dependencies
 
