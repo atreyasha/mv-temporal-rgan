@@ -3,7 +3,6 @@
 ## Table of Contents
 
 * [Motivation](#Motivation)
-* [Dependencies](#Dependencies)
 * [Usage](#Usage)
     * [1. Data acquisition](#1-Data-acquisition)
     * [2.i. Model training](#2i-Model-training)
