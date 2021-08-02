@@ -14,6 +14,7 @@ from keras.legacy import interfaces
 from keras.layers import Dense, Conv1D, Conv2D, Conv3D, Conv2DTranspose, Embedding
 import tensorflow as tf
 
+
 class DenseSN(Dense):
     def build(self, input_shape):
         assert len(input_shape) >= 2
@@ -24,35 +25,38 @@ class DenseSN(Dense):
                                       regularizer=self.kernel_regularizer,
                                       constraint=self.kernel_constraint)
         if self.use_bias:
-            self.bias = self.add_weight(shape=(self.units,),
+            self.bias = self.add_weight(shape=(self.units, ),
                                         initializer=self.bias_initializer,
                                         name='bias',
                                         regularizer=self.bias_regularizer,
                                         constraint=self.bias_constraint)
         else:
             self.bias = None
-        self.u = self.add_weight(shape=tuple([1, self.kernel.shape.as_list()[-1]]),
+        self.u = self.add_weight(shape=tuple(
+            [1, self.kernel.shape.as_list()[-1]]),
                                  initializer=initializers.RandomNormal(0, 1),
                                  name='sn',
                                  trainable=False)
         self.input_spec = InputSpec(min_ndim=2, axes={-1: input_dim})
         self.built = True
-        
+
     def call(self, inputs, training=None):
         def _l2normalize(v, eps=1e-12):
-            return v / (K.sum(v ** 2) ** 0.5 + eps)
+            return v / (K.sum(v**2)**0.5 + eps)
+
         def power_iteration(W, u):
             _u = u
             _v = _l2normalize(K.dot(_u, K.transpose(W)))
             _u = _l2normalize(K.dot(_v, W))
             return _u, _v
+
         W_shape = self.kernel.shape.as_list()
         #Flatten the Tensor
         W_reshaped = K.reshape(self.kernel, [-1, W_shape[-1]])
         _u, _v = power_iteration(W_reshaped, self.u)
         #Calculate Sigma
-        sigma=K.dot(_v, W_reshaped)
-        sigma=K.dot(sigma, K.transpose(_u))
+        sigma = K.dot(_v, W_reshaped)
+        sigma = K.dot(sigma, K.transpose(_u))
         #normalize it
         W_bar = W_reshaped / sigma
         #reshape weight tensor
@@ -60,17 +64,18 @@ class DenseSN(Dense):
             W_bar = K.reshape(W_bar, W_shape)
         else:
             with tf.control_dependencies([self.u.assign(_u)]):
-                 W_bar = K.reshape(W_bar, W_shape)  
+                W_bar = K.reshape(W_bar, W_shape)
         output = K.dot(inputs, W_bar)
         if self.use_bias:
             output = K.bias_add(output, self.bias, data_format='channels_last')
         if self.activation is not None:
             output = self.activation(output)
-        return output 
-        
-class _ConvSN(Layer):
+        return output
 
-    def __init__(self, rank,
+
+class _ConvSN(Layer):
+    def __init__(self,
+                 rank,
                  filters,
                  kernel_size,
                  strides=1,
@@ -91,11 +96,13 @@ class _ConvSN(Layer):
         super(_ConvSN, self).__init__(**kwargs)
         self.rank = rank
         self.filters = filters
-        self.kernel_size = conv_utils.normalize_tuple(kernel_size, rank, 'kernel_size')
+        self.kernel_size = conv_utils.normalize_tuple(kernel_size, rank,
+                                                      'kernel_size')
         self.strides = conv_utils.normalize_tuple(strides, rank, 'strides')
         self.padding = conv_utils.normalize_padding(padding)
         self.data_format = conv_utils.normalize_data_format(data_format)
-        self.dilation_rate = conv_utils.normalize_tuple(dilation_rate, rank, 'dilation_rate')
+        self.dilation_rate = conv_utils.normalize_tuple(
+            dilation_rate, rank, 'dilation_rate')
         self.activation = activations.get(activation)
         self.use_bias = use_bias
         self.kernel_initializer = initializers.get(kernel_initializer)
@@ -108,10 +115,10 @@ class _ConvSN(Layer):
         self.input_spec = InputSpec(ndim=self.rank + 2)
         self.spectral_normalization = spectral_normalization
         self.u = None
-        
+
     def _l2normalize(self, v, eps=1e-12):
-        return v / (K.sum(v ** 2) ** 0.5 + eps)
-    
+        return v / (K.sum(v**2)**0.5 + eps)
+
     def power_iteration(self, u, W):
         '''
         Accroding the paper, we only need to do power iteration one time.
@@ -119,6 +126,7 @@ class _ConvSN(Layer):
         v = self._l2normalize(K.dot(u, K.transpose(W)))
         u = self._l2normalize(K.dot(v, W))
         return u, v
+
     def build(self, input_shape):
         if self.data_format == 'channels_first':
             channel_axis = 1
@@ -138,13 +146,14 @@ class _ConvSN(Layer):
 
         #Spectral Normalization
         if self.spectral_normalization:
-            self.u = self.add_weight(shape=tuple([1, self.kernel.shape.as_list()[-1]]),
-                                     initializer=initializers.RandomNormal(0, 1),
-                                     name='sn',
-                                     trainable=False)
-        
+            self.u = self.add_weight(
+                shape=tuple([1, self.kernel.shape.as_list()[-1]]),
+                initializer=initializers.RandomNormal(0, 1),
+                name='sn',
+                trainable=False)
+
         if self.use_bias:
-            self.bias = self.add_weight(shape=(self.filters,),
+            self.bias = self.add_weight(shape=(self.filters, ),
                                         initializer=self.bias_initializer,
                                         name='bias',
                                         regularizer=self.bias_regularizer,
@@ -158,21 +167,22 @@ class _ConvSN(Layer):
 
     def call(self, inputs):
         def _l2normalize(v, eps=1e-12):
-            return v / (K.sum(v ** 2) ** 0.5 + eps)
+            return v / (K.sum(v**2)**0.5 + eps)
+
         def power_iteration(W, u):
             _u = u
             _v = _l2normalize(K.dot(_u, K.transpose(W)))
             _u = _l2normalize(K.dot(_v, W))
             return _u, _v
-        
+
         if self.spectral_normalization:
             W_shape = self.kernel.shape.as_list()
             #Flatten the Tensor
             W_reshaped = K.reshape(self.kernel, [-1, W_shape[-1]])
             _u, _v = power_iteration(W_reshaped, self.u)
             #Calculate Sigma
-            sigma=K.dot(_v, W_reshaped)
-            sigma=K.dot(sigma, K.transpose(_u))
+            sigma = K.dot(_v, W_reshaped)
+            sigma = K.dot(sigma, K.transpose(_u))
             #normalize it
             W_bar = W_reshaped / sigma
             #reshape weight tensor
@@ -184,37 +194,33 @@ class _ConvSN(Layer):
 
             #update weitht
             self.kernel = W_bar
-        
+
         if self.rank == 1:
-            outputs = K.conv1d(
-                inputs,
-                self.kernel,
-                strides=self.strides[0],
-                padding=self.padding,
-                data_format=self.data_format,
-                dilation_rate=self.dilation_rate[0])
+            outputs = K.conv1d(inputs,
+                               self.kernel,
+                               strides=self.strides[0],
+                               padding=self.padding,
+                               data_format=self.data_format,
+                               dilation_rate=self.dilation_rate[0])
         if self.rank == 2:
-            outputs = K.conv2d(
-                inputs,
-                self.kernel,
-                strides=self.strides,
-                padding=self.padding,
-                data_format=self.data_format,
-                dilation_rate=self.dilation_rate)
+            outputs = K.conv2d(inputs,
+                               self.kernel,
+                               strides=self.strides,
+                               padding=self.padding,
+                               data_format=self.data_format,
+                               dilation_rate=self.dilation_rate)
         if self.rank == 3:
-            outputs = K.conv3d(
-                inputs,
-                self.kernel,
-                strides=self.strides,
-                padding=self.padding,
-                data_format=self.data_format,
-                dilation_rate=self.dilation_rate)
+            outputs = K.conv3d(inputs,
+                               self.kernel,
+                               strides=self.strides,
+                               padding=self.padding,
+                               data_format=self.data_format,
+                               dilation_rate=self.dilation_rate)
 
         if self.use_bias:
-            outputs = K.bias_add(
-                outputs,
-                self.bias,
-                data_format=self.data_format)
+            outputs = K.bias_add(outputs,
+                                 self.bias,
+                                 data_format=self.data_format)
 
         if self.activation is not None:
             return self.activation(outputs)
@@ -232,7 +238,7 @@ class _ConvSN(Layer):
                     stride=self.strides[i],
                     dilation=self.dilation_rate[i])
                 new_space.append(new_dim)
-            return (input_shape[0],) + tuple(new_space) + (self.filters,)
+            return (input_shape[0], ) + tuple(new_space) + (self.filters, )
         if self.data_format == 'channels_first':
             space = input_shape[2:]
             new_space = []
@@ -248,28 +254,44 @@ class _ConvSN(Layer):
 
     def get_config(self):
         config = {
-            'rank': self.rank,
-            'filters': self.filters,
-            'kernel_size': self.kernel_size,
-            'strides': self.strides,
-            'padding': self.padding,
-            'data_format': self.data_format,
-            'dilation_rate': self.dilation_rate,
-            'activation': activations.serialize(self.activation),
-            'use_bias': self.use_bias,
-            'kernel_initializer': initializers.serialize(self.kernel_initializer),
-            'bias_initializer': initializers.serialize(self.bias_initializer),
-            'kernel_regularizer': regularizers.serialize(self.kernel_regularizer),
-            'bias_regularizer': regularizers.serialize(self.bias_regularizer),
-            'activity_regularizer': regularizers.serialize(self.activity_regularizer),
-            'kernel_constraint': constraints.serialize(self.kernel_constraint),
-            'bias_constraint': constraints.serialize(self.bias_constraint)
+            'rank':
+            self.rank,
+            'filters':
+            self.filters,
+            'kernel_size':
+            self.kernel_size,
+            'strides':
+            self.strides,
+            'padding':
+            self.padding,
+            'data_format':
+            self.data_format,
+            'dilation_rate':
+            self.dilation_rate,
+            'activation':
+            activations.serialize(self.activation),
+            'use_bias':
+            self.use_bias,
+            'kernel_initializer':
+            initializers.serialize(self.kernel_initializer),
+            'bias_initializer':
+            initializers.serialize(self.bias_initializer),
+            'kernel_regularizer':
+            regularizers.serialize(self.kernel_regularizer),
+            'bias_regularizer':
+            regularizers.serialize(self.bias_regularizer),
+            'activity_regularizer':
+            regularizers.serialize(self.activity_regularizer),
+            'kernel_constraint':
+            constraints.serialize(self.kernel_constraint),
+            'bias_constraint':
+            constraints.serialize(self.bias_constraint)
         }
         base_config = super(_Conv, self).get_config()
         return dict(list(base_config.items()) + list(config.items()))
-    
+
+
 class ConvSN2D(Conv2D):
-
     def build(self, input_shape):
         if self.data_format == 'channels_first':
             channel_axis = 1
@@ -288,40 +310,44 @@ class ConvSN2D(Conv2D):
                                       constraint=self.kernel_constraint)
 
         if self.use_bias:
-            self.bias = self.add_weight(shape=(self.filters,),
+            self.bias = self.add_weight(shape=(self.filters, ),
                                         initializer=self.bias_initializer,
                                         name='bias',
                                         regularizer=self.bias_regularizer,
                                         constraint=self.bias_constraint)
         else:
             self.bias = None
-            
-        self.u = self.add_weight(shape=tuple([1, self.kernel.shape.as_list()[-1]]),
-                         initializer=initializers.RandomNormal(0, 1),
-                         name='sn',
-                         trainable=False)
-        
+
+        self.u = self.add_weight(shape=tuple(
+            [1, self.kernel.shape.as_list()[-1]]),
+                                 initializer=initializers.RandomNormal(0, 1),
+                                 name='sn',
+                                 trainable=False)
+
         # Set input spec.
         self.input_spec = InputSpec(ndim=self.rank + 2,
                                     axes={channel_axis: input_dim})
         self.built = True
+
     def call(self, inputs, training=None):
         def _l2normalize(v, eps=1e-12):
-            return v / (K.sum(v ** 2) ** 0.5 + eps)
+            return v / (K.sum(v**2)**0.5 + eps)
+
         def power_iteration(W, u):
             #Accroding the paper, we only need to do power iteration one time.
             _u = u
             _v = _l2normalize(K.dot(_u, K.transpose(W)))
             _u = _l2normalize(K.dot(_v, W))
             return _u, _v
+
         #Spectral Normalization
         W_shape = self.kernel.shape.as_list()
         #Flatten the Tensor
         W_reshaped = K.reshape(self.kernel, [-1, W_shape[-1]])
         _u, _v = power_iteration(W_reshaped, self.u)
         #Calculate Sigma
-        sigma=K.dot(_v, W_reshaped)
-        sigma=K.dot(sigma, K.transpose(_u))
+        sigma = K.dot(_v, W_reshaped)
+        sigma = K.dot(sigma, K.transpose(_u))
         #normalize it
         W_bar = W_reshaped / sigma
         #reshape weight tensor
@@ -330,25 +356,23 @@ class ConvSN2D(Conv2D):
         else:
             with tf.control_dependencies([self.u.assign(_u)]):
                 W_bar = K.reshape(W_bar, W_shape)
-                
-        outputs = K.conv2d(
-                inputs,
-                W_bar,
-                strides=self.strides,
-                padding=self.padding,
-                data_format=self.data_format,
-                dilation_rate=self.dilation_rate)
+
+        outputs = K.conv2d(inputs,
+                           W_bar,
+                           strides=self.strides,
+                           padding=self.padding,
+                           data_format=self.data_format,
+                           dilation_rate=self.dilation_rate)
         if self.use_bias:
-            outputs = K.bias_add(
-                outputs,
-                self.bias,
-                data_format=self.data_format)
+            outputs = K.bias_add(outputs,
+                                 self.bias,
+                                 data_format=self.data_format)
         if self.activation is not None:
             return self.activation(outputs)
         return outputs
-    
+
+
 class ConvSN1D(Conv1D):
-    
     def build(self, input_shape):
         if self.data_format == 'channels_first':
             channel_axis = 1
@@ -367,40 +391,43 @@ class ConvSN1D(Conv1D):
                                       constraint=self.kernel_constraint)
 
         if self.use_bias:
-            self.bias = self.add_weight(shape=(self.filters,),
+            self.bias = self.add_weight(shape=(self.filters, ),
                                         initializer=self.bias_initializer,
                                         name='bias',
                                         regularizer=self.bias_regularizer,
                                         constraint=self.bias_constraint)
         else:
             self.bias = None
-            
-        self.u = self.add_weight(shape=tuple([1, self.kernel.shape.as_list()[-1]]),
-                 initializer=initializers.RandomNormal(0, 1),
-                 name='sn',
-                 trainable=False)
+
+        self.u = self.add_weight(shape=tuple(
+            [1, self.kernel.shape.as_list()[-1]]),
+                                 initializer=initializers.RandomNormal(0, 1),
+                                 name='sn',
+                                 trainable=False)
         # Set input spec.
         self.input_spec = InputSpec(ndim=self.rank + 2,
                                     axes={channel_axis: input_dim})
         self.built = True
-        
+
     def call(self, inputs, training=None):
         def _l2normalize(v, eps=1e-12):
-            return v / (K.sum(v ** 2) ** 0.5 + eps)
+            return v / (K.sum(v**2)**0.5 + eps)
+
         def power_iteration(W, u):
             #Accroding the paper, we only need to do power iteration one time.
             _u = u
             _v = _l2normalize(K.dot(_u, K.transpose(W)))
             _u = _l2normalize(K.dot(_v, W))
             return _u, _v
+
         #Spectral Normalization
         W_shape = self.kernel.shape.as_list()
         #Flatten the Tensor
         W_reshaped = K.reshape(self.kernel, [-1, W_shape[-1]])
         _u, _v = power_iteration(W_reshaped, self.u)
         #Calculate Sigma
-        sigma=K.dot(_v, W_reshaped)
-        sigma=K.dot(sigma, K.transpose(_u))
+        sigma = K.dot(_v, W_reshaped)
+        sigma = K.dot(sigma, K.transpose(_u))
         #normalize it
         W_bar = W_reshaped / sigma
         #reshape weight tensor
@@ -409,24 +436,23 @@ class ConvSN1D(Conv1D):
         else:
             with tf.control_dependencies([self.u.assign(_u)]):
                 W_bar = K.reshape(W_bar, W_shape)
-                
-        outputs = K.conv1d(
-                inputs,
-                W_bar,
-                strides=self.strides,
-                padding=self.padding,
-                data_format=self.data_format,
-                dilation_rate=self.dilation_rate)
+
+        outputs = K.conv1d(inputs,
+                           W_bar,
+                           strides=self.strides,
+                           padding=self.padding,
+                           data_format=self.data_format,
+                           dilation_rate=self.dilation_rate)
         if self.use_bias:
-            outputs = K.bias_add(
-                outputs,
-                self.bias,
-                data_format=self.data_format)
+            outputs = K.bias_add(outputs,
+                                 self.bias,
+                                 data_format=self.data_format)
         if self.activation is not None:
             return self.activation(outputs)
         return outputs
 
-class ConvSN3D(Conv3D):    
+
+class ConvSN3D(Conv3D):
     def build(self, input_shape):
         if self.data_format == 'channels_first':
             channel_axis = 1
@@ -443,14 +469,15 @@ class ConvSN3D(Conv3D):
                                       name='kernel',
                                       regularizer=self.kernel_regularizer,
                                       constraint=self.kernel_constraint)
-        
-        self.u = self.add_weight(shape=tuple([1, self.kernel.shape.as_list()[-1]]),
-                         initializer=initializers.RandomNormal(0, 1),
-                         name='sn',
-                         trainable=False)
-        
+
+        self.u = self.add_weight(shape=tuple(
+            [1, self.kernel.shape.as_list()[-1]]),
+                                 initializer=initializers.RandomNormal(0, 1),
+                                 name='sn',
+                                 trainable=False)
+
         if self.use_bias:
-            self.bias = self.add_weight(shape=(self.filters,),
+            self.bias = self.add_weight(shape=(self.filters, ),
                                         initializer=self.bias_initializer,
                                         name='bias',
                                         regularizer=self.bias_regularizer,
@@ -464,21 +491,23 @@ class ConvSN3D(Conv3D):
 
     def call(self, inputs, training=None):
         def _l2normalize(v, eps=1e-12):
-            return v / (K.sum(v ** 2) ** 0.5 + eps)
+            return v / (K.sum(v**2)**0.5 + eps)
+
         def power_iteration(W, u):
             #Accroding the paper, we only need to do power iteration one time.
             _u = u
             _v = _l2normalize(K.dot(_u, K.transpose(W)))
             _u = _l2normalize(K.dot(_v, W))
             return _u, _v
+
         #Spectral Normalization
         W_shape = self.kernel.shape.as_list()
         #Flatten the Tensor
         W_reshaped = K.reshape(self.kernel, [-1, W_shape[-1]])
         _u, _v = power_iteration(W_reshaped, self.u)
         #Calculate Sigma
-        sigma=K.dot(_v, W_reshaped)
-        sigma=K.dot(sigma, K.transpose(_u))
+        sigma = K.dot(_v, W_reshaped)
+        sigma = K.dot(sigma, K.transpose(_u))
         #normalize it
         W_bar = W_reshaped / sigma
         #reshape weight tensor
@@ -487,26 +516,23 @@ class ConvSN3D(Conv3D):
         else:
             with tf.control_dependencies([self.u.assign(_u)]):
                 W_bar = K.reshape(W_bar, W_shape)
-                
-        outputs = K.conv3d(
-                inputs,
-                W_bar,
-                strides=self.strides,
-                padding=self.padding,
-                data_format=self.data_format,
-                dilation_rate=self.dilation_rate)
+
+        outputs = K.conv3d(inputs,
+                           W_bar,
+                           strides=self.strides,
+                           padding=self.padding,
+                           data_format=self.data_format,
+                           dilation_rate=self.dilation_rate)
         if self.use_bias:
-            outputs = K.bias_add(
-                outputs,
-                self.bias,
-                data_format=self.data_format)
+            outputs = K.bias_add(outputs,
+                                 self.bias,
+                                 data_format=self.data_format)
         if self.activation is not None:
             return self.activation(outputs)
         return outputs
 
-        
+
 class EmbeddingSN(Embedding):
-    
     def build(self, input_shape):
         self.embeddings = self.add_weight(
             shape=(self.input_dim, self.output_dim),
@@ -515,33 +541,36 @@ class EmbeddingSN(Embedding):
             regularizer=self.embeddings_regularizer,
             constraint=self.embeddings_constraint,
             dtype=self.dtype)
-        
-        self.u = self.add_weight(shape=tuple([1, self.embeddings.shape.as_list()[-1]]),
-                         initializer=initializers.RandomNormal(0, 1),
-                         name='sn',
-                         trainable=False)
-        
+
+        self.u = self.add_weight(shape=tuple(
+            [1, self.embeddings.shape.as_list()[-1]]),
+                                 initializer=initializers.RandomNormal(0, 1),
+                                 name='sn',
+                                 trainable=False)
+
         self.built = True
-        
+
     def call(self, inputs):
         if K.dtype(inputs) != 'int32':
             inputs = K.cast(inputs, 'int32')
-            
+
         def _l2normalize(v, eps=1e-12):
-            return v / (K.sum(v ** 2) ** 0.5 + eps)
+            return v / (K.sum(v**2)**0.5 + eps)
+
         def power_iteration(W, u):
             #Accroding the paper, we only need to do power iteration one time.
             _u = u
             _v = _l2normalize(K.dot(_u, K.transpose(W)))
             _u = _l2normalize(K.dot(_v, W))
             return _u, _v
+
         W_shape = self.embeddings.shape.as_list()
         #Flatten the Tensor
         W_reshaped = K.reshape(self.embeddings, [-1, W_shape[-1]])
         _u, _v = power_iteration(W_reshaped, self.u)
         #Calculate Sigma
-        sigma=K.dot(_v, W_reshaped)
-        sigma=K.dot(sigma, K.transpose(_u))
+        sigma = K.dot(_v, W_reshaped)
+        sigma = K.dot(sigma, K.transpose(_u))
         #normalize it
         W_bar = W_reshaped / sigma
         #reshape weight tensor
@@ -551,17 +580,17 @@ class EmbeddingSN(Embedding):
             with tf.control_dependencies([self.u.assign(_u)]):
                 W_bar = K.reshape(W_bar, W_shape)
         self.embeddings = W_bar
-            
+
         out = K.gather(self.embeddings, inputs)
-        return out 
+        return out
+
 
 class ConvSN2DTranspose(Conv2DTranspose):
-
     def build(self, input_shape):
         if len(input_shape) != 4:
-            raise ValueError('Inputs should have rank ' +
-                             str(4) +
-                             '; Received input shape:', str(input_shape))
+            raise ValueError(
+                'Inputs should have rank ' + str(4) +
+                '; Received input shape:', str(input_shape))
         if self.data_format == 'channels_first':
             channel_axis = 1
         else:
@@ -578,23 +607,24 @@ class ConvSN2DTranspose(Conv2DTranspose):
                                       regularizer=self.kernel_regularizer,
                                       constraint=self.kernel_constraint)
         if self.use_bias:
-            self.bias = self.add_weight(shape=(self.filters,),
+            self.bias = self.add_weight(shape=(self.filters, ),
                                         initializer=self.bias_initializer,
                                         name='bias',
                                         regularizer=self.bias_regularizer,
                                         constraint=self.bias_constraint)
         else:
             self.bias = None
-            
-        self.u = self.add_weight(shape=tuple([1, self.kernel.shape.as_list()[-1]]),
-                         initializer=initializers.RandomNormal(0, 1),
-                         name='sn',
-                         trainable=False)
-        
+
+        self.u = self.add_weight(shape=tuple(
+            [1, self.kernel.shape.as_list()[-1]]),
+                                 initializer=initializers.RandomNormal(0, 1),
+                                 name='sn',
+                                 trainable=False)
+
         # Set input spec.
         self.input_spec = InputSpec(ndim=4, axes={channel_axis: input_dim})
-        self.built = True  
-    
+        self.built = True
+
     def call(self, inputs):
         input_shape = K.shape(inputs)
         batch_size = input_shape[0]
@@ -612,35 +642,33 @@ class ConvSN2DTranspose(Conv2DTranspose):
             out_pad_h, out_pad_w = self.output_padding
 
         # Infer the dynamic output shape:
-        out_height = conv_utils.deconv_length(height,
-                                              stride_h, kernel_h,
-                                              self.padding,
-                                              out_pad_h)
-        out_width = conv_utils.deconv_length(width,
-                                             stride_w, kernel_w,
-                                             self.padding,
-                                             out_pad_w)
+        out_height = conv_utils.deconv_length(height, stride_h, kernel_h,
+                                              self.padding, out_pad_h)
+        out_width = conv_utils.deconv_length(width, stride_w, kernel_w,
+                                             self.padding, out_pad_w)
         if self.data_format == 'channels_first':
             output_shape = (batch_size, self.filters, out_height, out_width)
         else:
             output_shape = (batch_size, out_height, out_width, self.filters)
-            
-        #Spectral Normalization    
+
+        #Spectral Normalization
         def _l2normalize(v, eps=1e-12):
-            return v / (K.sum(v ** 2) ** 0.5 + eps)
+            return v / (K.sum(v**2)**0.5 + eps)
+
         def power_iteration(W, u):
             #Accroding the paper, we only need to do power iteration one time.
             _u = u
             _v = _l2normalize(K.dot(_u, K.transpose(W)))
             _u = _l2normalize(K.dot(_v, W))
             return _u, _v
+
         W_shape = self.kernel.shape.as_list()
         #Flatten the Tensor
         W_reshaped = K.reshape(self.kernel, [-1, W_shape[-1]])
         _u, _v = power_iteration(W_reshaped, self.u)
         #Calculate Sigma
-        sigma=K.dot(_v, W_reshaped)
-        sigma=K.dot(sigma, K.transpose(_u))
+        sigma = K.dot(_v, W_reshaped)
+        sigma = K.dot(sigma, K.transpose(_u))
         #normalize it
         W_bar = W_reshaped / sigma
         #reshape weight tensor
@@ -650,20 +678,18 @@ class ConvSN2DTranspose(Conv2DTranspose):
             with tf.control_dependencies([self.u.assign(_u)]):
                 W_bar = K.reshape(W_bar, W_shape)
         self.kernel = W_bar
-        
-        outputs = K.conv2d_transpose(
-            inputs,
-            self.kernel,
-            output_shape,
-            self.strides,
-            padding=self.padding,
-            data_format=self.data_format)
+
+        outputs = K.conv2d_transpose(inputs,
+                                     self.kernel,
+                                     output_shape,
+                                     self.strides,
+                                     padding=self.padding,
+                                     data_format=self.data_format)
 
         if self.use_bias:
-            outputs = K.bias_add(
-                outputs,
-                self.bias,
-                data_format=self.data_format)
+            outputs = K.bias_add(outputs,
+                                 self.bias,
+                                 data_format=self.data_format)
 
         if self.activation is not None:
             return self.activation(outputs)
