@@ -36,9 +36,9 @@ Our workflow and source code can be found in the `src` directory of this reposit
 
 A thorough development log for our ideas/progress can be found [here](/docs/todos.md).
 
-### Citations
+### References
 
-Relevant BibTeX citations for the above-mentioned papers can be found below:
+Relevant BibTeX entries for the above-mentioned papers can be found below:
 
 Harutyunyan et al. 2019 
 

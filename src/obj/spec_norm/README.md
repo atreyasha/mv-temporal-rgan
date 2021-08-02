@@ -4,9 +4,9 @@ This directory contains source code for spectral normalization, which has been e
 
 https://github.com/IShengFang/SpectralNormalizationKeras
 
-### Citation
+### Reference
 
-Below is the BibTeX citation for the paper in which the above-mentioned code was developed.
+Below is the BibTeX entry for the paper in which the above-mentioned code was developed.
 
 ```
 @misc{miyato2018spectral,
