@@ -26,7 +26,7 @@
 
 1. Non-sparse activation, ie. LeakyReLU
 2. Implementing two optimizers in GAN with differing learning rates; specifically where the generator has slightly lower learning rate than optimizer
-3. Implemening spectral normalization for all significant convolutional and dense layers.
+3. Implementing spectral normalization for all significant convolutional and dense layers.
 4. Auxiliary architecture helps to stabilize network further
 
 ### Performance

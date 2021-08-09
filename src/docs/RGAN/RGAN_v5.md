@@ -26,7 +26,7 @@
 1. Non-sparse activation, ie. LeakyReLU
 2. Gaussian-smoothened real-data labels, ie. target labels follow a normal distribution of mean `0.9` and variance `0.005` and are re-sampled every epoch
 3. Implementing two optimizers in GAN with differing learning rates; specifically where the generator has slightly lower learning rate than optimizer
-4. Implemening spectral normalization for all significant convolutional and dense layers.
+4. Implementing spectral normalization for all significant convolutional and dense layers.
 
 ### Performance
 
