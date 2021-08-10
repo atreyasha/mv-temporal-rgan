@@ -58,7 +58,9 @@ The motivation for having LFWcrop greyscale faces is that it has much fewer data
 
 ### 2.i. Model training[*](#Caveats)
 
-In order to train a RGAN/RCGAN model, you can run `train.py`. Following is the usage documentation:
+In order to train a RGAN/RCGAN model, you can run `train.py`. In our models, we utilize [Spectral Normalization](https://github.com/IShengFang/SpectralNormalizationKeras) which is distributed under the MIT [License](../THIRD_PARTY_NOTICES.txt).
+
+Following is the usage documentation:
 
 ```
 $ python3 train.py --help
